@@ -19,10 +19,53 @@ from metapype.model.node import Node
 
 
 logger = daiquiri.getLogger('model_io: ' + __name__)
+
 space = '    '
 
 
-def to_json(node, level=0, comma=''):
+def from_json(json_node: dict, parent: Node=None) -> Node:
+    _ = json_node.popitem()
+    name = _[0]
+    body = _[1]
+    node = Node(name)
+
+    if parent is not None:
+        node.parent = parent
+
+    attributes = body[0]['attributes']
+    if attributes is not None:
+        for attribute in attributes:
+            node.add_attribute(attribute, attributes[attribute])
+
+    content = body[1]['content']
+    if content is not None:
+        node.content = content
+
+    children = body[2]['children']
+    for child in children:
+        if child is not None:
+            child_node = from_json(child, node)
+            node.add_child(child_node)
+
+    return node
+
+
+def graph(node: Node, level: int) -> str:
+    indent = '  ' * level
+    type = node.rank
+    if node.content is not None:
+        type += ': {}'.format(node.content)
+    if len(node.attributes) > 0:
+        type += ' ' + str(node.attributes)
+    if level == 0:
+        print(type)
+    else:
+        print(indent + '\u2570\u2500 ' + type)
+    for child in node.children:
+       graph(child, level + 1)
+
+
+def to_json(node: Node, level: int=0, comma: str='') -> str:
     json = ''
     type = node.rank
     if level == 0:
@@ -69,33 +112,6 @@ def to_json(node, level=0, comma=''):
     json += close_tag
 
     return json
-
-
-def from_json(json_node: dict, parent: Node=None) -> Node:
-    _ = json_node.popitem()
-    name = _[0]
-    body = _[1]
-    node = Node(name)
-
-    if parent is not None:
-        node.parent = parent
-
-    attributes = body[0]['attributes']
-    if attributes is not None:
-        for attribute in attributes:
-            node.add_attribute(attribute, attributes[attribute])
-
-    content = body[1]['content']
-    if content is not None:
-        node.content = content
-
-    children = body[2]['children']
-    for child in children:
-        if child is not None:
-            child_node = from_json(child, node)
-            node.add_child(child_node)
-
-    return node
 
 
 def main():
