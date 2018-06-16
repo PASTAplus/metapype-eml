@@ -13,7 +13,7 @@
 """
 import daiquiri
 
-from metapype.eml2_1_1.exceptions import MPLRuleError
+from metapype.eml2_1_1.exceptions import MetapypeRuleError
 from metapype.eml2_1_1.rules import rules
 from metapype.model.node import Node
 
@@ -24,7 +24,7 @@ logger = daiquiri.getLogger('validate: ' + __name__)
 def node(node: Node):
     if node.rank not in rules:
         msg = 'Unknown node rank: {}'.format(node.rank)
-        raise MPLRuleError(msg)
+        raise MetapypeRuleError(msg)
     else:
         rules[node.rank](node)
 
@@ -32,7 +32,7 @@ def node(node: Node):
 def tree(root: Node):
     try:
         node(root)
-    except MPLRuleError as e:
+    except MetapypeRuleError as e:
         logger.error(e)
     for child in root.children:
         tree(child)
