@@ -13,7 +13,7 @@
 """
 import daiquiri
 
-from metapype.eml2_1_1.exceptions import MPLRuleError
+from metapype.eml2_1_1.exceptions import MetapypeRuleError
 from metapype.model.node import Node
 
 
@@ -25,10 +25,15 @@ INFINITY = None
 
 
 def access_rule(node: Node):
-    rules = [
+    if 'order' in node.attributes:
+        allowed = ['allowFirst', 'denyFirst']
+        if node.attributes['order'] not in allowed:
+            msg = '"{0}:order" attribute must be one of "{1}"'.format(node.rank, allowed)
+            raise MetapypeRuleError(msg)
+    children = [
         ['allow', 'deny', 1, INFINITY]
     ]
-    process_rules(rules, node)
+    process_children(children, node)
     attributes = {
         'id': OPTIONAL,
         'system': OPTIONAL,
@@ -37,19 +42,14 @@ def access_rule(node: Node):
         'authSystem': REQUIRED
     }
     process_attributes(attributes, node)
-    if 'order' in node.attributes:
-        allowed = ['allowFirst', 'denyFirst']
-        if node.attributes['order'] not in allowed:
-            msg = '"{0}:order" attribute must be one of "{1}"'.format(node.rank, allowed)
-            raise MPLRuleError(msg)
 
 
 def additional_metadata_rule(node: Node):
-    rules = [
+    children = [
         ['describes', 0, INFINITY],
         ['metadata', 1, 1]
     ]
-    process_rules(rules, node)
+    process_children(children, node)
     attributes = {
         'id': OPTIONAL
     }
@@ -57,48 +57,49 @@ def additional_metadata_rule(node: Node):
 
 
 def allow_rule(node: Node):
-    rules = [
+    children = [
         ['principal', 1, INFINITY],
         ['permission', 1, INFINITY]
     ]
-    process_rules(rules, node)
+    process_children(children, node)
 
 
 def any_name_rule(node: Node):
-    rules = [
+    if node.content is not None and type(node.content) is not str:
+        msg = 'Node "{0}" content should be type string, not "{1}"'.format(node.rank, type(node.content))
+        raise MetapypeRuleError(msg)
+    if len(node.children) == 0 and node.content is None:
+        msg = 'Node "{0}" content should not be empty'.format(node.rank)
+        raise MetapypeRuleError(msg)
+    children = [
         ['value', 0, INFINITY]
     ]
-    process_rules(rules, node)
+    process_children(children, node)
     attributes = {
         'lang': OPTIONAL
     }
     process_attributes(attributes, node)
-    if node.content is not None and type(node.content) is not str:
-        msg = 'Node "{0}" content should be type string, not "{1}"'.format(node.rank, type(node.content))
-        raise MPLRuleError(msg)
-    if len(node.children) == 0 and node.content is None:
-        msg = 'Node "{0}" content should not be empty'.format(node.rank)
-        raise MPLRuleError(msg)
+
 
 def dataset_rule(node: Node):
     pass
 
 
 def deny_rule(node: Node):
-    rules = [
+    children = [
         ['principal', 1, INFINITY],
         ['permission', 1, INFINITY]
     ]
-    process_rules(rules, node)
+    process_children(children, node)
 
 
 def eml_rule(node: Node):
-    rules = [
+    children = [
         ['access', 0, 1],
         ['dataset', 'citation', 'software', 'protocol', 1, 1],
         ['additionalMetadata', 0, INFINITY]
     ]
-    process_rules(rules, node)
+    process_children(children, node)
     attributes = {
         'packageId': REQUIRED,
         'system': REQUIRED,
@@ -109,44 +110,44 @@ def eml_rule(node: Node):
 
 
 def individual_name_rule(node: Node):
-    rules = [
+    children = [
         ['salutation', 0, INFINITY],
         ['givenName', 0, INFINITY],
         ['surName', 1, 1]
     ]
-    process_rules(rules, node)
+    process_children(children, node)
 
 
 def metadata_rule(node: Node):
     if len(node.children) != 0:
         msg = 'Node "{0}" should not have children'.format(node.rank)
-        raise MPLRuleError(msg)
+        raise MetapypeRuleError(msg)
     if type(node.content) is not str:
         msg = 'Node "{0}" content should be type string, not "{1}"'.format(node.rank, type(node.content))
-        raise MPLRuleError(msg)
+        raise MetapypeRuleError(msg)
 
 
 def permission_rule(node: Node):
     if len(node.children) != 0:
         msg = 'Node "{0}" should not have children'.format(node.rank)
-        raise MPLRuleError(msg)
+        raise MetapypeRuleError(msg)
     allowed = ['read', 'write', 'changePermission', 'all']
     if node.content not in allowed:
         msg = 'Node "{0}" content should be one of "{1}", not "{2}"'.format(node.rank, allowed, node.content)
-        raise MPLRuleError(msg)
+        raise MetapypeRuleError(msg)
 
 
 def principal_rule(node: Node):
     if len(node.children) != 0:
         msg = 'Node "{0}" should not have children'.format(node.rank)
-        raise MPLRuleError(msg)
+        raise MetapypeRuleError(msg)
     if type(node.content) is not str:
         msg = 'Node content should be type string, not "{0}"'.format(type(node.content))
-        raise MPLRuleError(msg)
+        raise MetapypeRuleError(msg)
 
 
 def responsible_party_rule(node: Node):
-    rules = [
+    children = [
         ['individualName', 'organizationName', 'positionName', 1, INFINITY],
         ['address', 0, INFINITY],
         ['phone', 0, INFINITY],
@@ -154,7 +155,7 @@ def responsible_party_rule(node: Node):
         ['onlineUrl', 0, INFINITY],
         ['userId', 0, INFINITY]
     ]
-    process_rules(rules, node)
+    process_children(children, node)
     attributes = {
         'id': OPTIONAL,
         'system': OPTIONAL,
@@ -166,11 +167,11 @@ def responsible_party_rule(node: Node):
 def title_rule(node: Node):
     if node.content is not None and type(node.content) is not str:
         msg = 'Node "{0}" content should be type string, not "{1}"'.format(node.rank, type(node.content))
-        raise MPLRuleError(msg)
-    rules = [
+        raise MetapypeRuleError(msg)
+    children = [
         ['value', 0, INFINITY]
     ]
-    process_rules(rules, node)
+    process_children(children, node)
     attributes = {
         'lang': OPTIONAL
     }
@@ -180,17 +181,17 @@ def title_rule(node: Node):
 def value_rule(node: Node):
     if node.content is None:
         msg = 'Node "{0}" content cannot be empty'.format(node.rank)
-        raise MPLRuleError(msg)
+        raise MetapypeRuleError(msg)
     if type(node.content) is not str:
         msg = 'Node "{0}" content should be type string, not "{1}"'.format(node.rank, type(node.content))
-        raise MPLRuleError(msg)
+        raise MetapypeRuleError(msg)
     attributes = {
         'xml:lang': REQUIRED,
     }
     process_attributes(attributes, node)
 
 
-def process_rules(rules, node: Node):
+def process_children(rules, node: Node):
     i = 0
     max_i = len(node.children)
     for rule in rules:
@@ -204,16 +205,16 @@ def process_rules(rules, node: Node):
                 cnt += 1
                 if max is not INFINITY and cnt > max:
                     msg = 'Maximum occurrence of "{0}" exceeded for "{1}"'.format(rank, node.rank)
-                    raise MPLRuleError(msg)
+                    raise MetapypeRuleError(msg)
                 i += 1
             else: break
         if cnt < min:
             msg = 'Minimum occurrence of "{0}" not met for "{1}"'.format(rank, node.rank)
-            raise MPLRuleError(msg)
+            raise MetapypeRuleError(msg)
     if i < max_i:
         child_rank = node.children[i].rank
         msg = 'Child "{0}" not allowed  for "{1}"'.format(child_rank, node.rank)
-        raise MPLRuleError(msg)
+        raise MetapypeRuleError(msg)
 
 
 def  process_attributes(attributes, node: Node):
@@ -221,11 +222,11 @@ def  process_attributes(attributes, node: Node):
         required = attributes[attribute]
         if required and attribute not in node.attributes:
             msg = '"{0}" is a required attribute of node "{1}"'.format(attribute, node.rank)
-            raise MPLRuleError(msg)
+            raise MetapypeRuleError(msg)
     for attribute in node.attributes:
         if attribute not in attributes:
             msg = '"{0}" is not a recognized attributes of node "{1}"'.format(attribute, node.rank)
-            raise MPLRuleError(msg)
+            raise MetapypeRuleError(msg)
 
 
 
