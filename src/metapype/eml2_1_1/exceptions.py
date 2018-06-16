@@ -16,7 +16,7 @@ import daiquiri
 logger = daiquiri.getLogger('exceptions: ' + __name__)
 
 
-class MPLRuleError(Exception):
+class MetapypeRuleError(Exception):
     pass
 
 
