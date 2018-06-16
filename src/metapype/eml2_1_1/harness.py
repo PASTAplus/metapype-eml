@@ -15,7 +15,7 @@ import json
 
 import daiquiri
 
-from metapype.eml2_1_1.exceptions import MPLRuleError
+from metapype.eml2_1_1.exceptions import MetapypeRuleError
 import metapype.eml2_1_1.export
 import metapype.eml2_1_1.validate as validate
 from metapype.model.node import Node
@@ -94,7 +94,7 @@ def main():
 
     try:
         validate.tree(eml)
-    except  MPLRuleError as e:
+    except  MetapypeRuleError as e:
         logger.error(e)
 
     json_str = io.to_json(eml)
@@ -105,11 +105,11 @@ def main():
     m = json.loads(json_str)
     node = io.from_json(m)
 
-    views.graph(node, 0)
+    io.graph(node, 0)
 
     try:
         validate.tree(node)
-    except  MPLRuleError as e:
+    except  MetapypeRuleError as e:
         logger.error(e)
 
     xml = metapype.eml2_1_1.export.to_xml(node)
