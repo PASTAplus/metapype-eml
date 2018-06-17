@@ -64,7 +64,7 @@ There is a processing step after sections 2 and 3, respectively, that evaluates
 model node for rule compliance. Not all rules have the three sections described
 above. The following is an example of the "access" rule:
 
-```
+```Python
 def access_rule(node: Node):
     if 'order' in node.attributes:
         allowed = ['allowFirst', 'denyFirst']
