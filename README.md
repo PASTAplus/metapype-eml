@@ -18,7 +18,7 @@ attributes, content, and children. Node instances must be generated with
 at least the corresponding "rank" name as found in the schema [^1]. All
 other content may be accessed through setters and getters.
 
-<img align="center" src="https://github.com/PASTAplus/metapype-eml/blob/master/docs/node.png"/>
+<p align="center>"<img src="https://github.com/PASTAplus/metapype-eml/blob/master/docs/node.png" /></p>
 
 [^1]: Actually, the metadata content model may contain any hierarchical
       content that can be entered into the existing Node data structure,
