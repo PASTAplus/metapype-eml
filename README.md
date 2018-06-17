@@ -1,4 +1,5 @@
 # Metapype for EML
+
 #### A light weight metadata generator for the Ecological Metadata Language
 
 Metapype is a Python 3 library for building, saving, and exporting
@@ -14,10 +15,13 @@ root) node. The links for either parent or children are constructed of
 the nodes respective address in memory. Nodes represent the primary
 characteristics of their corresponding XML schema elements, including
 attributes, content, and children. Node instances must be generated with
-at least the corresponding "rank" name as found in the schema[^1].
+at least the corresponding "rank" name as found in the schema [^1]. All
+other content may be accessed through setters and getters.
 
+<img align="center" src="https://github.com/PASTAplus/metapype-eml/blob/master/docs/node.png"/>
 
 [^1]: Actually, the metadata content model may contain any hierarchical
-content that can be entered into the existing Node data structure, but
-will not validate as an EML metadata content model either at the node or
-the tree level.
+      content that can be entered into the existing Node data structure,
+      but will not validate as an EML metadata content model either at
+      the node or the tree level.
+
