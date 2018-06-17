@@ -51,7 +51,7 @@ whether they are required or optional.</p>
 <p style="margin:1.2em 0;">There is a processing step after sections 2 and 3, respectively, that evaluates
 model node for rule compliance. Not all rules have the three sections described
 above. The following is an example of the &quot;access&quot; rule:</p>
-<pre style="font-family:Consolas,Inconsolata,Courier,monospace;font-size:1em;line-height:1.3em;margin:1.2em 0;"><code style="background-color:#f8f8f8;border-radius:3px;border:1px solid #ccc;display:block;font-family:Consolas,Inconsolata,Courier,monospace;font-size:0.9em;margin:0 0.15em;overflow:auto;padding:0.5em 0.7em;white-space:pre;color:#444;">def access_rule(node: Node):
+<pre style="font-family:Consolas,Inconsolata,Courier,monospace;font-size:1em;line-height:1.3em;margin:1.2em 0;"><code class="Python" style="background-color:#f8f8f8;border-radius:3px;border:1px solid #ccc;display:block;font-family:Consolas,Inconsolata,Courier,monospace;font-size:0.9em;margin:0 0.15em;overflow:auto;padding:0.5em 0.7em;white-space:pre;color:#444;">def access_rule(node: Node):
     if 'order' in node.attributes:
         allowed = ['allowFirst', 'denyFirst']
         if node.attributes['order'] not in allowed:
