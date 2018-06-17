@@ -1,0 +1,121 @@
+@startuml
+
+class eml {
+    name: 'eml'
+    attributes: {'packageId': 'edi.23.1'}
+    content: None
+    parent: None
+    children: [access, dataset]
+}
+
+class access {
+    name: 'access'
+    attributes: {}
+    content: None
+    parent: eml
+    children: [allow]
+}
+
+class allow {
+    name: 'allow'
+    attributes: {}
+    content: None
+    parent: access
+    children: [principal, permission]
+}
+
+class principal {
+    name: 'principal'
+    attributes: {}
+    content: 'uid=gaucho,o=EDI,dc=edirepository,dc=org'
+    parent: allow
+    children: []
+}
+
+class permission {
+    name: 'permission'
+    attributes: {}
+    content: 'all'
+    parent: allow
+    children: []
+}
+
+class dataset {
+    name: 'dataset'
+    attributes: {}
+    content: None
+    parent: eml
+    children: [title, creator, contact]
+}
+
+class title {
+    name: 'title'
+    attributes: {}
+    content: 'Green sea turtle counts: Tortuga Island 2017'
+    parent: dataset
+    children: []
+}
+
+class creator {
+    name: 'creator'
+    attributes: {}
+    cotent: None
+    parent: dataset
+    children: [individualName_creator]
+}
+
+class individualName_creator {
+    name: 'individualName_creator'
+    attributes: {}
+    contents: None
+    parent: creator
+    children: [surName_creator]
+}
+
+class surName_creator {
+    name: 'surName_creator'
+    attributes: {}
+    contents: 'Gaucho'
+    parent: individualName_creator
+    children: []
+}
+
+class contact {
+    name: 'contact'
+    attributes: []
+    content: None
+    parent: dataset
+    children: [individualName_contact] 
+}
+
+class individualName_contact {
+    name: 'individualName_contact'
+    attributes: {}
+    contents: None
+    parent: creator
+    children: [surName_contact]
+}
+
+class surName_contact {
+    name: 'surName_contact'
+    attributes: {}
+    contents: 'Gaucho'
+    parent: individualName_contact
+    children: []
+}
+
+
+eml <--> access
+eml <--> dataset
+access <--> allow
+allow <--> principal
+allow <--> permission
+dataset <--> title
+dataset <--> creator
+creator <--> individualName_creator
+individualName_creator <--> surName_creator
+dataset <--> contact
+contact <--> individualName_contact
+individualName_contact <--> surName_contact
+
+@enduml

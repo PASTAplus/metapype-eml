@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eml:eml packageId="edi.100.1" scope="system"
+    system="https://pasta.edirepository.org"
+    xmlns:eml="eml://ecoinformatics.org/eml-2.1.1"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="eml://ecoinformatics.org/eml-2.1.1 http://nis.lternet.edu/schemas/eml/eml-2.1.1/eml.xsd">
+    <access order="allowFirst" authSystem="https://pasta.lternet.edu">
+        <allow>
+            <principal>uid=gaucho,o=EDI,dc=edirepository,dc=org</principal>
+            <permission>all</permission>
+        </allow>
+   </access>
+    <dataset>
+        <title>
+            Green sea turtle counts: Tortuga Island 2017
+        </title>
+        <creator>
+            <individualName>
+                <surName>Gaucho</surName>
+            </individualName>
+        </creator>
+        <contact>
+            <individualName>
+                <surName>Gaucho</surName>
+            </individualName>
+        </contact>
+    </dataset>
+</eml:eml>

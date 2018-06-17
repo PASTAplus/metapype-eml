@@ -1,0 +1,11 @@
+@startuml
+
+class node {
+    rank: str [1]
+    attributes: {str: object} [0..*]
+    content: str [0..1]
+    parent: node [0..1]
+    children: [node] [0..*]
+}
+
+@enduml
