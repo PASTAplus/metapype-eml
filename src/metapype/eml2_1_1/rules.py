@@ -196,25 +196,25 @@ def process_children(rules, node: Node):
     i = 0
     max_i = len(node.children)
     for rule in rules:
-        rank = rule[:-2]
+        name = rule[:-2]
         min = rule[-2]
         max = rule[-1]
         cnt = 0
         while i < max_i:
-            child_rank = node.children[i].name
-            if child_rank in rank:
+            child_name = node.children[i].name
+            if child_name in name:
                 cnt += 1
                 if max is not INFINITY and cnt > max:
-                    msg = 'Maximum occurrence of "{0}" exceeded for "{1}"'.format(rank, node.name)
+                    msg = 'Maximum occurrence of "{0}" exceeded for "{1}"'.format(name, node.name)
                     raise MetapypeRuleError(msg)
                 i += 1
             else: break
         if cnt < min:
-            msg = 'Minimum occurrence of "{0}" not met for "{1}"'.format(rank, node.name)
+            msg = 'Minimum occurrence of "{0}" not met for "{1}"'.format(name, node.name)
             raise MetapypeRuleError(msg)
     if i < max_i:
-        child_rank = node.children[i].name
-        msg = 'Child "{0}" not allowed  for "{1}"'.format(child_rank, node.name)
+        child_name = node.children[i].name
+        msg = 'Child "{0}" not allowed  for "{1}"'.format(child_name, node.name)
         raise MetapypeRuleError(msg)
 
 
