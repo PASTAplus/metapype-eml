@@ -20,7 +20,6 @@ import metapype.eml2_1_1.export
 import metapype.eml2_1_1.validate as validate
 from metapype.model.node import Node
 from metapype.model import io
-from metapype.model import views
 
 
 logger = daiquiri.getLogger('harness: ' + __name__)

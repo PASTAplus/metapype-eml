@@ -22,11 +22,11 @@ logger = daiquiri.getLogger('validate: ' + __name__)
 
 
 def node(node: Node):
-    if node.rank not in rules:
-        msg = 'Unknown node rank: {}'.format(node.rank)
+    if node.name not in rules:
+        msg = 'Unknown node rank: {}'.format(node.name)
         raise MetapypeRuleError(msg)
     else:
-        rules[node.rank](node)
+        rules[node.name](node)
 
 
 def tree(root: Node):

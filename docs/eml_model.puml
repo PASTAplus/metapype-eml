@@ -1,7 +1,7 @@
 @startuml
 
 class eml {
-    rank: 'eml'
+    name: 'eml'
     attributes: {'packageId':'edi.23.1', 'system':'metapype'}
     content: None
     parent: None
@@ -9,7 +9,7 @@ class eml {
 }
 
 class access {
-    rank: 'access'
+    name: 'access'
     attributes: {'authSystem':'pasta', 'order':'allowFirst'}
     content: None
     parent: eml
@@ -17,7 +17,7 @@ class access {
 }
 
 class allow {
-    rank: 'allow'
+    name: 'allow'
     attributes: {}
     content: None
     parent: access
@@ -25,7 +25,7 @@ class allow {
 }
 
 class principal {
-    rank: 'principal'
+    name: 'principal'
     attributes: {}
     content: 'uid=gaucho,o=EDI,dc=edirepository,dc=org'
     parent: allow
@@ -33,7 +33,7 @@ class principal {
 }
 
 class permission {
-    rank: 'permission'
+    name: 'permission'
     attributes: {}
     content: 'all'
     parent: allow
@@ -41,7 +41,7 @@ class permission {
 }
 
 class dataset {
-    rank: 'dataset'
+    name: 'dataset'
     attributes: {}
     content: None
     parent: eml
@@ -49,7 +49,7 @@ class dataset {
 }
 
 class title {
-    rank: 'title'
+    name: 'title'
     attributes: {}
     content: 'Green sea turtle counts: Tortuga Island 2017'
     parent: dataset
@@ -57,7 +57,7 @@ class title {
 }
 
 class creator {
-    rank: 'creator'
+    name: 'creator'
     attributes: {}
     cotent: None
     parent: dataset
@@ -65,7 +65,7 @@ class creator {
 }
 
 class contact {
-    rank: 'contact'
+    name: 'contact'
     attributes: []
     content: None
     parent: dataset
@@ -73,7 +73,7 @@ class contact {
 }
 
 class individualName_contact {
-    rank: 'individualName'
+    name: 'individualName'
     attributes: {}
     contents: None
     parent: creator
@@ -81,7 +81,7 @@ class individualName_contact {
 }
 
 class surName_contact {
-    rank: 'surName'
+    name: 'surName'
     attributes: {}
     contents: 'Gaucho'
     parent: individualName_contact
@@ -89,7 +89,7 @@ class surName_contact {
 }
 
 class individualName_creator {
-    rank: 'individualName'
+    name: 'individualName'
     attributes: {}
     contents: None
     parent: creator
@@ -97,7 +97,7 @@ class individualName_creator {
 }
 
 class surName_creator {
-    rank: 'surName'
+    name: 'surName'
     attributes: {}
     contents: 'Gaucho'
     parent: individualName_creator

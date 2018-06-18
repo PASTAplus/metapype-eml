@@ -25,7 +25,7 @@ root node may be without parent link. Node links for either parent or children
 are constructed of the nodes respective address in memory. Nodes represent the
 primary characteristics of their corresponding XML schema elements, including
 attributes, content, and children. Node instances must be generated with at
-least the corresponding "rank" name as found in the schema for binding to the
+least the corresponding "name" as found in the schema for binding to the
 EML rule set*. All other node attributes may be accessed through setters and
 getters.
 
@@ -41,14 +41,14 @@ informative) is found in the following diagram:
 A metadata standard compliance rule is a codified set of constraints that follow
 the same (or similar) constraints that are declared within the corresponding
 metadata standard. In Metapype for EML, these rules are written in accordance
-with the rank of the element definition as declared in the EML XML schema. Each
+with the element definition as declared in the EML XML schema. Each
 rule supports the presence of XML attributes, content, and if a "complex" XML
 element, the sequence or choice of descendant elements, including descendant
 cardinality (descendant elements are represented as children in the metadata
 content model). Rules do not support all XML schema constructs (e.g., groups or
 all).
 
-Rules are broken into three parts: 1) zero or more rank specific rules (such as
+Rules are broken into three parts: 1) zero or more node specific rules (such as
 a datatype constraint) or a context sensitive rule (such as allowing only an
 enumerated set of choices); 2) an ordered list of allowable children and their
 corresponding cardinality; and 3) an unordered list of allowable attributes and
@@ -57,7 +57,7 @@ whether they are required or optional.
 A typical rule has the following Python code structure:
 
 1. Conditional statements
-2. Ordered list of lists (sublists are lists of children rank and cardinality)
+2. Ordered list of lists (sublists are lists of children names and cardinality)
 3. Dictionary of attributes
 
 There is a processing step after sections 2 and 3, respectively, that evaluates
@@ -69,7 +69,7 @@ def access_rule(node: Node):
     if 'order' in node.attributes:
         allowed = ['allowFirst', 'denyFirst']
         if node.attributes['order'] not in allowed:
-            msg = '"{0}:order" attribute must be one of "{1}"'.format(node.rank, allowed)
+            msg = '"{0}:order" attribute must be one of "{1}"'.format(node.name, allowed)
             raise MetapypeRuleError(msg)
     children = [
         ['allow', 'deny', 1, INFINITY]

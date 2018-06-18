@@ -21,9 +21,9 @@ logger = daiquiri.getLogger('node.py: ' + __name__)
 
 class Node(object):
 
-    def __init__(self, rank: str, parent=None, content: str=None):
+    def __init__(self, name: str, parent=None, content: str=None):
         self._node_id = uuid.uuid4().hex
-        self._rank = rank
+        self._name = name
         self._parent = parent
         self._content = content
         self._attributes = {} # Attribute key/value pairs
@@ -34,8 +34,8 @@ class Node(object):
         return self._node_id
 
     @property
-    def rank(self):
-        return self._rank
+    def name(self):
+        return self._name
 
     @property
     def parent(self):

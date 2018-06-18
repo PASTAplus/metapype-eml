@@ -52,28 +52,28 @@ def from_json(json_node: dict, parent: Node=None) -> Node:
 
 def graph(node: Node, level: int) -> str:
     indent = '  ' * level
-    type = node.rank
+    name = node.name
     if node.content is not None:
-        type += ': {}'.format(node.content)
+        name += ': {}'.format(node.content)
     if len(node.attributes) > 0:
-        type += ' ' + str(node.attributes)
+        name += ' ' + str(node.attributes)
     if level == 0:
-        print(type)
+        print(name)
     else:
-        print(indent + '\u2570\u2500 ' + type)
+        print(indent + '\u2570\u2500 ' + name)
     for child in node.children:
        graph(child, level + 1)
 
 
 def to_json(node: Node, level: int=0, comma: str='') -> str:
     json = ''
-    type = node.rank
+    name = node.name
     if level == 0:
         indent = ''
     else:
         indent = space * level
 
-    open_tag = '{"' + type + '":[\n'
+    open_tag = '{"' + name + '":[\n'
     json += indent + open_tag
 
     attributes = '{"attributes":null},'
