@@ -17,6 +17,7 @@ import daiquiri
 
 from metapype.eml2_1_1.exceptions import MetapypeRuleError
 import metapype.eml2_1_1.export
+import metapype.eml2_1_1.names as names
 import metapype.eml2_1_1.validate as validate
 from metapype.model.node import Node
 from metapype.model import io
@@ -26,70 +27,53 @@ logger = daiquiri.getLogger('harness: ' + __name__)
 
 
 def main():
-    # Create root EML node, with attributes
-    eml = Node('eml')
-    eml.add_attribute('packageId', 'edi.1001.1')
-    eml.add_attribute('system', 'http://metapypelite.edirepository.org')
 
-    # Create access control node with approrpiate permissionsc
-    access = Node('access', parent=eml)
-    access.add_attribute('authSystem', 'https://pasta.edirepository.org/authentication')
+    eml = Node(names.EML)
+    eml.add_attribute('packageId', 'edi.23.1')
+    eml.add_attribute('system', 'metapype')
+
+    access = Node(names.ACCESS, parent=eml)
+    access.add_attribute('authSystem', 'pasta')
     access.add_attribute('order', 'allowFirst')
-    allow = Node('allow', parent=access)
-    principal = Node('principal', parent=allow, content='uid=chase,o=EDI,dc=edirepository,dc=org')
-    allow.add_child(principal)
-    permission = Node('permission', parent=allow, content='changePermission')
-    allow.add_child(permission)
-    access.add_child(allow)
-    allow = Node('allow', parent=access)
-    principal = Node('principal', parent=allow, content='public')
-    allow.add_child(principal)
-    permission = Node('permission', parent=allow, content='read')
-    allow.add_child(permission)
-    access.add_child(allow)
-    deny = Node('deny', parent=access)
-    access.add_child(deny)
-    principal = Node('principal', parent=deny, content='public')
-    deny.add_child(principal)
-    permission = Node('permission', parent=deny, content='write')
-    deny.add_child(permission)
     eml.add_child(access)
 
+    allow = Node(names.ALLOW, parent=access)
+    access.add_child(allow)
 
-    # Create dataset node
-    dataset = Node('dataset')
+    principal = Node(names.PRINCIPAL, parent=allow)
+    principal.content = 'uid=gaucho,o=EDI,dc=edirepository,dc=org'
+    allow.add_child(principal)
+
+    permission = Node(names.PERMISSION, parent=allow)
+    permission.content = 'all'
+    allow.add_child(permission)
+
+    dataset = Node(names.DATASET, parent=eml)
     eml.add_child(dataset)
-    title = Node('title', parent=dataset, content='This is my title')
+
+    title = Node(names.TITLE, parent=dataset)
+    title.content = 'Green sea turtle counts: Tortuga Island 20017'
     dataset.add_child(title)
-    creator = Node('creator', parent=dataset)
+
+    creator = Node(names.CREATOR, parent=dataset)
     dataset.add_child(creator)
-    individual_name = Node('individualName', parent=creator)
-    creator.add_child(individual_name)
-    given_name = Node('givenName', parent=individual_name, content='Mark')
-    individual_name.add_child(given_name)
-    surname = Node('surName', parent=individual_name)
-    surname.content = 'Servilla'
-    value = Node('value', parent = surname)
-    value.content = 'Servilla'
-    value.add_attribute('xml:lang', 'en')
-    surname.add_child(value)
-    individual_name.add_child(surname)
-    contact = Node('contact', parent=dataset)
-    dataset.add_child(contact)
-    contact.add_child(individual_name)
-    contact = Node('contact', parent=dataset)
-    individual_name = Node('individualName', parent=contact)
-    surname = Node('surName', parent=individual_name, content='James')
-    dataset.add_child(contact)
-    contact.add_child(individual_name)
-    individual_name.add_child(surname)
 
+    individualName_creator = Node(names.INDIVIDUALNAME, parent=creator)
+    creator.add_child(individualName_creator)
 
-    # Create additional metadata node
-    additional_metadata = Node('additionalMetadata', parent=eml)
-    eml.add_child(additional_metadata)
-    metadata = Node('metadata', parent=additional_metadata, content='<test>TEST</test>')
-    additional_metadata.add_child(metadata)
+    surName_creator = Node(names.SURNAME, parent=individualName_creator)
+    surName_creator.content = 'Gaucho'
+    individualName_creator.add_child(surName_creator)
+
+    contact = Node(names.CONTACT, parent=dataset)
+    dataset.add_child(contact)
+
+    individualName_contact = Node(names.INDIVIDUALNAME, parent=contact)
+    contact.add_child(individualName_contact)
+
+    surName_contact = Node(names.SURNAME, parent=individualName_contact)
+    surName_contact.content = 'Gaucho'
+    individualName_contact.add_child(surName_contact)
 
     try:
         validate.tree(eml)

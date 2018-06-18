@@ -14,6 +14,7 @@
 import daiquiri
 
 from metapype.eml2_1_1.exceptions import MetapypeRuleError
+import metapype.eml2_1_1.names as names
 from metapype.model.node import Node
 
 
@@ -231,25 +232,25 @@ def  process_attributes(attributes, node: Node):
 
 
 rules = {
-    'access': access_rule,
-    'additionalMetadata': additional_metadata_rule,
-    'allow': allow_rule,
-    'contact': responsible_party_rule,
-    'creator': responsible_party_rule,
-    'dataset': dataset_rule,
-    'deny': deny_rule,
-    'eml': eml_rule,
-    'givenName': any_name_rule,
-    'individualName': individual_name_rule,
-    'metadata': metadata_rule,
-    'organizationName': any_name_rule,
-    'permission': permission_rule,
-    'positionName': any_name_rule,
-    'principal': principal_rule,
-    'salutation': any_name_rule,
-    'surName': any_name_rule,
-    'title': title_rule,
-    'value': value_rule,
+    names.ACCESS: access_rule,
+    names.ADDITIONALMETADATA: additional_metadata_rule,
+    names.ALLOW: allow_rule,
+    names.CONTACT: responsible_party_rule,
+    names.CREATOR: responsible_party_rule,
+    names.DATASET: dataset_rule,
+    names.DENY: deny_rule,
+    names.EML: eml_rule,
+    names.GIVENNAME: any_name_rule,
+    names.INDIVIDUALNAME: individual_name_rule,
+    names.METADATA: metadata_rule,
+    names.ORGANIZATIONNAME: any_name_rule,
+    names.PERMISSION: permission_rule,
+    names.POSITIONNAME: any_name_rule,
+    names.PRINCIPAL: principal_rule,
+    names.SALUTATION: any_name_rule,
+    names.SURNAME: any_name_rule,
+    names.TITLE: title_rule,
+    names.VALUE: value_rule,
 }
 
 
