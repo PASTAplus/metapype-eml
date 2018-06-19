@@ -80,7 +80,7 @@ sequence location. The cardinality (i.e., minimum and maximum occurrence) of
 each child node(s) is always set to the last two positions of the list,
 thereby making the values accessible through list slicing (i.e., `rule[-2:]`).
 The "list-of-lists" data structure is passed to a validating function, called
-`process_children`, that iterates through both the rule-based list and the
+`rules.process_children`, that iterates through both the rule-based list and the
 list of children from the node instance to evaluate compliance as specified in
 the given rule. Compliance failure at this point indicates that the node
 contains illegal children, children occurring in the wrong sequence, or
@@ -92,12 +92,15 @@ Allowable attributes are represented as a Python dictionary, where attribute
 names are the "keys" and their cardinality (i.e., optional or required) the
 "values". Similar to the validating function found for descendant children,
 the attributes of the node instance are checked against those of the rule's
-attribute dictionary using a function called `process_attributes`. Errors
+attribute dictionary using a function called `rules.process_attributes`. Errors
 during this step may result from the presence of illegal attributes or
 attributes that are required, but missing from the node. The literal value of
 of node attributes are not evaluated during this validation phase,
 but can be codified as a node specific constraint described earlier (see
 following example).
+
+Rule functions implicitly return `None` unless an exception occurs during the
+evaluation process; exceptions are of the class `exceptions.MetapypeRuleError`.
 
 The following is an example of the "access" rule as codified in Python:
 
