@@ -4,6 +4,9 @@
 """:Mod: rules
 
 :Synopsis:
+    The set of rules used to evaluate a model instance for compliance
+    to the Ecological Metadata Lanaguage metatdata standard version
+    2.1.1.
 
 :Author:
     servilla
@@ -66,6 +69,22 @@ def allow_rule(node: Node):
 
 
 def any_name_rule(node: Node):
+    '''
+    Generic rule for names.
+
+    This is a generic rule for evaluating name-based metadata like
+    surName, givenName, or salutations.
+
+    Args:
+        node: Node instance being evaluated
+
+    Returns:
+        None
+
+    Raises:
+        MetapypeRuleError: If content is not string or if without child and
+        content is empty
+    '''
     if node.content is not None and type(node.content) is not str:
         msg = 'Node "{0}" content should be type string, not "{1}"'.format(node.name, type(node.content))
         raise MetapypeRuleError(msg)
@@ -147,7 +166,17 @@ def principal_rule(node: Node):
         raise MetapypeRuleError(msg)
 
 
-def responsible_party_rule(node: Node):
+def responsible_party_rule(node: Node) -> None:
+    '''
+    Generic rule for any responsibleParty type of metadata like creator or
+    contact.
+
+    Args:
+        node: Node instance being evaluated
+
+    Returns:
+        None
+    '''
     children = [
         ['individualName', 'organizationName', 'positionName', 1, INFINITY],
         ['address', 0, INFINITY],
@@ -192,13 +221,30 @@ def value_rule(node: Node):
     process_attributes(attributes, node)
 
 
-def process_children(rules, node: Node):
+def process_children(children: list, node: Node) -> None:
+    '''
+    Evaluates node children for rule compliance.
+
+    Iterates through the list children rules and evaluates whether
+    the node instance complies with the rules.
+
+    Args:
+        children: list of lists containing children
+        node: Node instance to be evaluated
+
+    Returns:
+        None
+
+    Raises:
+        MetapypeRuleError: Illegal child, bad sequence or choice, missing
+        child, or wrong child cardinality
+    '''
     i = 0
     max_i = len(node.children)
-    for rule in rules:
-        name = rule[:-2]
-        min = rule[-2]
-        max = rule[-1]
+    for child in children:
+        name = child[:-2]
+        min = child[-2]
+        max = child[-1]
         cnt = 0
         while i < max_i:
             child_name = node.children[i].name
@@ -218,7 +264,23 @@ def process_children(rules, node: Node):
         raise MetapypeRuleError(msg)
 
 
-def  process_attributes(attributes, node: Node):
+def  process_attributes(attributes: dict, node: Node) -> None:
+    '''
+    Evaluates node attributes for rule compliance.
+
+    Iterates through the dict of attribute rules and evaluates whether
+    the node instance complies with the rule.
+
+    Args:
+        attributes: dict of rule attributes
+        node: Node instance to be evaluated
+
+    Returns:
+        None
+
+    Raises:
+        MetapypeRuleError: Illegal attribute or missing required attribute
+    '''
     for attribute in attributes:
         required = attributes[attribute]
         if required and attribute not in node.attributes:
@@ -230,7 +292,7 @@ def  process_attributes(attributes, node: Node):
             raise MetapypeRuleError(msg)
 
 
-
+# Rule function pointers
 rules = {
     names.ACCESS: access_rule,
     names.ADDITIONALMETADATA: additional_metadata_rule,
@@ -252,11 +314,3 @@ rules = {
     names.TITLE: title_rule,
     names.VALUE: value_rule,
 }
-
-
-def main():
-    return 0
-
-
-if __name__ == "__main__":
-    main()
