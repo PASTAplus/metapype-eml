@@ -93,20 +93,20 @@ The following is an example of the "access" rule as codified in Python:
 
 ```Python
 def access_rule(node: Node):
-    # Node specific constraints
+    # Node specific constraint section
     if 'order' in node.attributes:
         allowed = ['allowFirst', 'denyFirst']
         if node.attributes['order'] not in allowed:
             msg = '"{0}:order" attribute must be one of "{1}"'.format(node.name, allowed)
             raise MetapypeRuleError(msg)
 
-    # Descendant children rule
+    # Children rule section
     children = [
         ['allow', 'deny', 1, INFINITY]
     ]
     process_children(children, node)
 
-    # Attribute rule
+    # Attribute rule section
     attributes = {
         'id': OPTIONAL,
         'system': OPTIONAL,
