@@ -26,7 +26,7 @@ as a metadata generator.
 The metadata content model is designed as a hierarchical directed graph with a
 root node that spans the tree's children using directional links; similarly,
 each child node contains a reverse link to its parent (or root) node. Only the
-root node may be without parent link. Node links for either parent or children
+root node may be without a parent link. Node links for either parent or children
 are constructed of the nodes respective address in memory. Nodes represent the
 primary characteristics of their corresponding XML schema elements, including
 attributes, content, and children. Node instances must be generated with at
