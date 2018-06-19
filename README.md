@@ -26,7 +26,7 @@ are constructed of the nodes respective address in memory. Nodes represent the
 primary characteristics of their corresponding XML schema elements, including
 attributes, content, and children. Node instances must be generated with at
 least the corresponding "name" as found in the schema for binding to the
-EML rule set*. All other node attributes may be accessed through setters and
+EML rule set\*. All other node attributes may be accessed through setters and
 getters.
 
 <p align="center"><img src="https://raw.githubusercontent.com/PASTAplus/metapype-eml/master/docs/node.png" /></p>
@@ -39,11 +39,11 @@ informative) is found in the following diagram:
 #### Metadata Standard Compliance Rules
 
 A metadata standard compliance rule is a codified set of constraints that follow
-the same (or similar) requirements of metadata that are declared within the
-corresponding metadata standard. In Metapype for EML, for example, these rules
+the same (or similar) requirements that are declared within the
+corresponding metadata standard. In Metapype for EML, in particular, these rules
 are written in accordance with the element definitions as declared in the EML
 XML schema. Each rule enforces the presence of XML attributes, content
-requirements, and if a "complex" XML element, the sequence or choice of
+requirements, and if a "complex" XML element is being modeled, the sequence or choice of
 descendant elements, including descendant cardinality (descendant elements are
 represented as children in the metadata content model). Rules do not support all
 XML schema constructs (e.g., groups or all), but they can also enforce
@@ -129,7 +129,7 @@ defines the set of acceptable attributes to be `id`, `system`, `order`, and
 
 <hr/>
 
-*Actually, the metadata content model may contain any hierarchical content that
+\*Actually, the metadata content model may contain any hierarchical content that
 can be entered into the existing Node data structure, but will not validate as
 an EML metadata content model either at the node or the tree level.
 
