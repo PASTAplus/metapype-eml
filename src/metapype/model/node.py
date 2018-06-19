@@ -20,9 +20,17 @@ logger = daiquiri.getLogger('node.py: ' + __name__)
 
 
 class Node(object):
+    '''
+    Model node class representation.
+
+    Attributes:
+        name: Required string of metadata element name being modeled
+        parent: Optional parent node
+        content: Optional string content
+    '''
 
     def __init__(self, name: str, parent=None, content: str=None):
-        self._node_id = uuid.uuid4().hex
+        self._node_id = uuid.uuid4().hex # Random and unique node identifier
         self._name = name
         self._parent = parent
         self._content = content

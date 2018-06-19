@@ -4,6 +4,7 @@
 """:Mod: io
 
 :Synopsis:
+    Utilities for reading and writing a model instance
 
 :Author:
     servilla
@@ -17,13 +18,25 @@ import daiquiri
 
 from metapype.model.node import Node
 
-
 logger = daiquiri.getLogger('model_io: ' + __name__)
 
 space = '    '
 
 
-def from_json(json_node: dict, parent: Node=None) -> Node:
+def from_json(json_node: dict, parent: Node = None) -> Node:
+    '''
+    Recursively traverse Python JSON and build a metapype model
+    instance.
+
+    Args:
+        json_node: JSON converted to Python structure
+        parent: parent node reference to child
+
+    Returns:
+        Node: Child node of decomposed and parsed JSON
+
+    '''
+    # Get first inner JSON object from dict and discard outer
     _ = json_node.popitem()
     name = _[0]
     body = _[1]
@@ -51,6 +64,16 @@ def from_json(json_node: dict, parent: Node=None) -> Node:
 
 
 def graph(node: Node, level: int) -> str:
+    '''
+    Return a graphic tree structure of the model instance
+
+    Args:
+        node: Root node of the model instance
+        level: Indention level
+
+    Returns:
+        str: String representation of the model instance.
+    '''
     indent = '  ' * level
     name = node.name
     if node.content is not None:
@@ -62,10 +85,23 @@ def graph(node: Node, level: int) -> str:
     else:
         print(indent + '\u2570\u2500 ' + name)
     for child in node.children:
-       graph(child, level + 1)
+        graph(child, level + 1)
 
 
-def to_json(node: Node, level: int=0, comma: str='') -> str:
+def to_json(node: Node, level: int = 0, comma: str = '') -> str:
+    '''
+    Converts a model instance from the root node to a JSON compliant
+    string.
+
+    Args:
+        node: Root node of the model instance
+        level: Indention level
+        comma: String representation of a comma if condition dictates
+
+    Returns:
+        str: JSON representation of the model instance.
+
+    '''
     json = ''
     name = node.name
     if level == 0:
@@ -78,20 +114,26 @@ def to_json(node: Node, level: int=0, comma: str='') -> str:
 
     attributes = '{"attributes":null},'
     if len(node.attributes) > 0:
-        _ = '{' + ','.join(['"' + key + '":"' + node.attributes[key] + '"' for key in node.attributes]) + '}'
+        # Creates comma delimited list of attributes
+        _ = '{' + ','.join(
+            ['"' + key + '":"' + node.attributes[key] + '"' for key in
+             node.attributes]) + '}'
         attributes = attributes.replace('null', _)
     json += indent + space + attributes + '\n'
 
     content = '{"content":null},'
     if node.content is not None:
         _ = '"' + node.content + '"'
-        content = content.replace('null',_)
+        content = content.replace('null', _)
     json += indent + space + content + '\n'
 
     children = '{"children":[null]}'
-    if  len(node.children) > 0:
+    if len(node.children) > 0:
         _ = ''
         for child in node.children:
+            # Special formatting necessary for first and last child to
+            # cleanly represent indention and commas to be JSON
+            # compliant
             newline = ''
             if child is node.children[0]:
                 newline = '\n'
