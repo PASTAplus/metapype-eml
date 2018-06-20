@@ -34,10 +34,6 @@ def access_rule(node: Node):
         if node.attributes['order'] not in allowed:
             msg = '"{0}:order" attribute must be one of "{1}"'.format(node.name, allowed)
             raise MetapypeRuleError(msg)
-    children = [
-        ['allow', 'deny', 1, INFINITY]
-    ]
-    process_children(children, node)
     attributes = {
         'id': OPTIONAL,
         'system': OPTIONAL,
@@ -46,18 +42,22 @@ def access_rule(node: Node):
         'authSystem': REQUIRED
     }
     process_attributes(attributes, node)
+    children = [
+        ['allow', 'deny', 1, INFINITY]
+    ]
+    process_children(children, node)
 
 
 def additional_metadata_rule(node: Node):
+    attributes = {
+        'id': OPTIONAL
+    }
+    process_attributes(attributes, node)
     children = [
         ['describes', 0, INFINITY],
         ['metadata', 1, 1]
     ]
     process_children(children, node)
-    attributes = {
-        'id': OPTIONAL
-    }
-    process_attributes(attributes, node)
 
 
 def allow_rule(node: Node):
@@ -91,14 +91,14 @@ def any_name_rule(node: Node):
     if len(node.children) == 0 and node.content is None:
         msg = 'Node "{0}" content should not be empty'.format(node.name)
         raise MetapypeRuleError(msg)
-    children = [
-        ['value', 0, INFINITY]
-    ]
-    process_children(children, node)
     attributes = {
         'lang': OPTIONAL
     }
     process_attributes(attributes, node)
+    children = [
+        ['value', 0, INFINITY]
+    ]
+    process_children(children, node)
 
 
 def dataset_rule(node: Node):
@@ -114,12 +114,6 @@ def deny_rule(node: Node):
 
 
 def eml_rule(node: Node):
-    children = [
-        ['access', 0, 1],
-        ['dataset', 'citation', 'software', 'protocol', 1, 1],
-        ['additionalMetadata', 0, INFINITY]
-    ]
-    process_children(children, node)
     attributes = {
         'packageId': REQUIRED,
         'system': REQUIRED,
@@ -127,6 +121,12 @@ def eml_rule(node: Node):
         'lang': OPTIONAL
     }
     process_attributes(attributes, node)
+    children = [
+        ['access', 0, 1],
+        ['dataset', 'citation', 'software', 'protocol', 1, 1],
+        ['additionalMetadata', 0, INFINITY]
+    ]
+    process_children(children, node)
 
 
 def individual_name_rule(node: Node):
@@ -177,6 +177,12 @@ def responsible_party_rule(node: Node) -> None:
     Returns:
         None
     '''
+    attributes = {
+        'id': OPTIONAL,
+        'system': OPTIONAL,
+        'scope': OPTIONAL
+    }
+    process_attributes(attributes, node)
     children = [
         ['individualName', 'organizationName', 'positionName', 1, INFINITY],
         ['address', 0, INFINITY],
@@ -186,26 +192,20 @@ def responsible_party_rule(node: Node) -> None:
         ['userId', 0, INFINITY]
     ]
     process_children(children, node)
-    attributes = {
-        'id': OPTIONAL,
-        'system': OPTIONAL,
-        'scope': OPTIONAL
-    }
-    process_attributes(attributes, node)
 
 
 def title_rule(node: Node):
     if node.content is not None and type(node.content) is not str:
         msg = 'Node "{0}" content should be type string, not "{1}"'.format(node.name, type(node.content))
         raise MetapypeRuleError(msg)
-    children = [
-        ['value', 0, INFINITY]
-    ]
-    process_children(children, node)
     attributes = {
         'lang': OPTIONAL
     }
     process_attributes(attributes, node)
+    children = [
+        ['value', 0, INFINITY]
+    ]
+    process_children(children, node)
 
 
 def value_rule(node: Node):
@@ -219,6 +219,34 @@ def value_rule(node: Node):
         'xml:lang': REQUIRED,
     }
     process_attributes(attributes, node)
+
+
+def  process_attributes(attributes: dict, node: Node) -> None:
+    '''
+    Evaluates node attributes for rule compliance.
+
+    Iterates through the dict of attribute rules and evaluates whether
+    the node instance complies with the rule.
+
+    Args:
+        attributes: dict of rule attributes
+        node: Node instance to be evaluated
+
+    Returns:
+        None
+
+    Raises:
+        MetapypeRuleError: Illegal attribute or missing required attribute
+    '''
+    for attribute in attributes:
+        required = attributes[attribute]
+        if required and attribute not in node.attributes:
+            msg = '"{0}" is a required attribute of node "{1}"'.format(attribute, node.name)
+            raise MetapypeRuleError(msg)
+    for attribute in node.attributes:
+        if attribute not in attributes:
+            msg = '"{0}" is not a recognized attributes of node "{1}"'.format(attribute, node.name)
+            raise MetapypeRuleError(msg)
 
 
 def process_children(children: list, node: Node) -> None:
@@ -262,34 +290,6 @@ def process_children(children: list, node: Node) -> None:
         child_name = node.children[i].name
         msg = 'Child "{0}" not allowed  for "{1}"'.format(child_name, node.name)
         raise MetapypeRuleError(msg)
-
-
-def  process_attributes(attributes: dict, node: Node) -> None:
-    '''
-    Evaluates node attributes for rule compliance.
-
-    Iterates through the dict of attribute rules and evaluates whether
-    the node instance complies with the rule.
-
-    Args:
-        attributes: dict of rule attributes
-        node: Node instance to be evaluated
-
-    Returns:
-        None
-
-    Raises:
-        MetapypeRuleError: Illegal attribute or missing required attribute
-    '''
-    for attribute in attributes:
-        required = attributes[attribute]
-        if required and attribute not in node.attributes:
-            msg = '"{0}" is a required attribute of node "{1}"'.format(attribute, node.name)
-            raise MetapypeRuleError(msg)
-    for attribute in node.attributes:
-        if attribute not in attributes:
-            msg = '"{0}" is not a recognized attributes of node "{1}"'.format(attribute, node.name)
-            raise MetapypeRuleError(msg)
 
 
 # Rule function pointers
