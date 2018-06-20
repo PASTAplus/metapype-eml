@@ -1,12 +1,12 @@
 # Metapype for EML
 
-#### A light weight metadata generator for the Ecological Metadata Language
+#### A lightweight metadata generator for the Ecological Metadata Language
 
 <hr />
 
 Metapype is a Python 3 library for building, saving, and exporting scientific
 metadata using a flexible metadata content model in a hierarchical tree-like
-structure. Metapye only provides the primitives (as a Python application
+structure. Metapype only provides the primitives (as a Python application
 programmable interface) for operating on metadata; it is expected that client
 applications will use the Metapype API to build more robust and user friendly
 applications.
@@ -27,7 +27,7 @@ The metadata content model is designed as a hierarchical directed graph with a
 root node that spans the tree's children using directional links; similarly,
 each child node contains a reverse link to its parent (or root) node. Only the
 root node may be without a parent link. Node links for either parent or children
-are constructed of the nodes respective address in memory. Nodes represent the
+are constructed of the node's respective address in memory. Nodes represent the
 primary characteristics of their corresponding XML schema elements, including
 attributes, content, and children. Node instances must be generated with at
 least the corresponding "name" as found in the schema for binding to the
@@ -52,7 +52,7 @@ enforces the presence of XML attributes, content requirements, and if a
 "complex" XML element is being modeled, the sequence or choice of descendant
 elements, including descendant cardinality (descendant elements are
 represented as children in the metadata content model). Rules do not support
-all XML schema constructs (e.g., groups or all). Rules can, howver, enforce
+all XML schema constructs (e.g., groups or all). Rules can, however, enforce
 constraints or practices that fall outside of the XML schema.
 
 Rules are divided into three parts: 1) zero or more node specific constraints,
@@ -77,7 +77,7 @@ Python list. This data structure is a "list-of-lists": the outer list
 specifies the sequence in which children may occur, while the inner list(s)
 specifies what child node (or children, if a choice) may occur at the current
 sequence location. The cardinality (i.e., minimum and maximum occurrence) of
-each child node(s) is always set to the last two positions of the list,
+each child node is always set to the last two positions of the list,
 thereby making the values accessible through list slicing (i.e., `rule[-2:]`).
 The "list-of-lists" data structure is passed to a validating function, called
 `rules.process_children`, that iterates through both the rule-based list and the
@@ -94,9 +94,9 @@ names are the "keys" and their cardinality (i.e., optional or required) the
 the attributes of the node instance are checked against those of the rule's
 attribute dictionary using a function called `rules.process_attributes`. Errors
 during this step may result from the presence of illegal attributes or
-attributes that are required, but missing from the node. The literal value of
+attributes that are required, but missing from the node. The literal value
 of node attributes are not evaluated during this validation phase,
-but can be codified as a node specific constraint described earlier (see
+but can be codified as a node-specific constraint described earlier (see
 following example).
 
 Rule functions implicitly return `None` unless an exception occurs during the
@@ -131,7 +131,7 @@ def access_rule(node: Node):
 ```
 
 This `access_rule` example demonstrates the use of all three rule sections: 1)
-The node specific constraint validates the value of a specific node attribute.
+The node-specific constraint validates the value of a specific node attribute.
 In this case, the `order` attribute, if defined, must have a value of either
 `allowFirst` or `denyFirst` only. 2) The descendant children section defines a
 single node choice of either an `allow` or `deny` child, along with
@@ -220,7 +220,7 @@ if __name__ == "__main__":
 
 In the above example, the "eml" node is created and used as the anchor node for the root of the model tree. Sub-element descendant nodes are created and then added to higher-level nodes as children. Although this example is quite small, it does produce metadata that conforms to EML 2.1.1 standard.
 
-Metapype can convert a model instance tree to either EML specific *XML* or to
+Metapype can convert a model instance tree to either EML-specific *XML* or to
 *JSON* Unicode strings by using either the `export.to_xml` or `io.to_json`
 functions, respectively. The string value can then be saved directly to the file
 system or passed to other functions for additional processing. Metapype can also
