@@ -37,7 +37,8 @@ getters.
 <p align="center"><img src="https://raw.githubusercontent.com/PASTAplus/metapype-eml/master/docs/node.png" /></p>
 
 A complete and compliant EML 2.1.1 metadata content model tree (albeit not too
-informative) is found in the following diagram:
+informative) is found in the following diagram (for those familiar with UML,
+these class diagrams actually represent class instances):
 
 <p align="center"><img src="https://raw.githubusercontent.com/PASTAplus/metapype-eml/master/docs/eml_model.png"/></p>
 
@@ -57,10 +58,10 @@ constraints or practices that fall outside of the XML schema.
 
 Rules are divided into three parts: 1) zero or more node specific constraints,
 such as data type or enumerations requirements (note that constraints do not
-have to be XML schema dependent); 2) an ordered list of allowable descendant
-nodes and their corresponding cardinality; and 3) an non-ordered list of
-allowable attributes and their corresponding cardinality (optional or
-required).
+have to be XML schema dependent); 2) an non-ordered list of allowable
+attributes and their corresponding cardinality (optional or required); and 3)
+an ordered list of allowable descendant nodes and their corresponding
+cardinality;
 
 Node specific constraints, if any, are written as Python conditional
 statements (e.g., `if`, `else`, or `elif`) and provide a "fail fast" method
@@ -70,6 +71,19 @@ encode more qualitative assessments, such as whether the content complies with
 community best practices. To satisfy complex situations, conditional
 statements may be chained together for evaluating multiple or different
 requirements.
+
+The rule section for node attributes (node attributes are equivalent to
+attributes specified in the XML schema) is the last part of the rule function.
+Allowable attributes are represented as a Python dictionary, where attribute
+names are the "keys" and their cardinality (i.e., optional or required) the
+"values". Similar to the validating function found for descendant children,
+the attributes of the node instance are checked against those of the rule's
+attribute dictionary using a function called `rules.process_attributes`. Errors
+during this step may result from the presence of illegal attributes or
+attributes that are required, but missing from the node. The literal value
+of node attributes are not evaluated during this validation phase,
+but can be codified as a node-specific constraint described earlier (see
+example below).
 
 The rule section for descendant children (children correspond to sub-elements
 or sub-trees declared in "complex" XML elements) is declared as a nested
@@ -85,20 +99,6 @@ list of children from the node instance to evaluate compliance as specified in
 the given rule. Compliance failure at this point indicates that the node
 contains illegal children, children occurring in the wrong sequence, or
 children occurring too few or too many times (a cardinality violation).
-
-The rule section for node attributes (node attributes are equivalent to
-attributes specified in the XML schema) is the last part of the rule function.
-Allowable attributes are represented as a Python dictionary, where attribute
-names are the "keys" and their cardinality (i.e., optional or required) the
-"values". Similar to the validating function found for descendant children,
-the attributes of the node instance are checked against those of the rule's
-attribute dictionary using a function called `rules.process_attributes`. Errors
-during this step may result from the presence of illegal attributes or
-attributes that are required, but missing from the node. The literal value
-of node attributes are not evaluated during this validation phase,
-but can be codified as a node-specific constraint described earlier (see
-following example).
-
 Rule functions implicitly return `None` unless an exception occurs during the
 evaluation process; exceptions are of the class `exceptions.MetapypeRuleError`.
 
@@ -113,12 +113,6 @@ def access_rule(node: Node):
             msg = '"{0}:order" attribute must be one of "{1}"'.format(node.name, allowed)
             raise MetapypeRuleError(msg)
 
-    # Children rule section
-    children = [
-        ['allow', 'deny', 1, INFINITY]
-    ]
-    process_children(children, node)
-
     # Attribute rule section
     attributes = {
         'id': OPTIONAL,
@@ -128,6 +122,12 @@ def access_rule(node: Node):
         'authSystem': REQUIRED
     }
     process_attributes(attributes, node)
+
+    # Children rule section
+    children = [
+        ['allow', 'deny', 1, INFINITY]
+    ]
+    process_children(children, node)
 ```
 
 This `access_rule` example demonstrates the use of all three rule sections: 1)
