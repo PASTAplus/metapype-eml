@@ -11,8 +11,6 @@
 :Created:
     5/15/18
 """
-import uuid
-
 import daiquiri
 
 
@@ -30,7 +28,6 @@ class Node(object):
     '''
 
     def __init__(self, name: str, parent=None, content: str=None):
-        self._node_id = uuid.uuid4().hex # Random and unique node identifier
         self._name = name
         self._parent = parent
         self._content = content
@@ -39,7 +36,7 @@ class Node(object):
 
     @property
     def node_id(self):
-        return self._node_id
+        return id(self)
 
     @property
     def name(self):
