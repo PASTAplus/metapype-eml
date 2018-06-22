@@ -11,28 +11,33 @@ programmable interface) for operating on metadata; it is expected that client
 applications will use the Metapype API to build more robust and user friendly
 applications.
 
-This version of Metapype is designed to reflect the content
-structure of the Ecological Metadata Lanaguage (EML) XML schema, but is not
-locked into a specific version of EML.
+This version of Metapype is designed to reflect the content structure of the
+Ecological Metadata Lanaguage (EML) XML schema; it is not, however, locked
+into a specific version of EML. As such, Metapype can support multiple
+versions of metadata standards.
 
-Metapype is divided into a metadata content model and a set of conditional rules
-that enforce model compliance to a specific metadata standard. The content model
-is fully independent of the compliance rules, but cannot perform node or
-tree validation without the rules; as such, they must operate together to serve
-as a metadata generator.
+Metapype is divided into a metadata content model and a set of validation
+rules that enforce model compliance to a specific metadata standard, including
+its version. Compliance only implies that the metadata model conforms to the
+syntactical requirements of the metadata standard, but not necessarily to
+semantic requirements, like adherence to a particular controlled vocabulary
+for keywords or requiring additional descriptive content within the model when
+the standard does not require it. As an extension to the validation component
+of Metapype, there is also an evaluation process that ensures the model
+conforms to practices and requirements beyond the metadata standard.
 
 #### Metadata Content Model
 
-The metadata content model is designed as a hierarchical directed graph with a
-root node that spans the tree's children using directional links; similarly,
-each child node contains a reverse link to its parent (or root) node. Only the
-root node may be without a parent link. Node links for either parent or children
-are constructed of the node's respective address in memory. Nodes represent the
-primary characteristics of their corresponding XML schema elements, including
-attributes, content, and children. Node instances must be generated with at
-least the corresponding "name" as found in the schema for binding to the
-EML rule set\*. All other node attributes may be accessed through setters and
-getters.
+The metadata content model is designed as a hierarchical directed graph (e.g.,
+tree) with a root node that spans the tree's children using directional links;
+similarly, each child node contains a reverse link to its parent (or root)
+node. Only the root node may be without a parent link. Node links for either
+parent or children are constructed of the node's respective address in memory.
+Nodes represent the primary characteristics of their corresponding XML schema
+elements, including attributes, content, and children. Node instances must be
+generated with at least the corresponding "name" as found in the schema for
+binding to the EML rule set\*. All other node attributes may be accessed
+through setters and getters.
 
 <p align="center"><img src="https://raw.githubusercontent.com/PASTAplus/metapype-eml/master/docs/node.png" /></p>
 
@@ -42,9 +47,18 @@ these class diagrams actually represent class instances):
 
 <p align="center"><img src="https://raw.githubusercontent.com/PASTAplus/metapype-eml/master/docs/eml_model.png"/></p>
 
-#### Metadata Standard Compliance Rules
+#### Metadata Standard Validation Rules
 
-A metadata standard compliance rule is a codified set of constraints that
+Metadata standard validation is critical to ensure that the working model
+complies with all requirements and constraints declared within the metadata
+standard. A valid metadata content model implies that every node of the tree
+complies with the syntax of the metadata standard being modeled (it is worth
+noting at this point that a valid model does not necessarily mean the model
+contains useful information). To perform model validation, Metapype processes
+the model through a series of validation rules. Node validation failure
+results in critical exception.
+
+A metadata standard validation rule is a codified set of constraints that
 follow the same (or similar) requirements that are declared within the
 corresponding metadata standard. In Metapype for EML, in particular, these
 rules are written in accordance with the element definitions as declared in
