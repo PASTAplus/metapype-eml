@@ -15,7 +15,7 @@
 import daiquiri
 
 from metapype.eml2_1_1.exceptions import MetapypeRuleError
-import metapype.eml2_1_1.names as names
+from metapype.eml2_1_1 import names
 from metapype.model.node import Node
 
 
@@ -226,19 +226,19 @@ def value_rule(node: Node):
     process_attributes(attributes, node)
 
 
-# End of rules section
+#===================== End of rules section =====================
 
 
 def process_attributes(attributes: dict, node: Node) -> None:
     '''
-    Evaluates node attributes for rule compliance.
+    Validates node attributes for rule compliance.
 
-    Iterates through the dict of attribute rules and evaluates whether
+    Iterates through the dict of attribute rules and validates whether
     the node instance complies with the rule.
 
     Args:
         attributes: dict of rule attributes
-        node: Node instance to be evaluated
+        node: Node instance to be validates
 
     Returns:
         None
@@ -261,14 +261,14 @@ def process_attributes(attributes: dict, node: Node) -> None:
 
 def process_children(children: list, node: Node) -> None:
     '''
-    Evaluates node children for rule compliance.
+    Validates node children for rule compliance.
 
-    Iterates through the list children rules and evaluates whether
+    Iterates through the list children rules and validates whether
     the node instance complies with the rules.
 
     Args:
         children: list of lists containing children
-        node: Node instance to be evaluated
+        node: Node instance to be validated
 
     Returns:
         None
@@ -307,10 +307,10 @@ def process_children(children: list, node: Node) -> None:
 
 def node(node: Node) -> None:
     '''
-    Evaluates a given node for rule compliance.
+    Validates a given node for rule compliance.
 
     Args:
-        node: Node instance to be evaluated
+        node: Node instance to be validated
 
     Returns:
         None
@@ -327,11 +327,11 @@ def node(node: Node) -> None:
 
 def tree(root: Node) -> None:
     '''
-    Recursively walks from the root node and evaluates
+    Recursively walks from the root node and validates
     each child node for rule compliance.
 
     Args:
-        root: Node instance of root for evaluation
+        root: Node instance of root for validates
 
     Returns:
         None
