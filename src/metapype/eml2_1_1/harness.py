@@ -16,9 +16,10 @@ import json
 import daiquiri
 
 from metapype.eml2_1_1.exceptions import MetapypeRuleError
-import metapype.eml2_1_1.export
-import metapype.eml2_1_1.names as names
-import metapype.eml2_1_1.validate as validate
+from metapype.eml2_1_1 import export
+from metapype.eml2_1_1 import evaluate
+from metapype.eml2_1_1 import names
+from metapype.eml2_1_1 import validate
 from metapype.model.node import Node
 from metapype.model import io
 
@@ -71,6 +72,10 @@ def main():
     individualName_contact = Node(names.INDIVIDUALNAME, parent=contact)
     contact.add_child(individualName_contact)
 
+    givenName_contact = Node(names.GIVENNAME, parent=individualName_contact)
+    givenName_contact.content = 'Chase'
+    individualName_contact.add_child(givenName_contact)
+
     surName_contact = Node(names.SURNAME, parent=individualName_contact)
     surName_contact.content = 'Gaucho'
     individualName_contact.add_child(surName_contact)
@@ -80,25 +85,30 @@ def main():
     except  MetapypeRuleError as e:
         logger.error(e)
 
-    json_str = io.to_json(eml)
-    print(json_str)
-    with open('test_eml.json', 'w') as f:
-        f.write(json_str)
+    evaluation = []
+    evaluate.tree(eml, evaluation)
+    for e in evaluation:
+        print(e)
 
-    m = json.loads(json_str)
-    node = io.from_json(m)
-
-    io.graph(node, 0)
-
-    try:
-        validate.tree(node)
-    except  MetapypeRuleError as e:
-        logger.error(e)
-
-    xml = metapype.eml2_1_1.export.to_xml(node)
-    print(xml)
-    with open('test_eml.xml', 'w') as f:
-        f.write(xml)
+    # json_str = io.to_json(eml)
+    # print(json_str)
+    # with open('test_eml.json', 'w') as f:
+    #     f.write(json_str)
+    #
+    # m = json.loads(json_str)
+    # node = io.from_json(m)
+    #
+    io.graph(eml, 0)
+    #
+    # try:
+    #     validate.tree(node)
+    # except  MetapypeRuleError as e:
+    #     logger.error(e)
+    #
+    # xml = export.to_xml(node)
+    # print(xml)
+    # with open('test_eml.xml', 'w') as f:
+    #     f.write(xml)
 
 
     return 0
