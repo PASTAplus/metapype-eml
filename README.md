@@ -28,106 +28,100 @@ conforms to practices and requirements beyond the metadata standard.
 
 #### Metadata Content Model
 
-The metadata content model is designed as a hierarchical directed graph (e.g.,
-tree) with a root node that spans the tree's children using directional links;
-similarly, each child node contains a reverse link to its parent (or root)
-node. Only the root node may be without a parent link. Node links for either
+The metadata content model is designed as an [ordered
+tree](https://en.wikipedia.org/wiki/Tree_(graph_theory)#Ordered_tree). Node
+children follow a rule-based order and can be reached via directed edges from
+their parent node. Each child node can have only one parent, which is
+represented by a single reverse edge from the child to its parent; only the
+root node may be without a "true" parent.
+
+Metapype uses a `Node` class for modeling elements of the EML XML schema. Node
+instances must be constructed with a `name` parameter, which corresponds to
+the element name as declared in the schema\*. Node edges for either
 parent or children are constructed of the node's respective address in memory.
-Nodes represent the primary characteristics of their corresponding XML schema
-elements, including attributes, content, and children. Node instances must be
-generated with at least the corresponding "name" as found in the schema for
-binding to the EML rule set\*. All other node attributes may be accessed
-through setters and getters.
+Node instances capture the primary characteristics of the corresponding
+EML element being modeled, including attributes, content, and children.
+Attributes of a node instance may be accessed through setters and getters (see
+the Node API).
 
 <p align="center"><img src="https://raw.githubusercontent.com/PASTAplus/metapype-eml/master/docs/node.png" /></p>
 
-A complete and compliant EML 2.1.1 metadata content model tree (albeit not too
-informative) is found in the following diagram (for those familiar with UML,
-these class diagrams actually represent class instances):
+A compliant EML 2.1.1 metadata content model tree is found in the following
+diagram (this diagram represents an instance of a Metapype tree model):
 
 <p align="center"><img src="https://raw.githubusercontent.com/PASTAplus/metapype-eml/master/docs/eml_model.png"/></p>
 
-#### Metadata Standard Validation Rules
+#### Metadata Validation Rules
 
-Metadata standard validation is critical to ensure that the working model
-complies with all requirements and constraints declared within the metadata
-standard. A valid metadata content model implies that every node of the tree
-complies with the syntax of the metadata standard being modeled (it is worth
-noting at this point that a valid model does not necessarily mean the model
-contains useful information). To perform model validation, Metapype processes
-the model through a series of validation rules. Node validation failure
-results in critical exception.
+Metadata validation is critical to ensure that the working model complies with
+all requirements and constraints declared within the metadata standard, and in
+this case, the EML XML schema. A valid metadata content model implies that
+every node of the tree complies with the syntax of the metadata standard being
+modeled. Metapype can process the model instance through a series of
+validation rules to ensure compliance with the EML XML schema. A critical
+exception is raised if any node within the model fails validation during
+processing.
 
 A metadata standard validation rule is a codified set of constraints that
 follow the same (or similar) requirements that are declared within the
-corresponding metadata standard. In Metapype for EML, in particular, these
+corresponding metadata standard. In this version of Metapype (for EML), these
 rules are written in accordance with the element definitions as declared in
-the EML XML schema and are written as individual Python functions. Each rule
-enforces the presence of XML attributes, content requirements, and if a
+the EML XML schema and are written as unique Python functions. Each rule
+enforces content requirements, the presence of XML attributes, and if a
 "complex" XML element is being modeled, the sequence or choice of descendant
-elements, including descendant cardinality (descendant elements are
-represented as children in the metadata content model). Rules do not support
-all XML schema constructs (e.g., groups or all). Rules can, however, enforce
-constraints or practices that fall outside of the XML schema.
+elements, including descendant cardinality (rules do not, however, support
+all XML schema constructs such as `groups` or `all`). Rule functions implicitly
+return `None` unless an exception occurs during the evaluation process;
+exceptions are of the class `exceptions.MetapypeRuleError`.
 
-Rules are divided into three parts: 1) zero or more node specific constraints,
-such as data type or enumerations requirements (note that constraints do not
-have to be XML schema dependent); 2) an non-ordered list of allowable
-attributes and their corresponding cardinality (optional or required); and 3)
-an ordered list of allowable descendant nodes and their corresponding
-cardinality;
+Rules are divided into three parts for validating the components of an EML
+element: 1) element specific constraints, 2) attributes, and 3) and sub-
+elements, if present.
 
-Node specific constraints, if any, are written as Python conditional
+Element specific constraints, if any, are written as Python conditional
 statements (e.g., `if`, `else`, or `elif`) and provide a "fail fast" method
-for node validation. Node specific constraints are best used for enforcing
-content data types or enumerations as declared in the XML schema, but they can also
-encode more qualitative assessments, such as whether the content complies with
-community best practices. To satisfy complex situations, conditional
-statements may be chained together for evaluating multiple or different
-requirements.
+for node validation. Element pecific constraints are best used for enforcing
+content data types, enumerations, or other detailed constraint as declared in
+the XML schema. Conditional statements may be chained together for validating
+multiple or different contraints imposed by the correspdoning element.
 
-The rule section for node attributes (node attributes are equivalent to
-attributes specified in the XML schema) is the last part of the rule function.
-Allowable attributes are represented as a Python dictionary, where attribute
-names are the "keys" and their cardinality (i.e., optional or required) the
-"values". Similar to the validating function found for descendant children,
-the attributes of the node instance are checked against those of the rule's
-attribute dictionary using a function called `rules.process_attributes`. Errors
-during this step may result from the presence of illegal attributes or
-attributes that are required, but missing from the node. The literal value
-of node attributes are not evaluated during this validation phase,
-but can be codified as a node-specific constraint described earlier (see
-example below).
+The rule section for attributes is represented as a Python dictionary, where
+attribute names are the "keys" and their optional or required status the
+"values". Attributes, as defined in a node instance, are validated against
+those of the rule's attribute dictionary using a function called
+`validate.process_attributes`. Errors during this step may result from the
+presence of illegal attributes or attributes that are required, but missing
+from the node. The literal value of node attributes are not evaluated during
+this validation phase, but can be codified as a node-specific constraint
+described earlier (see example below).
 
-The rule section for descendant children (children correspond to sub-elements
-or sub-trees declared in "complex" XML elements) is declared as a nested
-Python list. This data structure is a "list-of-lists": the outer list
-specifies the sequence in which children may occur, while the inner list(s)
-specifies what child node (or children, if a choice) may occur at the current
-sequence location. The cardinality (i.e., minimum and maximum occurrence) of
-each child node is always set to the last two positions of the list,
-thereby making the values accessible through list slicing (i.e., `rule[-2:]`).
-The "list-of-lists" data structure is passed to a validating function, called
-`rules.process_children`, that iterates through both the rule-based list and the
-list of children from the node instance to evaluate compliance as specified in
-the given rule. Compliance failure at this point indicates that the node
-contains illegal children, children occurring in the wrong sequence, or
-children occurring too few or too many times (a cardinality violation).
-Rule functions implicitly return `None` unless an exception occurs during the
-evaluation process; exceptions are of the class `exceptions.MetapypeRuleError`.
+The rule section for sub-element validation is declared as a nested Python
+list that contains the children of the node instance. This data structure is a
+"list-of-lists": the outer list specifies the sequence in which children may
+occur, while the inner list(s) specifies what child node (or children, if a
+choice) may occur at the current location in the sequence. The cardinality
+(i.e., minimum and maximum occurrence) of each child node is always set to the
+last two positions of the inner list, thereby making the values accessible
+through list slicing (i.e., `rule[-2:]`). The "list-of-lists" data structure
+is passed to a function, called `validate.process_children`, that
+iterates through both the rule-based list and the list of children from the
+node instance to validate compliance as specified in the given rule.
+Validation failure at this point indicates that the node contains illegal
+children, children occurring in the wrong sequence, or children occurring too
+few or too many times (a cardinality violation).
 
 The following is an example of the "access" rule as codified in Python:
 
 ```Python
 def access_rule(node: Node):
-    # Node specific constraint section
+    # Specific constraint section
     if 'order' in node.attributes:
         allowed = ['allowFirst', 'denyFirst']
         if node.attributes['order'] not in allowed:
             msg = '"{0}:order" attribute must be one of "{1}"'.format(node.name, allowed)
             raise MetapypeRuleError(msg)
 
-    # Attribute rule section
+    # Attribute section
     attributes = {
         'id': OPTIONAL,
         'system': OPTIONAL,
@@ -137,7 +131,7 @@ def access_rule(node: Node):
     }
     process_attributes(attributes, node)
 
-    # Children rule section
+    # Children section
     children = [
         ['allow', 'deny', 1, INFINITY]
     ]
@@ -147,23 +141,26 @@ def access_rule(node: Node):
 This `access_rule` example demonstrates the use of all three rule sections: 1)
 The node-specific constraint validates the value of a specific node attribute.
 In this case, the `order` attribute, if defined, must have a value of either
-`allowFirst` or `denyFirst` only. 2) The descendant children section defines a
-single node choice of either an `allow` or `deny` child, along with
-the cardinality of 1 to infinity. And finally, 3) the allowable attributes
-rule defines the set of acceptable attributes to be `id`, `system`, `order`,
-and `authSystem`; all defined attributes are *optional* with the exception of
-`authSystem`, which is *required*.
+`allowFirst` or `denyFirst` only. 2) The allowable attributes rule defines the
+set of acceptable attributes to be `id`, `system`, `order`, and `authSystem`;
+all defined attributes are *optional* with the exception of `authSystem`,
+which is *required*. And finally, 3) the descendant children section defines a
+single node choice of either an `allow` or `deny` child, along with the
+cardinality of 1 to infinity.
 
 ### Using Metapype for EML
 
-The Metapype Python API can be used to generate metadata that is compliant with
-the Ecological Metadata Language standard. Using Metapype for this purpose is
-typically separated into two steps: first, build a Metapype model instance
-beginning wtih an "eml" node as the *root* node, followed by validating the
-model instance to ensure it complies with the EML standard. Validation can be
-performed on a single node using the `validate.node` function or on an entire
-model tree beginning with a specified *root* node using the `validate.tree`
-function. The following code example demonstrates these two steps:
+The Metapype Python API can be used to generate metadata that is compliant
+with the Ecological Metadata Language standard. Using Metapype for this
+purpose is typically separated into two steps: first, build a Metapype model
+instance beginning wtih an "eml" node as the *root* node, followed by
+validating the model instance to ensure it complies with the EML standard.
+Validation can be performed on a single node using the `validate.node`
+function or on an entire model tree beginning with a specified *root* node
+using the `validate.tree` function (to validate for EML compliance, the model
+root node as defined by  the "eml" name should be passed).
+
+The following code example demonstrates these two steps:
 
 ```Python
 from metapype.eml2_1_1.exceptions import MetapypeRuleError
