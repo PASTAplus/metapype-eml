@@ -37,12 +37,12 @@ root node may be without a "true" parent.
 
 Metapype uses a `Node` class for modeling elements of the EML XML schema. Node
 instances must be constructed with a `name` parameter, which corresponds to
-the element name as declared in the schema\*. Node edges for either
-parent or children are constructed of the node's respective address in memory.
-Node instances capture the primary characteristics of the corresponding
-EML element being modeled, including attributes, content, and children.
-Attributes of a node instance may be accessed through setters and getters (see
-the Node API).
+the element name as declared in the schema\*. Node edges for either parent or
+children are constructed of the node's respective address in memory. Node
+instances capture the primary characteristics of the corresponding EML element
+being modeled, including XML attributes, content, and sub-elements of complex
+types. Attributes of a node instance may be accessed through setters and
+getters (see the Node API).
 
 <p align="center"><img src="https://raw.githubusercontent.com/PASTAplus/metapype-eml/master/docs/node.png" /></p>
 
