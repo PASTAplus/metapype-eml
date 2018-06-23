@@ -1,6 +1,6 @@
 @startuml
 
-class node {
+class Node {
     name: str [1]
     attributes: {str: object} [0..*]
     content: str [0..1]
