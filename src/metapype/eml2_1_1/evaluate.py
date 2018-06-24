@@ -34,8 +34,8 @@ def _individual_name_rule(node: Node) -> str:
     if givename and surname:
         evaluation = PASS
     else:
-        evaluation = 'Should have both "{0}" and "{1}"'.format(names.GIVENNAME,
-                                                               names.SURNAME)
+        _ = 'Should have both a "{0}" and "{1}"'
+        evaluation = _.format(names.GIVENNAME, names.SURNAME)
     return evaluation
 
 
@@ -45,7 +45,9 @@ def _title_rule(node: Node) -> str:
     if title is not None:
         length = len(title.split(' '))
         if length < 10:
-            evaluation = 'Length of title "{0}" too short'.format(title)
+            _ = ('"{0}" is too short, should '
+                 'have at least 10 words')
+            evaluation = _.format(title)
     return evaluation
 
 
@@ -64,13 +66,11 @@ def node(node: Node):
     '''
     evaluation = None
     if node.name in rules:
-        evaluation = {}
-        _ = '{0}: {1}'.format(node.name, rules[node.name](node))
-        evaluation[node.node_id] = _
+        evaluation = '({0}) {1}'.format(node.name, rules[node.name](node))
     return evaluation
 
 
-def tree(root: Node, e: list):
+def tree(root: Node, e: dict):
     '''
     Recursively walks from the root node and evaluates
     each child node for rule compliance.
@@ -83,7 +83,7 @@ def tree(root: Node, e: list):
     '''
     evaluation = node(root)
     if evaluation is not None:
-        e.append(evaluation)
+        e[root.node_id] = evaluation
     for child in root.children:
         tree(child, e)
 
