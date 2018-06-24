@@ -14,15 +14,32 @@
 import daiquiri
 
 from metapype.eml2_1_1.exceptions import MetapypeRuleError
-from  metapype.eml2_1_1 import names
+from metapype.eml2_1_1 import names
 from metapype.model.node import Node
-
 
 logger = daiquiri.getLogger('evaluate: ' + __name__)
 
 PASS = 'PASS'
 
-def title_rule(node: Node) -> str:
+
+# ==================== Begin of rules section ====================
+
+
+def _individual_name_rule(node: Node) -> str:
+    givename = False
+    surname = False
+    for child in node.children:
+        if child.name == names.GIVENNAME: givename = True
+        if child.name == names.SURNAME: surname = True
+    if givename and surname:
+        evaluation = PASS
+    else:
+        evaluation = 'Should have both "{0}" and "{1}"'.format(names.GIVENNAME,
+                                                               names.SURNAME)
+    return evaluation
+
+
+def _title_rule(node: Node) -> str:
     evaluation = PASS
     title = node.content
     if title is not None:
@@ -32,20 +49,7 @@ def title_rule(node: Node) -> str:
     return evaluation
 
 
-def individual_name_rule(node: Node) -> str:
-    givename = False
-    surname = False
-    for child in node.children:
-        if child.name == names.GIVENNAME: givename = True
-        if child.name == names.SURNAME: surname = True
-    if givename and surname:
-        evaluation = PASS
-    else:
-        evaluation = 'Should have both "{0}" and "{1}"'.format(names.GIVENNAME, names.SURNAME)
-    return evaluation
-
-
-#===================== End of rules section =====================
+# ===================== End of rules section =====================
 
 
 def node(node: Node):
@@ -84,10 +88,8 @@ def tree(root: Node, e: list):
         tree(child, e)
 
 
-
-
 # Rule function pointers
 rules = {
-    names.INDIVIDUALNAME: individual_name_rule,
-    names.TITLE: title_rule,
+    names.INDIVIDUALNAME: _individual_name_rule,
+    names.TITLE: _title_rule,
 }

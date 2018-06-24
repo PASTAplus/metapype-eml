@@ -26,7 +26,9 @@ OPTIONAL = False
 INFINITY = None
 
 
-def access_rule(node: Node):
+#==================== Begin of rules section ====================
+
+def _access_rule(node: Node):
     if 'order' in node.attributes:
         allowed = ['allowFirst', 'denyFirst']
         if node.attributes['order'] not in allowed:
@@ -47,7 +49,7 @@ def access_rule(node: Node):
     _children(children, node)
 
 
-def additional_metadata_rule(node: Node):
+def _additional_metadata_rule(node: Node):
     attributes = {
         'id': OPTIONAL
     }
@@ -59,7 +61,7 @@ def additional_metadata_rule(node: Node):
     _children(children, node)
 
 
-def allow_rule(node: Node):
+def _allow_rule(node: Node):
     children = [
         ['principal', 1, INFINITY],
         ['permission', 1, INFINITY]
@@ -67,7 +69,7 @@ def allow_rule(node: Node):
     _children(children, node)
 
 
-def any_name_rule(node: Node):
+def _any_name_rule(node: Node):
     '''
     Generic rule for names.
 
@@ -101,11 +103,11 @@ def any_name_rule(node: Node):
     _children(children, node)
 
 
-def dataset_rule(node: Node):
+def _dataset_rule(node: Node):
     pass
 
 
-def deny_rule(node: Node):
+def _deny_rule(node: Node):
     children = [
         ['principal', 1, INFINITY],
         ['permission', 1, INFINITY]
@@ -113,7 +115,7 @@ def deny_rule(node: Node):
     _children(children, node)
 
 
-def eml_rule(node: Node):
+def _eml_rule(node: Node):
     attributes = {
         'packageId': REQUIRED,
         'system': REQUIRED,
@@ -129,7 +131,7 @@ def eml_rule(node: Node):
     _children(children, node)
 
 
-def individual_name_rule(node: Node):
+def _individual_name_rule(node: Node):
     children = [
         ['salutation', 0, INFINITY],
         ['givenName', 0, INFINITY],
@@ -138,7 +140,7 @@ def individual_name_rule(node: Node):
     _children(children, node)
 
 
-def metadata_rule(node: Node):
+def _metadata_rule(node: Node):
     if len(node.children) != 0:
         msg = 'Node "{0}" should not have children'.format(node.name)
         raise MetapypeRuleError(msg)
@@ -148,7 +150,7 @@ def metadata_rule(node: Node):
         raise MetapypeRuleError(msg)
 
 
-def permission_rule(node: Node):
+def _permission_rule(node: Node):
     if len(node.children) != 0:
         msg = 'Node "{0}" should not have children'.format(node.name)
         raise MetapypeRuleError(msg)
@@ -159,7 +161,7 @@ def permission_rule(node: Node):
         raise MetapypeRuleError(msg)
 
 
-def principal_rule(node: Node):
+def _principal_rule(node: Node):
     if len(node.children) != 0:
         msg = 'Node "{0}" should not have children'.format(node.name)
         raise MetapypeRuleError(msg)
@@ -169,7 +171,7 @@ def principal_rule(node: Node):
         raise MetapypeRuleError(msg)
 
 
-def responsible_party_rule(node: Node) -> None:
+def _responsible_party_rule(node: Node) -> None:
     '''
     Generic rule for any responsibleParty type of metadata like creator or
     contact.
@@ -197,7 +199,7 @@ def responsible_party_rule(node: Node) -> None:
     _children(children, node)
 
 
-def title_rule(node: Node):
+def _title_rule(node: Node):
     if node.content is not None and type(node.content) is not str:
         msg = 'Node "{0}" content should be type string, not "{1}"'.format(
             node.name, type(node.content))
@@ -212,7 +214,7 @@ def title_rule(node: Node):
     _children(children, node)
 
 
-def value_rule(node: Node):
+def _value_rule(node: Node):
     if node.content is None:
         msg = 'Node "{0}" content cannot be empty'.format(node.name)
         raise MetapypeRuleError(msg)
@@ -343,23 +345,23 @@ def tree(root: Node) -> None:
 
 # Rule function pointers
 rules = {
-    names.ACCESS: access_rule,
-    names.ADDITIONALMETADATA: additional_metadata_rule,
-    names.ALLOW: allow_rule,
-    names.CONTACT: responsible_party_rule,
-    names.CREATOR: responsible_party_rule,
-    names.DATASET: dataset_rule,
-    names.DENY: deny_rule,
-    names.EML: eml_rule,
-    names.GIVENNAME: any_name_rule,
-    names.INDIVIDUALNAME: individual_name_rule,
-    names.METADATA: metadata_rule,
-    names.ORGANIZATIONNAME: any_name_rule,
-    names.PERMISSION: permission_rule,
-    names.POSITIONNAME: any_name_rule,
-    names.PRINCIPAL: principal_rule,
-    names.SALUTATION: any_name_rule,
-    names.SURNAME: any_name_rule,
-    names.TITLE: title_rule,
-    names.VALUE: value_rule,
+    names.ACCESS: _access_rule,
+    names.ADDITIONALMETADATA: _additional_metadata_rule,
+    names.ALLOW: _allow_rule,
+    names.CONTACT: _responsible_party_rule,
+    names.CREATOR: _responsible_party_rule,
+    names.DATASET: _dataset_rule,
+    names.DENY: _deny_rule,
+    names.EML: _eml_rule,
+    names.GIVENNAME: _any_name_rule,
+    names.INDIVIDUALNAME: _individual_name_rule,
+    names.METADATA: _metadata_rule,
+    names.ORGANIZATIONNAME: _any_name_rule,
+    names.PERMISSION: _permission_rule,
+    names.POSITIONNAME: _any_name_rule,
+    names.PRINCIPAL: _principal_rule,
+    names.SALUTATION: _any_name_rule,
+    names.SURNAME: _any_name_rule,
+    names.TITLE: _title_rule,
+    names.VALUE: _value_rule,
 }
