@@ -148,6 +148,24 @@ which is *required*. And finally, 3) the sub-element children section defines a
 single node choice of either an `allow` or `deny` child, along with the
 cardinality of 1 to infinity.
 
+### Metadata Evaluation Rules
+
+Similar to the process used for validation of a model instance to the EML XML
+schema, Metapype also supports a process to *evaluate* a model instance
+against rules that are more semantic in nature. Evaluation rules differ from
+validation rules in that they do not result in an exception, but rather
+evaluate one or more nodes to somewhat "soft" requirements (e.g., the number
+of active words in a title or that an `individaulName` node has both `surName`
+**AND** `givenName` children, even though the EML XML schema does not require
+both) and only return information about the evaluation outcome for a node.
+And because evaluation rules do not have to test every node in the model
+instance, there can be fewer rules that need to be executed.
+
+Evaluation rules are generally written as Python conditional
+statements (e.g., `if`, `else`, or `elif`), but do not have to follow
+any typical pattern because of the wide difference in the constraints
+declared for various nodes.
+
 ### Using Metapype for EML
 
 The Metapype Python API can be used to generate metadata that is compliant
