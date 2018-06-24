@@ -40,23 +40,23 @@ def access_rule(node: Node):
         'order': OPTIONAL,
         'authSystem': REQUIRED
     }
-    process_attributes(attributes, node)
+    _attributes(attributes, node)
     children = [
         ['allow', 'deny', 1, INFINITY]
     ]
-    process_children(children, node)
+    _children(children, node)
 
 
 def additional_metadata_rule(node: Node):
     attributes = {
         'id': OPTIONAL
     }
-    process_attributes(attributes, node)
+    _attributes(attributes, node)
     children = [
         ['describes', 0, INFINITY],
         ['metadata', 1, 1]
     ]
-    process_children(children, node)
+    _children(children, node)
 
 
 def allow_rule(node: Node):
@@ -64,7 +64,7 @@ def allow_rule(node: Node):
         ['principal', 1, INFINITY],
         ['permission', 1, INFINITY]
     ]
-    process_children(children, node)
+    _children(children, node)
 
 
 def any_name_rule(node: Node):
@@ -94,11 +94,11 @@ def any_name_rule(node: Node):
     attributes = {
         'lang': OPTIONAL
     }
-    process_attributes(attributes, node)
+    _attributes(attributes, node)
     children = [
         ['value', 0, INFINITY]
     ]
-    process_children(children, node)
+    _children(children, node)
 
 
 def dataset_rule(node: Node):
@@ -110,7 +110,7 @@ def deny_rule(node: Node):
         ['principal', 1, INFINITY],
         ['permission', 1, INFINITY]
     ]
-    process_children(children, node)
+    _children(children, node)
 
 
 def eml_rule(node: Node):
@@ -120,13 +120,13 @@ def eml_rule(node: Node):
         'scope': OPTIONAL,
         'lang': OPTIONAL
     }
-    process_attributes(attributes, node)
+    _attributes(attributes, node)
     children = [
         ['access', 0, 1],
         ['dataset', 'citation', 'software', 'protocol', 1, 1],
         ['additionalMetadata', 0, INFINITY]
     ]
-    process_children(children, node)
+    _children(children, node)
 
 
 def individual_name_rule(node: Node):
@@ -135,7 +135,7 @@ def individual_name_rule(node: Node):
         ['givenName', 0, INFINITY],
         ['surName', 1, 1]
     ]
-    process_children(children, node)
+    _children(children, node)
 
 
 def metadata_rule(node: Node):
@@ -185,7 +185,7 @@ def responsible_party_rule(node: Node) -> None:
         'system': OPTIONAL,
         'scope': OPTIONAL
     }
-    process_attributes(attributes, node)
+    _attributes(attributes, node)
     children = [
         ['individualName', 'organizationName', 'positionName', 1, INFINITY],
         ['address', 0, INFINITY],
@@ -194,7 +194,7 @@ def responsible_party_rule(node: Node) -> None:
         ['onlineUrl', 0, INFINITY],
         ['userId', 0, INFINITY]
     ]
-    process_children(children, node)
+    _children(children, node)
 
 
 def title_rule(node: Node):
@@ -205,11 +205,11 @@ def title_rule(node: Node):
     attributes = {
         'lang': OPTIONAL
     }
-    process_attributes(attributes, node)
+    _attributes(attributes, node)
     children = [
         ['value', 0, INFINITY]
     ]
-    process_children(children, node)
+    _children(children, node)
 
 
 def value_rule(node: Node):
@@ -223,13 +223,13 @@ def value_rule(node: Node):
     attributes = {
         'xml:lang': REQUIRED,
     }
-    process_attributes(attributes, node)
+    _attributes(attributes, node)
 
 
 #===================== End of rules section =====================
 
 
-def process_attributes(attributes: dict, node: Node) -> None:
+def _attributes(attributes: dict, node: Node) -> None:
     '''
     Validates node attributes for rule compliance.
 
@@ -259,7 +259,7 @@ def process_attributes(attributes: dict, node: Node) -> None:
             raise MetapypeRuleError(msg)
 
 
-def process_children(children: list, node: Node) -> None:
+def _children(children: list, node: Node) -> None:
     '''
     Validates node children for rule compliance.
 
