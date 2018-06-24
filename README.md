@@ -12,7 +12,7 @@ applications will use the Metapype API to build more robust and user friendly
 applications.
 
 This version of Metapype is designed to reflect the content structure of the
-Ecological Metadata Lanaguage (EML) XML schema; it is not, however, locked
+Ecological Metadata Language (EML) XML schema; it is not, however, locked
 into a specific version of EML. As such, Metapype can support multiple
 versions of metadata standards.
 
@@ -58,7 +58,7 @@ all requirements and constraints declared within the metadata standard, and in
 this case, the EML XML schema. A valid metadata content model implies that
 every node of the tree complies with the syntax of the metadata standard being
 modeled. Metapype can process the model instance through a series of
-validation rules to ensure compliance with the EML XML schema. A critical
+*validation* rules to ensure compliance with the EML XML schema. A critical
 exception is raised if any node within the model fails validation during
 processing.
 
@@ -83,7 +83,7 @@ statements (e.g., `if`, `else`, or `elif`) and provide a "fail fast" method
 for node validation. Element specific constraints are best used for enforcing
 content data types, enumerations, or other detailed constraints declared in
 the XML schema. Conditional statements may be chained together for validating
-multiple or different contraints imposed by the correspdoning element.
+multiple or different constraints imposed by the corresponding element.
 
 The rule section for XML attributes is represented as a Python dictionary, where
 attribute names are the "keys" and their optional or required status the
@@ -161,17 +161,48 @@ both) and only return information about the evaluation outcome for a node.
 And because evaluation rules do not have to test every node in the model
 instance, there can be fewer rules that need to be executed.
 
-Evaluation rules are generally written as Python conditional
-statements (e.g., `if`, `else`, or `elif`), but do not have to follow
-any typical pattern because of the wide difference in the constraints
-declared for various nodes.
+Evaluation rules are written as Python conditional statements (e.g., `if`,
+`else`, or `elif`), but do not follow any typical pattern because of the wide
+difference in the constraints declared for various nodes. Evaluation rules
+simply return a Unicode string value with an explanation of the evaluation
+result, which could be the string `PASS` if the evaluation is acceptable or a
+recommendation for improving the node content. The user accessible function
+`evaluate.tree` requires an empty Python dictionary to be passed as a
+parameter. This dictionary is recursively populated with evaluation results
+from the `evaluate.node` function and assigned to the `node_id` key.
+
+As an example, the following evaluation rule inspects the title node:
+
+```Python
+def _title_rule(node: Node) -> str:
+    evaluation = PASS
+    title = node.content
+    if title is not None:
+        length = len(title.split(' '))
+        if length < 10:
+            _ = ('"{0}" is too short, should '
+                 'have at least 10 words')
+            evaluation = _.format(title)
+    return evaluation
+```
+
+The resulting dictionary from running the `evaluate.tree` function returns
+the following:
+
+```Text
+{
+    140101084713592: '(title) "Green sea turtle counts: Tortuga Island 20017" is too short, should have at least 10 words',
+    140101084713704: '(individualName) Should have both a "givenName" and "surName"', 140101084713872: '(individualName) PASS'
+}
+```
+
 
 ### Using Metapype for EML
 
 The Metapype Python API can be used to generate metadata that is compliant
 with the Ecological Metadata Language standard. Using Metapype for this
 purpose is typically separated into two steps: first, build a Metapype model
-instance beginning wtih an "eml" node as the *root* node, followed by
+instance beginning with an "eml" node as the *root* node, followed by
 validating the model instance to ensure it complies with the EML standard.
 Validation can be performed on a single node using the `validate.node`
 function or on an entire model tree beginning with a specified *root* node
