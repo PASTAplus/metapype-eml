@@ -192,7 +192,8 @@ the following:
 ```Text
 {
     140101084713592: '(title) "Green sea turtle counts: Tortuga Island 20017" is too short, should have at least 10 words',
-    140101084713704: '(individualName) Should have both a "givenName" and "surName"', 140101084713872: '(individualName) PASS'
+    140101084713704: '(individualName) Should have both a "givenName" and "surName"',
+    140101084713872: '(individualName) PASS'
 }
 ```
 
