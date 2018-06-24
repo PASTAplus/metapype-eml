@@ -85,10 +85,12 @@ def main():
     except  MetapypeRuleError as e:
         logger.error(e)
 
-    evaluation = []
+    evaluation = {}
     evaluate.tree(eml, evaluation)
     for e in evaluation:
-        print(e)
+        print('{0}: {1}'.format(e, evaluation[e]))
+
+    print(evaluation)
 
     # json_str = io.to_json(eml)
     # print(json_str)
