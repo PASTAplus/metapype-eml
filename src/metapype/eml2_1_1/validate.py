@@ -28,6 +28,37 @@ INFINITY = None
 
 #==================== Begin of rules section ====================
 
+class accessRule(object):
+
+    def _constraints(node:Node):
+        if 'order' in node.attributes:
+            allowed = ['allowFirst', 'denyFirst']
+            if node.attributes['order'] not in allowed:
+                msg = '"{0}:order" attribute must be one of "{1}"'.format(
+                    node.name,
+                    allowed)
+                raise MetapypeRuleError(msg)
+
+    attributes = {
+        'id': OPTIONAL,
+        'system': OPTIONAL,
+        'scope': OPTIONAL,
+        'order': OPTIONAL,
+        'authSystem': REQUIRED
+    }
+
+    children = [
+        ['allow', 'deny', 1, INFINITY]
+    ]
+
+    @staticmethod
+    def validate_rule(node:Node):
+        accessRule._constraints(node)
+        _attributes(attributes=accessRule.attributes, node=node)
+        _children(children=accessRule.children, node=node)
+
+
+
 def _access_rule(node: Node):
     if 'order' in node.attributes:
         allowed = ['allowFirst', 'denyFirst']
@@ -345,7 +376,7 @@ def tree(root: Node) -> None:
 
 # Rule function pointers
 rules = {
-    names.ACCESS: _access_rule,
+    names.ACCESS: accessRule.validate_rule,
     names.ADDITIONALMETADATA: _additional_metadata_rule,
     names.ALLOW: _allow_rule,
     names.CONTACT: _responsible_party_rule,
