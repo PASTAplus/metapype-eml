@@ -25,71 +25,72 @@ REQUIRED = True
 OPTIONAL = False
 INFINITY = None
 
+TYPE_NONE = None
+TYPE_STR = 'str'
+TYPE_INT = 'int'
+TYPE_FLOAT = 'float'
+TYPE_DATETIME = 'datetime'
+
 
 #==================== Begin of rules section ====================
 
-class accessRule(object):
+class rule(object):
+    attributes = dict()
+    children = list()
 
-    def _constraints(node:Node):
-        if 'order' in node.attributes:
-            allowed = ['allowFirst', 'denyFirst']
-            if node.attributes['order'] not in allowed:
-                msg = '"{0}:order" attribute must be one of "{1}"'.format(
-                    node.name,
-                    allowed)
-                raise MetapypeRuleError(msg)
+    @staticmethod
+    def list_attributes(attributes: dict):
+        for attribute in attributes:
+            print(attribute, attributes[attribute])
+
+    @staticmethod
+    def child_nodes(children: list):
+        for child in children:
+            print(child[0:-2])
+
+class accessRule(rule):
 
     attributes = {
-        'id': OPTIONAL,
-        'system': OPTIONAL,
-        'scope': OPTIONAL,
-        'order': OPTIONAL,
-        'authSystem': REQUIRED
+        'id': [OPTIONAL],
+        'system': [OPTIONAL],
+        'scope': [OPTIONAL],
+        'order': [OPTIONAL, 'allowFirst', 'denyFirst'],
+        'authSystem': [REQUIRED]
     }
 
     children = [
         ['allow', 'deny', 1, INFINITY]
     ]
+
+    content = TYPE_NONE
 
     @staticmethod
     def validate_rule(node:Node):
-        accessRule._constraints(node)
-        _attributes(attributes=accessRule.attributes, node=node)
+        # if 'order' in node.attributes:
+        #     allowed = ['allowFirst', 'denyFirst']
+        #     if node.attributes['order'] not in allowed:
+        #         msg = '"{0}:order" attribute must be one of "{1}"'.format(
+        #             node.name,
+        #             allowed)
+        #         raise MetapypeRuleError(msg)
+        _attributes_list(attributes=accessRule.attributes, node=node)
         _children(children=accessRule.children, node=node)
 
 
-
-def _access_rule(node: Node):
-    if 'order' in node.attributes:
-        allowed = ['allowFirst', 'denyFirst']
-        if node.attributes['order'] not in allowed:
-            msg = '"{0}:order" attribute must be one of "{1}"'.format(node.name,
-                                                                      allowed)
-            raise MetapypeRuleError(msg)
-    attributes = {
-        'id': OPTIONAL,
-        'system': OPTIONAL,
-        'scope': OPTIONAL,
-        'order': OPTIONAL,
-        'authSystem': REQUIRED
-    }
-    _attributes(attributes, node)
-    children = [
-        ['allow', 'deny', 1, INFINITY]
-    ]
-    _children(children, node)
-
-
-def _additional_metadata_rule(node: Node):
+class additionalMetadataRule(rule):
     attributes = {
         'id': OPTIONAL
     }
-    _attributes(attributes, node)
+
     children = [
         ['describes', 0, INFINITY],
         ['metadata', 1, 1]
     ]
-    _children(children, node)
+
+    @staticmethod
+    def validate_rule(node:Node):
+        _attributes(attributes=additionalMetadataRule.attributes, node=node)
+        _children(children=additionalMetadataRule.children, node=node)
 
 
 def _allow_rule(node: Node):
@@ -261,6 +262,39 @@ def _value_rule(node: Node):
 
 #===================== End of rules section =====================
 
+def _attributes_list(attributes: dict, node: Node) -> None:
+    '''
+    Validates node attributes for rule compliance.
+
+    Iterates through the dict of attribute rules and validates whether
+    the node instance complies with the rule.
+
+    Args:
+        attributes: dict of rule attributes
+        node: Node instance to be validates
+
+    Returns:
+        None
+
+    Raises:
+        MetapypeRuleError: Illegal attribute or missing required attribute
+    '''
+    for attribute in attributes:
+        required = attributes[attribute][0]
+        if required and attribute not in node.attributes:
+            msg = '"{0}" is a required attribute of node "{1}"'.format(
+                attribute, node.name)
+            raise MetapypeRuleError(msg)
+    for attribute in node.attributes:
+        if attribute not in attributes:
+            msg = '"{0}" is not a recognized attributes of node "{1}"'.format(
+                attribute, node.name)
+            raise MetapypeRuleError(msg)
+        else:
+            if len(attributes[attribute]) > 1 and node.attributes[attribute] not in attributes[attribute][1:]:
+                msg = f'Node "{node.name}" attribute "{attribute}" must be one of the following: "{attributes[attribute][1:]}"'
+                raise MetapypeRuleError(msg)
+
 
 def _attributes(attributes: dict, node: Node) -> None:
     '''
@@ -377,7 +411,7 @@ def tree(root: Node) -> None:
 # Rule function pointers
 rules = {
     names.ACCESS: accessRule.validate_rule,
-    names.ADDITIONALMETADATA: _additional_metadata_rule,
+    names.ADDITIONALMETADATA: additionalMetadataRule.validate_rule,
     names.ALLOW: _allow_rule,
     names.CONTACT: _responsible_party_rule,
     names.CREATOR: _responsible_party_rule,
