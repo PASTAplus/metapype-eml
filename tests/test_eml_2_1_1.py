@@ -18,6 +18,7 @@ import unittest
 import daiquiri
 
 import metapype.eml2_1_1.names as names
+import metapype.eml2_1_1.rules as rules
 import metapype.eml2_1_1.validate as validate
 from metapype.model.node import Node
 
@@ -111,48 +112,61 @@ class TestEml_2_1_1(unittest.TestCase):
         self.assertIsNone(validate.tree(self.node))
 
     def test_accessRule(self):
-        self.assertIsNone(validate.accessRule.validate_rule(self.access))
+        r = rules.dispatcher[names.ACCESS]
+        self.assertIsNone(r.validate_rule(self.access))
 
     def test_additionalMetadataRule(self):
-        self.assertIsNone(validate.additionalMetadataRule.validate_rule(self.additional_metadata))
+        r = rules.dispatcher[names.ADDITIONALMETADATA]
+        self.assertIsNone(r.validate_rule(self.additional_metadata))
 
     def test_allowRule(self):
-        self.assertIsNone(validate.allowRule.validate_rule(self.allow))
+        r = rules.dispatcher[names.ALLOW]
+        self.assertIsNone(r.validate_rule(self.allow))
 
     def test_anyNameRule(self):
-        self.assertIsNone(validate.anyNameRule.validate_rule(self.surName_contact))
-        self.assertIsNone(validate.anyNameRule.validate_rule(self.title))
+        r = rules.dispatcher[names.SURNAME]
+        self.assertIsNone(r.validate_rule(self.surName_contact))
+        self.assertIsNone(r.validate_rule(self.title))
 
     def test_datasetRule(self):
-        self.assertIsNone(validate.datasetRule.validate_rule(self.dataset))
+        r = rules.dispatcher[names.DATASET]
+        self.assertIsNone(r.validate_rule(self.dataset))
 
     def test_denyRule(self):
-        self.assertIsNone(validate.denyRule.validate_rule(self.deny))
+        r = rules.dispatcher[names.DENY]
+        self.assertIsNone(r.validate_rule(self.deny))
 
     def test_emlRule(self):
-        self.assertIsNone(validate.emlRule.validate_rule(self.eml))
+        r = rules.dispatcher[names.EML]
+        self.assertIsNone(r.validate_rule(self.eml))
 
     def test_individualNameRule(self):
-        self.assertIsNone(validate.individualNameRule.validate_rule(self.individualName_contact))
-        self.assertIsNone(validate.individualNameRule.validate_rule(self.individualName_creator))
+        r = rules.dispatcher[names.INDIVIDUALNAME]
+        self.assertIsNone(r.validate_rule(self.individualName_contact))
+        self.assertIsNone(r.validate_rule(self.individualName_creator))
 
     def test_metadataRule(self):
-        self.assertIsNone(validate.metadataRule.validate_rule(self.metadata))
+        r = rules.dispatcher[names.METADATA]
+        self.assertIsNone(r.validate_rule(self.metadata))
 
     def test_permissionRule(self):
-        self.assertIsNone(validate.permissionRule.validate_rule(self.permission_allow))
-        self.assertIsNone(validate.permissionRule.validate_rule(self.permission_deny))
+        r = rules.dispatcher[names.PERMISSION]
+        self.assertIsNone(r.validate_rule(self.permission_allow))
+        self.assertIsNone(r.validate_rule(self.permission_deny))
 
     def test_principalRule(self):
-        self.assertIsNone(validate.principalRule.validate_rule(self.principal_allow))
-        self.assertIsNone(validate.principalRule.validate_rule(self.principal_deny))
+        r = rules.dispatcher[names.PRINCIPAL]
+        self.assertIsNone(r.validate_rule(self.principal_allow))
+        self.assertIsNone(r.validate_rule(self.principal_deny))
 
     def test_responsiblePartyRule(self):
-        self.assertIsNone(validate.responsiblePartyRule.validate_rule(self.creator))
-        self.assertIsNone(validate.responsiblePartyRule.validate_rule(self.contact))
+        r = rules.dispatcher[names.CREATOR]
+        self.assertIsNone(r.validate_rule(self.creator))
+        self.assertIsNone(r.validate_rule(self.contact))
 
     def test_valuRule(self):
-        self.assertIsNone(validate.valueRule.validate_rule(self.value))
+        r = rules.dispatcher[names.VALUE]
+        self.assertIsNone(r.validate_rule(self.value))
 
 
 def main():

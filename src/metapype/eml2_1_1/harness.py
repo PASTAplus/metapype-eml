@@ -19,6 +19,7 @@ from metapype.eml2_1_1.exceptions import MetapypeRuleError
 from metapype.eml2_1_1 import export
 from metapype.eml2_1_1 import evaluate
 from metapype.eml2_1_1 import names
+from metapype.eml2_1_1 import rules
 from metapype.eml2_1_1 import validate
 from metapype.model.node import Node
 from metapype.model import io
@@ -80,15 +81,26 @@ def main():
     surName_contact.content = 'Gaucho'
     individualName_contact.add_child(surName_contact)
 
+    r = rules.dispatcher[names.ACCESS]
+    try:
+        r.validate_rule(access)
+    except MetapypeRuleError as e:
+        logger.error(e)
+    print(r.attributes)
+    print(r.children)
+    print(r.content)
+
     try:
         validate.node(access)
     except MetapypeRuleError as e:
         logger.error(e)
 
-    # try:
-    #     validate.tree(eml)
-    # except  MetapypeRuleError as e:
-    #     logger.error(e)
+    try:
+        validate.tree(eml)
+    except  MetapypeRuleError as e:
+        logger.error(e)
+
+    io.graph(eml, 0)
 
     # attr = validate.accessRule.attributes
     # print(attr)
