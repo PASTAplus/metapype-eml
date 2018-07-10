@@ -18,176 +18,252 @@ from metapype.eml2_1_1.exceptions import MetapypeRuleError
 from metapype.eml2_1_1 import names
 from metapype.model.node import Node
 
-
 logger = daiquiri.getLogger('validate: ' + __name__)
 
 REQUIRED = True
 OPTIONAL = False
 INFINITY = None
 
+TYPE_NONE = None
+TYPE_STR = 'str'
+TYPE_INT = 'int'
+TYPE_FLOAT = 'float'
+TYPE_DATETIME = 'datetime'
 
-#==================== Begin of rules section ====================
+PERMISSIONS = ('read', 'write', 'changePermission', 'all')
 
-def _access_rule(node: Node):
-    if 'order' in node.attributes:
-        allowed = ['allowFirst', 'denyFirst']
-        if node.attributes['order'] not in allowed:
-            msg = '"{0}:order" attribute must be one of "{1}"'.format(node.name,
-                                                                      allowed)
-            raise MetapypeRuleError(msg)
+
+class rule(object):
+    @staticmethod
+    def list_attributes(attributes: dict):
+        for attribute in attributes:
+            print(attribute, attributes[attribute])
+
+    @staticmethod
+    def child_nodes(children: list):
+        for child in children:
+            print(child[0:-2])
+
+
+# ==================== Begin of rules section ====================
+
+class accessRule(rule):
     attributes = {
-        'id': OPTIONAL,
-        'system': OPTIONAL,
-        'scope': OPTIONAL,
-        'order': OPTIONAL,
-        'authSystem': REQUIRED
+        'id': [OPTIONAL],
+        'system': [OPTIONAL],
+        'scope': [OPTIONAL],
+        'order': [OPTIONAL, 'allowFirst', 'denyFirst'],
+        'authSystem': [REQUIRED]
     }
-    _attributes(attributes, node)
     children = [
         ['allow', 'deny', 1, INFINITY]
     ]
-    _children(children, node)
+    content = TYPE_NONE
+
+    @staticmethod
+    def validate_rule(node: Node):
+        if node.content is not None:
+            msg = f'Node "{node.name}" content should be empty'
+            raise MetapypeRuleError(msg)
+        _attributes(accessRule.attributes, node)
+        _children(accessRule.children, node)
 
 
-def _additional_metadata_rule(node: Node):
+class additionalMetadataRule(rule):
     attributes = {
-        'id': OPTIONAL
+        'id': [OPTIONAL]
     }
-    _attributes(attributes, node)
     children = [
         ['describes', 0, INFINITY],
         ['metadata', 1, 1]
     ]
-    _children(children, node)
+    content = TYPE_NONE
+
+    @staticmethod
+    def validate_rule(node: Node):
+        if node.content is not None:
+            msg = f'Node "{node.name}" content should be empty'
+            raise MetapypeRuleError(msg)
+        _attributes(additionalMetadataRule.attributes, node)
+        _children(additionalMetadataRule.children, node)
 
 
-def _allow_rule(node: Node):
+class allowRule(rule):
+    attributes = {}
     children = [
         ['principal', 1, INFINITY],
         ['permission', 1, INFINITY]
     ]
-    _children(children, node)
+    content = TYPE_NONE
+
+    @staticmethod
+    def validate_rule(node: Node):
+        if node.content is not None:
+            msg = f'Node "{node.name}" content should be empty'
+            raise MetapypeRuleError(msg)
+        _attributes(allowRule.attributes, node)
+        _children(allowRule.children, node)
 
 
-def _any_name_rule(node: Node):
+class anyNameRule(rule):
     '''
     Generic rule for names.
 
     This is a generic rule for evaluating name-based metadata like
     surName, givenName, or salutations.
 
-    Args:
-        node: Node instance being evaluated
-
-    Returns:
-        None
-
     Raises:
         MetapypeRuleError: If content is not string or if without child and
         content is empty
     '''
-    if node.content is not None and type(node.content) is not str:
-        msg = 'Node "{0}" content should be type string, not "{1}"'.format(
-            node.name, type(node.content))
-        raise MetapypeRuleError(msg)
-    if len(node.children) == 0 and node.content is None:
-        msg = 'Node "{0}" content should not be empty'.format(node.name)
-        raise MetapypeRuleError(msg)
     attributes = {
-        'lang': OPTIONAL
+        'lang': [OPTIONAL]
     }
-    _attributes(attributes, node)
     children = [
         ['value', 0, INFINITY]
     ]
-    _children(children, node)
+    content = TYPE_STR
+
+    @staticmethod
+    def validate_rule(node: Node):
+        if node.content is not None and type(node.content) is not str:
+            msg = f'Node "{node.name}" content should be type "{TYPE_STR}", not "{type(node.content)}"'
+            raise MetapypeRuleError(msg)
+        if len(node.children) == 0 and node.content is None:
+            msg = f'Node "{node.name}" content should not be empty'
+            raise MetapypeRuleError(msg)
+        _attributes(anyNameRule.attributes, node)
+        _children(anyNameRule.children, node)
 
 
-def _dataset_rule(node: Node):
-    pass
+class datasetRule(rule):
+    # TODO: complete rule
+    attributes = {}
+    children = []
+    content = TYPE_NONE
+
+    @staticmethod
+    def validate_rule(node: Node):
+        if node.content is not None:
+            msg = f'Node "{node.name}" content should be empty'
+            raise MetapypeRuleError(msg)
+        # _attributes_list(datasetRule.attributes, node)
+        # _children(datasetRule.children, node)
 
 
-def _deny_rule(node: Node):
+class denyRule(rule):
+    attributes = {}
     children = [
         ['principal', 1, INFINITY],
         ['permission', 1, INFINITY]
     ]
-    _children(children, node)
+    content = TYPE_NONE
+
+    @staticmethod
+    def validate_rule(node: Node):
+        if node.content is not None:
+            msg = f'Node "{node.name}" content should be empty'
+            raise MetapypeRuleError(msg)
+        _attributes(denyRule.attributes, node)
+        _children(denyRule.children, node)
 
 
-def _eml_rule(node: Node):
+class emlRule(rule):
     attributes = {
-        'packageId': REQUIRED,
-        'system': REQUIRED,
-        'scope': OPTIONAL,
-        'lang': OPTIONAL
+        'packageId': [REQUIRED],
+        'system': [REQUIRED],
+        'scope': [OPTIONAL],
+        'lang': [OPTIONAL]
     }
-    _attributes(attributes, node)
     children = [
         ['access', 0, 1],
         ['dataset', 'citation', 'software', 'protocol', 1, 1],
         ['additionalMetadata', 0, INFINITY]
     ]
-    _children(children, node)
+    content = TYPE_NONE
+
+    @staticmethod
+    def validate_rule(node: Node):
+        if node.content is not None:
+            msg = f'Node "{node.name}" content should be empty'
+            raise MetapypeRuleError(msg)
+        _attributes(emlRule.attributes, node)
+        _children(emlRule.children, node)
 
 
-def _individual_name_rule(node: Node):
+class individualNameRule(rule):
+    attributes = {}
     children = [
         ['salutation', 0, INFINITY],
         ['givenName', 0, INFINITY],
         ['surName', 1, 1]
     ]
-    _children(children, node)
+    content = TYPE_NONE
+
+    @staticmethod
+    def validate_rule(node: Node):
+        if node.content is not None:
+            msg = f'Node "{node.name}" content should be empty'
+            raise MetapypeRuleError(msg)
+        _attributes(individualNameRule.attributes, node)
+        _children(individualNameRule.children, node)
 
 
-def _metadata_rule(node: Node):
-    if len(node.children) != 0:
-        msg = 'Node "{0}" should not have children'.format(node.name)
-        raise MetapypeRuleError(msg)
-    if type(node.content) is not str:
-        msg = 'Node "{0}" content should be type string, not "{1}"'.format(
-            node.name, type(node.content))
-        raise MetapypeRuleError(msg)
+class metadataRule(rule):
+    attributes = {}
+    children = []
+    content = TYPE_STR
+
+    @staticmethod
+    def validate_rule(node: Node):
+        if node.content is not None and type(node.content) is not str:
+            msg = f'Node "{node.name}" content should be type "{TYPE_STR}", not "{type(node.content)}"'
+            raise MetapypeRuleError(msg)
+        _attributes(metadataRule.attributes, node)
+        _children(metadataRule.children, node)
 
 
-def _permission_rule(node: Node):
-    if len(node.children) != 0:
-        msg = 'Node "{0}" should not have children'.format(node.name)
-        raise MetapypeRuleError(msg)
-    allowed = ['read', 'write', 'changePermission', 'all']
-    if node.content not in allowed:
-        msg = 'Node "{0}" content should be one of "{1}", not "{2}"'.format(
-            node.name, allowed, node.content)
-        raise MetapypeRuleError(msg)
+class permissionRule(rule):
+    attributes = {}
+    children = []
+    content = TYPE_STR
+
+    @staticmethod
+    def validate_rule(node: Node):
+        if node.content is None or type(node.content) is not str:
+            msg = f'Node "{node.name}" content should be type "{TYPE_STR}", not "{type(node.content)}"'
+            raise MetapypeRuleError(msg)
+        if node.content not in PERMISSIONS:
+            msg = f'Node "{node.name}" content should be one of "{PERMISSIONS}", not "{node.content}"'
+            raise MetapypeRuleError(msg)
+        _attributes(permissionRule.attributes, node)
+        _children(permissionRule.children, node)
 
 
-def _principal_rule(node: Node):
-    if len(node.children) != 0:
-        msg = 'Node "{0}" should not have children'.format(node.name)
-        raise MetapypeRuleError(msg)
-    if type(node.content) is not str:
-        msg = 'Node content should be type string, not "{0}"'.format(
-            type(node.content))
-        raise MetapypeRuleError(msg)
+class principalRule(rule):
+    attributes = {}
+    children = []
+    content = TYPE_STR
+
+    @staticmethod
+    def validate_rule(node: Node):
+        if node.content is None or type(node.content) is not str:
+            msg = f'Node "{node.name}" content should be type "{TYPE_STR}", not "{type(node.content)}"'
+            raise MetapypeRuleError(msg)
+        _attributes(principalRule.attributes, node)
+        _children(principalRule.children, node)
 
 
-def _responsible_party_rule(node: Node) -> None:
+class responsiblePartyRule(rule):
     '''
     Generic rule for any responsibleParty type of metadata like creator or
     contact.
-
-    Args:
-        node: Node instance being evaluated
-
-    Returns:
-        None
     '''
     attributes = {
-        'id': OPTIONAL,
-        'system': OPTIONAL,
-        'scope': OPTIONAL
+        'id': [OPTIONAL],
+        'system': [OPTIONAL],
+        'scope': [OPTIONAL]
     }
-    _attributes(attributes, node)
     children = [
         ['individualName', 'organizationName', 'positionName', 1, INFINITY],
         ['address', 0, INFINITY],
@@ -196,40 +272,34 @@ def _responsible_party_rule(node: Node) -> None:
         ['onlineUrl', 0, INFINITY],
         ['userId', 0, INFINITY]
     ]
-    _children(children, node)
+    content = TYPE_NONE
+
+    @staticmethod
+    def validate_rule(node: Node):
+        if node.content is not None:
+            msg = f'Node "{node.name}" content should be empty'
+            raise MetapypeRuleError(msg)
+        _attributes(responsiblePartyRule.attributes, node)
+        _children(responsiblePartyRule.children, node)
 
 
-def _title_rule(node: Node):
-    if node.content is not None and type(node.content) is not str:
-        msg = 'Node "{0}" content should be type string, not "{1}"'.format(
-            node.name, type(node.content))
-        raise MetapypeRuleError(msg)
+class valueRule(rule):
     attributes = {
-        'lang': OPTIONAL
+        'xml:lang': [REQUIRED]
     }
-    _attributes(attributes, node)
-    children = [
-        ['value', 0, INFINITY]
-    ]
-    _children(children, node)
+    children = []
+    content = TYPE_STR
+
+    @staticmethod
+    def validate_rule(node: Node):
+        if node.content is None or type(node.content) is not str:
+            msg = f'Node "{node.name}" content should be type "{TYPE_STR}", not "{type(node.content)}"'
+            raise MetapypeRuleError(msg)
+        _attributes(valueRule.attributes, node)
+        _children(valueRule.children, node)
 
 
-def _value_rule(node: Node):
-    if node.content is None:
-        msg = 'Node "{0}" content cannot be empty'.format(node.name)
-        raise MetapypeRuleError(msg)
-    if type(node.content) is not str:
-        msg = 'Node "{0}" content should be type string, not "{1}"'.format(
-            node.name, type(node.content))
-        raise MetapypeRuleError(msg)
-    attributes = {
-        'xml:lang': REQUIRED,
-    }
-    _attributes(attributes, node)
-
-
-#===================== End of rules section =====================
-
+# ===================== End of rules section =====================
 
 def _attributes(attributes: dict, node: Node) -> None:
     '''
@@ -249,16 +319,22 @@ def _attributes(attributes: dict, node: Node) -> None:
         MetapypeRuleError: Illegal attribute or missing required attribute
     '''
     for attribute in attributes:
-        required = attributes[attribute]
+        required = attributes[attribute][0]
+        # Test for required attributes
         if required and attribute not in node.attributes:
-            msg = '"{0}" is a required attribute of node "{1}"'.format(
-                attribute, node.name)
+            msg = f'"{attribute}" is a required attribute of node "{node.name}"'
             raise MetapypeRuleError(msg)
     for attribute in node.attributes:
+        # Test for non-allowed attribute
         if attribute not in attributes:
-            msg = '"{0}" is not a recognized attributes of node "{1}"'.format(
-                attribute, node.name)
+            msg = f'"{attribute}" is not a recognized attributes of node "{node.name}"'
             raise MetapypeRuleError(msg)
+        else:
+            # Test for enumerated list of allowed values
+            if len(attributes[attribute]) > 1 and node.attributes[
+                attribute] not in attributes[attribute][1:]:
+                msg = f'Node "{node.name}" attribute "{attribute}" must be one of the following: "{attributes[attribute][1:]}"'
+                raise MetapypeRuleError(msg)
 
 
 def _children(children: list, node: Node) -> None:
@@ -291,19 +367,17 @@ def _children(children: list, node: Node) -> None:
             if child_name in name:
                 cnt += 1
                 if max is not INFINITY and cnt > max:
-                    msg = 'Maximum occurrence of "{0}" exceeded for "{1}"'.format(
-                        name, node.name)
+                    msg = f'Maximum occurrence of "{name}" exceeded for "{node.name}"'
                     raise MetapypeRuleError(msg)
                 i += 1
             else:
                 break
         if cnt < min:
-            msg = 'Minimum occurrence of "{0}" not met for "{1}"'.format(name,
-                                                                         node.name)
+            msg = f'Minimum occurrence of "{name}" not met for "{node.name}"'
             raise MetapypeRuleError(msg)
     if i < max_i:
         child_name = node.children[i].name
-        msg = 'Child "{0}" not allowed  for "{1}"'.format(child_name, node.name)
+        msg = f'Child "{child_name}" not allowed  for "{node.name}"'
         raise MetapypeRuleError(msg)
 
 
@@ -345,23 +419,23 @@ def tree(root: Node) -> None:
 
 # Rule function pointers
 rules = {
-    names.ACCESS: _access_rule,
-    names.ADDITIONALMETADATA: _additional_metadata_rule,
-    names.ALLOW: _allow_rule,
-    names.CONTACT: _responsible_party_rule,
-    names.CREATOR: _responsible_party_rule,
-    names.DATASET: _dataset_rule,
-    names.DENY: _deny_rule,
-    names.EML: _eml_rule,
-    names.GIVENNAME: _any_name_rule,
-    names.INDIVIDUALNAME: _individual_name_rule,
-    names.METADATA: _metadata_rule,
-    names.ORGANIZATIONNAME: _any_name_rule,
-    names.PERMISSION: _permission_rule,
-    names.POSITIONNAME: _any_name_rule,
-    names.PRINCIPAL: _principal_rule,
-    names.SALUTATION: _any_name_rule,
-    names.SURNAME: _any_name_rule,
-    names.TITLE: _title_rule,
-    names.VALUE: _value_rule,
+    names.ACCESS: accessRule.validate_rule,
+    names.ADDITIONALMETADATA: additionalMetadataRule.validate_rule,
+    names.ALLOW: allowRule.validate_rule,
+    names.CONTACT: responsiblePartyRule.validate_rule,
+    names.CREATOR: responsiblePartyRule.validate_rule,
+    names.DATASET: datasetRule.validate_rule,
+    names.DENY: denyRule.validate_rule,
+    names.EML: emlRule.validate_rule,
+    names.GIVENNAME: anyNameRule.validate_rule,
+    names.INDIVIDUALNAME: individualNameRule.validate_rule,
+    names.METADATA: metadataRule.validate_rule,
+    names.ORGANIZATIONNAME: anyNameRule.validate_rule,
+    names.PERMISSION: permissionRule.validate_rule,
+    names.POSITIONNAME: anyNameRule.validate_rule,
+    names.PRINCIPAL: principalRule.validate_rule,
+    names.SALUTATION: anyNameRule.validate_rule,
+    names.SURNAME: anyNameRule.validate_rule,
+    names.TITLE: anyNameRule.validate_rule,
+    names.VALUE: valueRule.validate_rule,
 }

@@ -81,16 +81,22 @@ def main():
     individualName_contact.add_child(surName_contact)
 
     try:
-        validate.tree(eml)
-    except  MetapypeRuleError as e:
+        validate.node(access)
+    except MetapypeRuleError as e:
         logger.error(e)
 
-    evaluation = {}
-    evaluate.tree(eml, evaluation)
-    for e in evaluation:
-        print('{0}: {1}'.format(e, evaluation[e]))
+    # try:
+    #     validate.tree(eml)
+    # except  MetapypeRuleError as e:
+    #     logger.error(e)
 
-    print(evaluation)
+    # attr = validate.accessRule.attributes
+    # print(attr)
+    # children = validate.accessRule.children
+    # print(children)
+    #
+    # validate.accessRule.list_attributes(validate.accessRule.attributes)
+    # validate.accessRule.child_nodes(validate.accessRule.children)
 
     # json_str = io.to_json(eml)
     # print(json_str)
@@ -100,18 +106,23 @@ def main():
     # m = json.loads(json_str)
     # node = io.from_json(m)
     #
-    io.graph(eml, 0)
     #
     # try:
     #     validate.tree(node)
     # except  MetapypeRuleError as e:
     #     logger.error(e)
     #
-    # xml = export.to_xml(node)
+    # xml = export.to_xml(eml)
     # print(xml)
-    # with open('test_eml.xml', 'w') as f:
+    # # with open('test_eml.xml', 'w') as f:
     #     f.write(xml)
 
+
+    # evaluation = {}
+    # evaluate.tree(eml, evaluation)
+    # for e in evaluation:
+    #     print('{0}: {1}'.format(e, evaluation[e]))
+    #
 
     return 0
 
