@@ -1,0 +1,193 @@
+{
+    "accessRule" : [
+        { 
+            "id": [false],
+            "system": [false],
+            "scope": [false],
+            "order": [false, "allowFirst", "denyFirst"],
+            "authSystem": [true]
+        },
+        [
+            ["allow", "deny", 1, null]
+        ],
+        {
+            "content" : null
+        },
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "additionalMetadataRule" : [
+        { 
+            "id": [false]
+        },
+        [
+            ["describes", 0, null],
+            ["metadata", 1, 1]
+        ],
+        {
+            "content" : null
+        },
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "allowRule" : [
+        { 
+        },
+        [
+            ["principal", 1, null],
+            ["permission", 1, null]
+        ],
+        {
+            "content" : null
+        },
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "anyNameRule" : [
+        { 
+            "lang": [false]
+        },
+        [
+            ["value", 0, null]
+        ],
+        {
+            "content" : "str"
+        },
+        {
+            "content_rules" : ["strContent", "nonEmptyContent"]
+        }
+    ],
+    "datasetRule" : [
+        { 
+        },
+        [
+        ],
+        {
+            "content" : null
+        },
+        {
+            "content_rules" : []
+        }
+    ],
+    "denyRule" : [
+        { 
+        },
+        [
+            ["principal", 1, null],
+            ["permission", 1, null]
+        ],
+        {
+            "content" : null
+        },
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "emlRule" : [
+        { 
+            "packageId" : [true],
+            "system" : [true],
+            "scope" : [false],
+            "lang" : [false]
+        },
+        [
+            ["access", 0, 1],
+            ["dataset", "citation", "software", "protocol", 1, 1],
+            ["additionalMetadata", 0, null]
+        ],
+        {
+            "content" : null
+        },
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "individualNameRule" : [
+        { 
+        },
+        [
+            ["salutation", 0, null],
+            ["givenName", 0, null],
+            ["surName", 1, 1]
+        ],
+        {
+            "content" : null
+        },
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "metadataRule" : [
+        { 
+        },
+        [
+        ],
+        {
+            "content" : "str"
+        },
+        {
+            "content_rules" : ["strContent"]
+        }
+    ],
+    "permissionRule" : [
+        { 
+        },
+        [
+        ],
+        {
+            "content" : "str"
+        },
+        {
+            "content_rules" : ["strContent", "permissionsContent"]
+        }
+    ],
+    "principalRule" : [
+        { 
+        },
+        [
+        ],
+        {
+            "content" : "str"
+        },
+        {
+            "content_rules" : ["strContent"]
+        }
+    ],
+    "responsiblePartyRule" : [
+        { 
+            "id": [false],
+            "system": [false],
+            "scope": [false]
+        },
+        [
+            ["individualName", "organizationName", "positionName", 1, null],
+            ["address", 0, null],
+            ["phone", 0, null],
+            ["electronicMailAddress", 0, null],
+            ["onlineUrl", 0, null],
+            ["userId", 0, null]
+        ],
+        {
+            "content" : null
+        },
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "valueRule" : [
+        { 
+            "xml:lang": [true]
+        },
+        [
+        ],
+        {
+            "content" : "str"
+        },
+        {
+            "content_rules" : ["strContent"]
+        }
+    ]
+}

@@ -7,6 +7,7 @@
 
 :Author:
     servilla
+    costa
 
 :Created:
     7/10/18
@@ -14,7 +15,7 @@
 import daiquiri
 
 from metapype.eml2_1_1.exceptions import MetapypeRuleError
-from metapype.eml2_1_1 import rules
+from metapype.eml2_1_1 import rule
 from metapype.model.node import Node
 
 
@@ -34,12 +35,12 @@ def node(node: Node) -> None:
     Raises:
         MetapypeRuleError: An unknown type of node for EML 2.1.1
     '''
-    if node.name not in rules.dispatcher:
+    if node.name not in rule.node_mappings:
         msg = 'Unknown node: {}'.format(node.name)
         raise MetapypeRuleError(msg)
     else:
-        rule = rules.dispatcher[node.name]
-        rule.validate_rule(node)
+        node_rule = rule.get_rule(node.name)
+        node_rule.validate_rule(node)
 
 
 def tree(root: Node) -> None:

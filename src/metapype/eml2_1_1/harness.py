@@ -7,6 +7,7 @@
 
 :Author:
     servilla
+    costa
 
 :Created:
     6/5/18
@@ -19,7 +20,7 @@ from metapype.eml2_1_1.exceptions import MetapypeRuleError
 from metapype.eml2_1_1 import export
 from metapype.eml2_1_1 import evaluate
 from metapype.eml2_1_1 import names
-from metapype.eml2_1_1 import rules
+from metapype.eml2_1_1 import rule
 from metapype.eml2_1_1 import validate
 from metapype.model.node import Node
 from metapype.model import io
@@ -81,14 +82,15 @@ def main():
     surName_contact.content = 'Gaucho'
     individualName_contact.add_child(surName_contact)
 
-    r = rules.dispatcher[names.ACCESS]
+    access_rule = rule.get_rule(names.ACCESS)
+    
     try:
-        r.validate_rule(access)
+        access_rule.validate_rule(access)
     except MetapypeRuleError as e:
         logger.error(e)
-    print(r.attributes)
-    print(r.children)
-    print(r.content)
+    print(access_rule.attributes)
+    print(access_rule.children)
+    print(access_rule.content)
 
     try:
         validate.node(access)
@@ -102,39 +104,37 @@ def main():
 
     io.graph(eml, 0)
 
-    # attr = validate.accessRule.attributes
-    # print(attr)
-    # children = validate.accessRule.children
-    # print(children)
+    attr = access_rule.attributes
+    print(attr)
+    children = access_rule.children
+    print(children)
     #
-    # validate.accessRule.list_attributes(validate.accessRule.attributes)
-    # validate.accessRule.child_nodes(validate.accessRule.children)
+    print(access.list_attributes())
 
-    # json_str = io.to_json(eml)
-    # print(json_str)
-    # with open('test_eml.json', 'w') as f:
-    #     f.write(json_str)
+    json_str = io.to_json(eml)
+    print(json_str)
+    with open('test_eml.json', 'w') as f:
+        f.write(json_str)
     #
-    # m = json.loads(json_str)
-    # node = io.from_json(m)
+    m = json.loads(json_str)
+    node = io.from_json(m)
     #
     #
-    # try:
-    #     validate.tree(node)
-    # except  MetapypeRuleError as e:
-    #     logger.error(e)
+    try:
+        validate.tree(node)
+    except  MetapypeRuleError as e:
+        logger.error(e)
     #
-    # xml = export.to_xml(eml)
-    # print(xml)
-    # # with open('test_eml.xml', 'w') as f:
-    #     f.write(xml)
+    xml = export.to_xml(eml)
+    print(xml)
+    with open('test_eml.xml', 'w') as f:
+        f.write(xml)
 
 
-    # evaluation = {}
-    # evaluate.tree(eml, evaluation)
-    # for e in evaluation:
-    #     print('{0}: {1}'.format(e, evaluation[e]))
-    #
+    evaluation = {}
+    evaluate.tree(eml, evaluation)
+    for e in evaluation:
+        print('{0}: {1}'.format(e, evaluation[e]))
 
     return 0
 
