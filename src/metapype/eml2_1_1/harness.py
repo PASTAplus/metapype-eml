@@ -90,7 +90,7 @@ def main():
         logger.error(e)
     print(access_rule.attributes)
     print(access_rule.children)
-    print(access_rule.content)
+    print(access_rule.content_rules)
 
     try:
         validate.node(access)

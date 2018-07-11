@@ -55,14 +55,13 @@ class Rule(object):
     def __init__(self, node_name=None):
         self._attributes = {}
         self._children = []
-        self._content = None
+        self._content_rules = []
 
         # Initialize rule content for this instance from the rules dict
         rule_data = rules_dict[node_name]
         self._attributes = rule_data[0]
         self._children = rule_data[1]
-        self._content = rule_data[2]
-        self._content_rules = rule_data[3]
+        self._content_rules = rule_data[2]
 
     def validate_rule(self, node: Node):
         '''
@@ -78,11 +77,11 @@ class Rule(object):
         Raises:
             MetapypeRuleError: Illegal attribute or missing required attribute
         '''
-        self._validate_content(self._content, node)
+        self._validate_content(node)
         self._validate_attributes(self._attributes, node)
         self._validate_children(self._children, node)
 
-    def _validate_content(self, content, node: Node):
+    def _validate_content(self, node: Node):
         '''
         Validates node content for rule compliance.
         For each of the content rules configured for this rule,
@@ -101,30 +100,30 @@ class Rule(object):
         '''
         for content_rule in self._content_rules:
             if content_rule == 'emptyContent':
-                self._validate_empty_content(content, node)
+                self._validate_empty_content(node)
             elif content_rule == 'nonEmptyContent':
-                self._validate_non_empty_content(content, node)
+                self._validate_non_empty_content(node)
             elif content_rule == 'permissionsContent':
-                self._validate_permissions_content(content, node)
+                self._validate_permissions_content(node)
             elif content_rule == 'strContent':
-                self._validate_str_content(content, node)
+                self._validate_str_content(node)
 
-    def _validate_empty_content(self, content, node: Node):
+    def _validate_empty_content(self, node: Node):
         if node.content is not None:
             msg = f'Node "{node.name}" content should be empty'
             raise MetapypeRuleError(msg)
 
-    def _validate_non_empty_content(self, content, node: Node):
+    def _validate_non_empty_content(self, node: Node):
         if len(node.children) == 0 and node.content is None:
             msg = f'Node "{node.name}" content should not be empty'
             raise MetapypeRuleError(msg)
 
-    def _validate_permissions_content(self, content, node: Node):
+    def _validate_permissions_content(self, node: Node):
         if node.content not in PERMISSIONS:
             msg = f'Node "{node.name}" content should be one of "{PERMISSIONS}", not "{node.content}"'
             raise MetapypeRuleError(msg)
 
-    def _validate_str_content(self, content, node: Node):
+    def _validate_str_content(self, node: Node):
         if node.content is not None and type(node.content) is not str:
             msg = f'Node "{node.name}" content should be type "{TYPE_STR}", not "{type(node.content)}"'
             raise MetapypeRuleError(msg)
@@ -217,8 +216,8 @@ class Rule(object):
         return self._children
 
     @property
-    def content(self):
-        return self._content
+    def content_rules(self):
+        return self._content_rules
 
 
 # Named constants for EML 2.1.1 metadata rules

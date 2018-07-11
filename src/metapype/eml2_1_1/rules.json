@@ -11,9 +11,6 @@
             ["allow", "deny", 1, null]
         ],
         {
-            "content" : null
-        },
-        {
             "content_rules" : ["emptyContent"]
         }
     ],
@@ -26,9 +23,6 @@
             ["metadata", 1, 1]
         ],
         {
-            "content" : null
-        },
-        {
             "content_rules" : ["emptyContent"]
         }
     ],
@@ -39,9 +33,6 @@
             ["principal", 1, null],
             ["permission", 1, null]
         ],
-        {
-            "content" : null
-        },
         {
             "content_rules" : ["emptyContent"]
         }
@@ -54,9 +45,6 @@
             ["value", 0, null]
         ],
         {
-            "content" : "str"
-        },
-        {
             "content_rules" : ["strContent", "nonEmptyContent"]
         }
     ],
@@ -65,9 +53,6 @@
         },
         [
         ],
-        {
-            "content" : null
-        },
         {
             "content_rules" : []
         }
@@ -79,9 +64,6 @@
             ["principal", 1, null],
             ["permission", 1, null]
         ],
-        {
-            "content" : null
-        },
         {
             "content_rules" : ["emptyContent"]
         }
@@ -99,9 +81,6 @@
             ["additionalMetadata", 0, null]
         ],
         {
-            "content" : null
-        },
-        {
             "content_rules" : ["emptyContent"]
         }
     ],
@@ -114,9 +93,6 @@
             ["surName", 1, 1]
         ],
         {
-            "content" : null
-        },
-        {
             "content_rules" : ["emptyContent"]
         }
     ],
@@ -125,9 +101,6 @@
         },
         [
         ],
-        {
-            "content" : "str"
-        },
         {
             "content_rules" : ["strContent"]
         }
@@ -138,9 +111,6 @@
         [
         ],
         {
-            "content" : "str"
-        },
-        {
             "content_rules" : ["strContent", "permissionsContent"]
         }
     ],
@@ -149,9 +119,6 @@
         },
         [
         ],
-        {
-            "content" : "str"
-        },
         {
             "content_rules" : ["strContent"]
         }
@@ -171,9 +138,6 @@
             ["userId", 0, null]
         ],
         {
-            "content" : null
-        },
-        {
             "content_rules" : ["emptyContent"]
         }
     ],
@@ -183,9 +147,6 @@
         },
         [
         ],
-        {
-            "content" : "str"
-        },
         {
             "content_rules" : ["strContent"]
         }
