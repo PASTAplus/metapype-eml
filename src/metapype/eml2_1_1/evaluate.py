@@ -44,7 +44,7 @@ def _title_rule(node: Node) -> str:
     title = node.content
     if title is not None:
         length = len(title.split(' '))
-        if length < 10:
+        if length < 20:
             _ = ('"{0}" is too short, should '
                  'have at least 10 words')
             evaluation = _.format(title)

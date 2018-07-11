@@ -100,6 +100,8 @@ def main():
     except  MetapypeRuleError as e:
         logger.error(e)
 
+    print(evaluate.node(title))
+
     io.graph(eml, 0)
 
     # attr = validate.accessRule.attributes
