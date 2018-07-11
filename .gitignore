@@ -105,3 +105,6 @@ venv.bak/
 
 # Jetbrains IDEA artifacts
 .idea
+
+# Visual Studio Code artifacts
+.vscode
