@@ -85,11 +85,10 @@ class Rule(object):
         '''
         Validates node content for rule compliance.
         For each of the content rules configured for this rule,
-        validates the node content to see if its content complies 
+        validates the node to see if its content complies 
         with the content that this rule expects.
 
         Args:
-            content: the type of content which this rule expects
             node: Node instance to be validated
 
         Returns:
