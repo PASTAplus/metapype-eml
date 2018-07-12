@@ -2,6 +2,8 @@
 
 #### A lightweight metadata generator for the Ecological Metadata Language
 
+[![Build Status](https://travis-ci.org/PASTAplus/metapype-eml.svg?branch=master)](https://travis-ci.org/PASTAplus/metapype-eml)
+
 <hr />
 
 Metapype is a Python 3 library for building, saving, and exporting scientific
