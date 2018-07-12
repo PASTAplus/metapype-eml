@@ -16,6 +16,7 @@
 import daiquiri
 import json
 
+from metapype.config import Config
 from metapype.eml2_1_1.exceptions import MetapypeRuleError
 from metapype.eml2_1_1 import names
 from metapype.model.node import Node
@@ -38,7 +39,7 @@ def load_rules():
     '''
     Load rules from the JSON file into the rules dict
     '''
-    with open('eml2_1_1/rules.json') as fh:
+    with open(Config.EML2_1_1_RULES) as fh:
         rules_dict = json.load(fh)
     fh.close()
     return (rules_dict)
@@ -78,8 +79,8 @@ class Rule(object):
             MetapypeRuleError: Illegal attribute or missing required attribute
         '''
         self._validate_content(node)
-        self._validate_attributes(self._attributes, node)
-        self._validate_children(self._children, node)
+        self._validate_attributes(node)
+        self._validate_children(node)
 
     def _validate_content(self, node: Node):
         '''
@@ -127,7 +128,7 @@ class Rule(object):
             msg = f'Node "{node.name}" content should be type "{TYPE_STR}", not "{type(node.content)}"'
             raise MetapypeRuleError(msg)
 
-    def _validate_attributes(self, attributes: dict, node: Node) -> None:
+    def _validate_attributes(self, node: Node) -> None:
         '''
         Validates node attributes for rule compliance.
 
@@ -135,7 +136,6 @@ class Rule(object):
         the node instance complies with the rule.
 
         Args:
-            attributes: dict of rule attributes
             node: Node instance to be validates
 
         Returns:
@@ -144,26 +144,26 @@ class Rule(object):
         Raises:
             MetapypeRuleError: Illegal attribute or missing required attribute
         '''
-        for attribute in attributes:
-            required = attributes[attribute][0]
+        for attribute in self._attributes:
+            required = self._attributes[attribute][0]
             # Test for required attributes
             if required and attribute not in node.attributes:
                 msg = f'"{attribute}" is a required attribute of node "{node.name}"'
                 raise MetapypeRuleError(msg)
         for attribute in node.attributes:
             # Test for non-allowed attribute
-            if attribute not in attributes:
+            if attribute not in self._attributes:
                 msg = f'"{attribute}" is not a recognized attributes of node "{node.name}"'
                 raise MetapypeRuleError(msg)
             else:
                 # Test for enumerated list of allowed values
-                if len(attributes[attribute]) > 1 and node.attributes[
-                    attribute] not in attributes[attribute][1:]:
-                    msg = f'Node "{node.name}" attribute "{attribute}" must be one of the following: "{attributes[attribute][1:]}"'
+                if len(self._attributes[attribute]) > 1 and node.attributes[
+                    attribute] not in self._attributes[attribute][1:]:
+                    msg = f'Node "{node.name}" attribute "{attribute}" must be one of the following: "{self._attributes[attribute][1:]}"'
                     raise MetapypeRuleError(msg)
 
 
-    def _validate_children(self, children: list, node: Node) -> None:
+    def _validate_children(self, node: Node) -> None:
         '''
         Validates node children for rule compliance.
 
@@ -171,7 +171,6 @@ class Rule(object):
         the node instance complies with the rules.
 
         Args:
-            children: list of lists containing children
             node: Node instance to be validated
 
         Returns:
@@ -183,7 +182,7 @@ class Rule(object):
         '''
         i = 0
         max_i = len(node.children)
-        for child in children:
+        for child in self._children:
             name = child[:-2]
             min = child[-2]
             max = child[-1]
