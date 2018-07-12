@@ -20,7 +20,6 @@ script:
   # the scripts.
   - ls -lr
   - pip install -r ./requirements.txt
-  - pip install ./src/setup.py
   - python --version
   - pip freeze
   - pip check || true
