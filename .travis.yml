@@ -12,7 +12,7 @@ addons:
       - python3-dev
 env:
   global:
-    - EML2_1_1_RULES=$TRAVIS_BUILD_DIR/src/metapype/eml2_1_1/rules.json
+    - MEL2_1_1_RULES=$TRAVIS_BUILD_DIR/src/metapype/eml2_1_1/rules.json
 before_install:
   - sudo apt-get -q update
 install:
