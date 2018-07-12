@@ -13,10 +13,11 @@
 :Created:
     7/10/18
 """
+import os
+
 import daiquiri
 import json
 
-from metapype.config import Config
 from metapype.eml2_1_1.exceptions import MetapypeRuleError
 from metapype.eml2_1_1 import names
 from metapype.model.node import Node
@@ -39,7 +40,12 @@ def load_rules():
     '''
     Load rules from the JSON file into the rules dict
     '''
-    with open(Config.EML2_1_1_RULES) as fh:
+    if 'EML2_1_1_RULES' in os.environ:
+        json_path = os.environ['EML2_1_1_RULES']
+    else:
+        json_path = './rules.json'
+
+    with open(json_path) as fh:
         rules_dict = json.load(fh)
     fh.close()
     return (rules_dict)
