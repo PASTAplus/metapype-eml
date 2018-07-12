@@ -18,7 +18,7 @@ install:
 script:
   # Travis clones the project to $TRAVIS_BUILD_DIR and CDs there before running
   # the scripts.
-  - ls -l
+  - ls -lr
   - pip install -r ./requirements.txt
   - pip install daiquiri==1.3.0
   - python --version
