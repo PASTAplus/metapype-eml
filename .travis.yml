@@ -20,7 +20,7 @@ install:
 script:
   # Travis clones the project to $TRAVIS_BUILD_DIR and CDs there before running
   # the scripts.
-  - ls -lr
+  - ls -lR
   - pip install -r ./requirements.txt
   - pip install -e ./src
   - python --version
