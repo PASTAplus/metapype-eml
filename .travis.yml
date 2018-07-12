@@ -1,0 +1,32 @@
+language:
+  python
+dist:
+  trusty
+python:
+  - 3.6
+addons:
+  apt:
+    packages:
+      - python-dev
+      - python-pip
+      - python3-dev
+env:
+before_install:
+  - sudo apt-get -q update
+install:
+  - pip install --upgrade pip setuptools
+script:
+  # Travis clones the project to $TRAVIS_BUILD_DIR and CDs there before running
+  # the scripts.
+  - ls -l
+  - pip install -r ./requirements.txt
+  - python --version
+  - pip freeze
+  - pip check || true
+  - pytest --help
+  # Create GMN template database (must be done in a single threaded run)
+  #- pytest --collect-only
+  # Run tests in parallel, using as many threads as are supported by Travis
+  - pytest
+  # -n auto
+after_success:
