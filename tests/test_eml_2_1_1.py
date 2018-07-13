@@ -17,6 +17,7 @@ import unittest
 
 import daiquiri
 
+from metapype.eml2_1_1.exceptions import MetapypeRuleError
 import metapype.eml2_1_1.names as names
 import metapype.eml2_1_1.rule as rule
 import metapype.eml2_1_1.validate as validate
@@ -111,62 +112,36 @@ class TestEml_2_1_1(unittest.TestCase):
     def test_validate_tree(self):
         self.assertIsNone(validate.tree(self.node))
 
-    def test_accessRule(self):
+    def test_get_rule(self):
+        r = rule.get_rule(names.ACCESS)
+        self.assertEquals(r.name, rule.RULE_ACCESS)
+        self.assertEquals(type(r.attributes), type(dict()))
+        self.assertEquals(type(r.children), type(list()))
+        self.assertEquals(type(r.content_rules), type(dict()))
+
+    def test_rule_validation(self):
         r = rule.get_rule(names.ACCESS)
         self.assertIsNone(r.validate_rule(self.access))
 
-    def test_additionalMetadataRule(self):
-        r = rule.get_rule(names.ADDITIONALMETADATA)
-        self.assertIsNone(r.validate_rule(self.additional_metadata))
+    def test_empty_content(self):
+        self.access.content = 'some content'
+        r = rule.get_rule(names.ACCESS)
+        self.assertRaises(MetapypeRuleError, r.validate_rule, self.access)
 
-    def test_allowRule(self):
-        r = rule.get_rule(names.ALLOW)
-        self.assertIsNone(r.validate_rule(self.allow))
-
-    def test_anyNameRule(self):
-        r = rule.get_rule(names.SURNAME)
-        self.assertIsNone(r.validate_rule(self.surName_contact))
-        self.assertIsNone(r.validate_rule(self.title))
-
-    def test_datasetRule(self):
-        r = rule.get_rule(names.DATASET)
-        self.assertIsNone(r.validate_rule(self.dataset))
-
-    def test_denyRule(self):
-        r = rule.get_rule(names.DENY)
-        self.assertIsNone(r.validate_rule(self.deny))
-
-    def test_emlRule(self):
-        r = rule.get_rule(names.EML)
-        self.assertIsNone(r.validate_rule(self.eml))
-
-    def test_individualNameRule(self):
-        r = rule.get_rule(names.INDIVIDUALNAME)
-        self.assertIsNone(r.validate_rule(self.individualName_contact))
-        self.assertIsNone(r.validate_rule(self.individualName_creator))
-
-    def test_metadataRule(self):
-        r = rule.get_rule(names.METADATA)
-        self.assertIsNone(r.validate_rule(self.metadata))
-
-    def test_permissionRule(self):
-        r = rule.get_rule(names.PERMISSION)
-        self.assertIsNone(r.validate_rule(self.permission_allow))
-        self.assertIsNone(r.validate_rule(self.permission_deny))
-
-    def test_principalRule(self):
+    def test_non_empty_content(self):
+        self.principal_allow.content = None
         r = rule.get_rule(names.PRINCIPAL)
-        self.assertIsNone(r.validate_rule(self.principal_allow))
-        self.assertIsNone(r.validate_rule(self.principal_deny))
+        self.assertRaises(MetapypeRuleError, r.validate_rule,self.principal_allow)
 
-    def test_responsiblePartyRule(self):
-        r = rule.get_rule(names.CREATOR)
-        self.assertIsNone(r.validate_rule(self.creator))
-        self.assertIsNone(r.validate_rule(self.contact))
+    def test_permissions_content(self):
+        self.permission_allow.content = 'some permission'
+        r = rule.get_rule(names.PERMISSION)
+        self.assertRaises(MetapypeRuleError, r.validate_rule, self.permission_allow)
 
-    def test_valuRule(self):
-        r = rule.get_rule(names.VALUE)
-        self.assertIsNone(r.validate_rule(self.value))
+    def test_str_content(self):
+        self.permission_allow.content = 1
+        r = rule.get_rule(names.PERMISSION)
+        self.assertRaises(MetapypeRuleError, r.validate_rule, self.permission_allow)
 
 
 def main():
