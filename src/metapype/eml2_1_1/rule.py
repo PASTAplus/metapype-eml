@@ -59,13 +59,14 @@ class Rule(object):
     The Rule class holds rule content for a specific rule as well as the logic for
     processing content validation.
     '''
-    def __init__(self, node_name=None):
+    def __init__(self, rule_name=None):
+        self._name = rule_name
         self._attributes = {}
         self._children = []
         self._content_rules = []
 
         # Initialize rule content for this instance from the rules dict
-        rule_data = rules_dict[node_name]
+        rule_data = rules_dict[rule_name]
         self._attributes = rule_data[0]
         self._children = rule_data[1]
         self._content_rules = rule_data[2]
@@ -104,7 +105,7 @@ class Rule(object):
         Raises:
             MetapypeRuleError: Illegal attribute or missing required attribute
         '''
-        for content_rule in self._content_rules:
+        for content_rule in self._content_rules['content_rules']:
             if content_rule == 'emptyContent':
                 self._validate_empty_content(node)
             elif content_rule == 'nonEmptyContent':
@@ -210,6 +211,10 @@ class Rule(object):
             child_name = node.children[i].name
             msg = f'Child "{child_name}" not allowed  for "{node.name}"'
             raise MetapypeRuleError(msg)
+
+    @property
+    def name(self):
+        return self._name
 
     @property
     def attributes(self):
