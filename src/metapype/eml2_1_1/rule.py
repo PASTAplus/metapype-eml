@@ -34,7 +34,6 @@ TYPE_INT = 'int'
 TYPE_FLOAT = 'float'
 TYPE_DATETIME = 'datetime'
 
-PERMISSIONS = ('read', 'write', 'changePermission', 'all')
 
 def load_rules():
     '''
@@ -59,17 +58,57 @@ class Rule(object):
     The Rule class holds rule content for a specific rule as well as the logic for
     processing content validation.
     '''
+
+    @staticmethod
+    def child_list_node_names(child_list:list):
+        if list is None or len(child_list) < 3:
+            raise Exception("Child list must contain at least 3 elements")
+        node_names = child_list[:-2]
+        return node_names
+
+
+    @staticmethod
+    def child_list_min_occurrences(child_list:list):
+        if list is None or len(child_list) < 3:
+            raise Exception("Child list must contain at least 3 elements")
+        min_occurrences = child_list[-2]
+        return min_occurrences
+
+
+    @staticmethod
+    def child_list_max_occurrences(child_list:list):
+        if list is None or len(child_list) < 3:
+            raise Exception("Child list must contain at least 3 elements")
+        max_occurrences = child_list[-1]
+        return max_occurrences
+
+
     def __init__(self, rule_name=None):
         self._name = rule_name
-        self._attributes = {}
-        self._children = []
-        self._content_rules = []
 
         # Initialize rule content for this instance from the rules dict
         rule_data = rules_dict[rule_name]
         self._attributes = rule_data[0]
         self._children = rule_data[1]
-        self._content_rules = rule_data[2]
+        self._content = rule_data[2]
+
+    def is_required_attribute(self, attribute: str):
+        if attribute in self._attributes:
+            return self._attributes[attribute][0]
+        else:
+            raise Exception(f"Unknown attribute {attribute}")
+
+    def allowed_attribute_values(self, attribute: str):
+        values = []
+        if attribute in self._attributes:
+            if (len(self._attributes[attribute]) > 1):
+                values = self._attributes[attribute][1:]
+        else:
+            raise Exception(f"Unknown attribute {attribute}")
+        return values
+
+    def has_enum_content(self):
+        return 'content_enum' in self._content
 
     def validate_rule(self, node: Node):
         '''
@@ -105,15 +144,17 @@ class Rule(object):
         Raises:
             MetapypeRuleError: Illegal attribute or missing required attribute
         '''
-        for content_rule in self._content_rules['content_rules']:
+        for content_rule in self._content['content_rules']:
             if content_rule == 'emptyContent':
                 self._validate_empty_content(node)
             elif content_rule == 'nonEmptyContent':
                 self._validate_non_empty_content(node)
-            elif content_rule == 'permissionsContent':
-                self._validate_permissions_content(node)
             elif content_rule == 'strContent':
                 self._validate_str_content(node)
+
+        if self.has_enum_content():
+            enum_values = self._content['content_enum']
+            self._validate_enum_content(node, enum_values)
 
     def _validate_empty_content(self, node: Node):
         if node.content is not None:
@@ -125,14 +166,14 @@ class Rule(object):
             msg = f'Node "{node.name}" content should not be empty'
             raise MetapypeRuleError(msg)
 
-    def _validate_permissions_content(self, node: Node):
-        if node.content not in PERMISSIONS:
-            msg = f'Node "{node.name}" content should be one of "{PERMISSIONS}", not "{node.content}"'
-            raise MetapypeRuleError(msg)
-
     def _validate_str_content(self, node: Node):
         if node.content is not None and type(node.content) is not str:
             msg = f'Node "{node.name}" content should be type "{TYPE_STR}", not "{type(node.content)}"'
+            raise MetapypeRuleError(msg)
+
+    def _validate_enum_content(self, node: Node, enum_values: list):
+        if node.content not in enum_values:
+            msg = f'Node "{node.name}" content should be one of "{enum_values}", not "{node.content}"'
             raise MetapypeRuleError(msg)
 
     def _validate_attributes(self, node: Node) -> None:
@@ -226,7 +267,14 @@ class Rule(object):
 
     @property
     def content_rules(self):
-        return self._content_rules
+        return self._content['content_rules']
+
+    @property
+    def content_enum(self):
+        if self.has_enum_content():
+            return self._content['content_enum']
+        else:
+            return []
 
 
 # Named constants for EML 2.1.1 metadata rules

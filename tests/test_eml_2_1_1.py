@@ -117,7 +117,8 @@ class TestEml_2_1_1(unittest.TestCase):
         self.assertEquals(r.name, rule.RULE_ACCESS)
         self.assertEquals(type(r.attributes), type(dict()))
         self.assertEquals(type(r.children), type(list()))
-        self.assertEquals(type(r.content_rules), type(dict()))
+        self.assertEquals(type(r.content_rules), type(list()))
+        self.assertEquals(type(r.content_enum), type(list()))
 
     def test_rule_validation(self):
         r = rule.get_rule(names.ACCESS)

@@ -57,7 +57,7 @@
             ["contact", 1, null]
         ],
         {
-            "content_rules" : []
+            "content_rules" : ["emptyContent"]
         }
     ],
     "denyRule" : [
@@ -114,7 +114,8 @@
         [
         ],
         {
-            "content_rules" : ["strContent", "permissionsContent"]
+            "content_rules" : ["strContent"],
+            "content_enum" : ["all", "changePermission", "read", "write"]
         }
     ],
     "principalRule" : [
