@@ -38,17 +38,19 @@ def to_xml(node: Node, level: int=0) -> str:
     else:
         indent = space * level
     open_tag = '<'+ name + attributes + '>'
-    xml += indent + open_tag + '\n'
+    close_tag = '</' + name + '>'
+    xml += indent + open_tag
     if node.content is not None:
-        xml += indent + space + node.content + '\n'
+        xml += node.content + close_tag + '\n'
+    else:
+        xml += '\n'
     for child in node.children:
        xml += to_xml(child, level + 1)
-    close_tag = '</' + name + '>'
 
-    if level == 0:
+    if len(node.children) > 0:
         xml += indent + close_tag
-    else:
-        xml += indent + close_tag + '\n'
+        if level > 0:
+            xml += '\n'
 
     return xml
 
