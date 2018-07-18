@@ -46,7 +46,7 @@ def load_rules():
 
     with open(json_path) as fh:
         rules_dict = json.load(fh)
-    fh.close()
+
     return (rules_dict)
 
 
