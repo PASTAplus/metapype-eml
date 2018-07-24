@@ -317,6 +317,14 @@ node_mappings = {
 }
 
 
+def node_names():
+    '''
+    Helper function.
+    Returns a list of all known node names.
+    '''
+    return list(node_mappings.keys())
+
+
 def get_rule_name(node_name: str):
     '''
     Helper function.
