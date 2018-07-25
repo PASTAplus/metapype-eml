@@ -286,15 +286,20 @@ RULE_DATASET = 'datasetRule'
 RULE_DENY = 'denyRule'
 RULE_EML = 'emlRule'
 RULE_INDIVIDUALNAME = 'individualNameRule'
+RULE_KEYWORD = 'keywordRule'
+RULE_KEYWORDSET = 'keywordSetRule'
+RULE_KEYWORDTHESAURUS = 'keywordThesaurusRule'
 RULE_METADATA = 'metadataRule'
 RULE_PERMISSION = 'permissionRule'
 RULE_PRINCIPAL = 'principalRule'
 RULE_RESPONSIBLEPARTY = 'responsiblePartyRule'
+RULE_TEXT = 'textRule'
 RULE_VALUE = 'valueRule'
 
 
 # Maps node names to their corresponding metadata rule names
 node_mappings = {
+    names.ABSTRACT: RULE_TEXT,
     names.ACCESS: RULE_ACCESS,
     names.ADDITIONALMETADATA: RULE_ADDITIONALMETADATA,
     names.ALLOW: RULE_ALLOW,
@@ -305,6 +310,9 @@ node_mappings = {
     names.EML: RULE_EML,
     names.GIVENNAME: RULE_ANYNAME,
     names.INDIVIDUALNAME: RULE_INDIVIDUALNAME,
+    names.KEYWORD: RULE_KEYWORD,
+    names.KEYWORDSET: RULE_KEYWORDSET,
+    names.KEYWORDTHESAURUS: RULE_KEYWORDTHESAURUS,
     names.METADATA: RULE_METADATA,
     names.ORGANIZATIONNAME: RULE_ANYNAME,
     names.PERMISSION: RULE_PERMISSION,

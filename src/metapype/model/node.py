@@ -92,6 +92,18 @@ class Node(object):
     def remove_child(self, child):
         self._children.remove(child)
 
+    def find_child(self, child_name):
+        '''
+        Finds the first child that matches the child_name
+        and returns it, or returns None if there is no match.
+        '''
+        child = None
+        for child_node in self._children:
+            if child_node.name == child_name:
+                child = child_node
+                break
+        return child
+
 
 def main():
     return 0

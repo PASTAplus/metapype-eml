@@ -60,5 +60,15 @@ class TestNode(unittest.TestCase):
         self.node.remove_child(child)
         self.assertListEqual([], self.node.children)
 
+    def test_find_child(self):
+        access = Node(names.ACCESS)
+        self.node.add_child(access)
+        child = self.node.find_child('access')
+        self.assertIs(access, child)
+        self.node.remove_child(child)
+        self.assertListEqual([], self.node.children)
+        child = self.node.find_child('nonesuch')
+        self.assertIs(child, None)
+
 if __name__ == '__main__':
     unittest.main()

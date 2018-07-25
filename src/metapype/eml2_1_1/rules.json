@@ -54,7 +54,8 @@
         [
             ["title", 1, null],
             ["creator", 1, null],
-            ["contact", 1, null]
+            ["contact", 1, null],
+            ["keywordSet", 0, null]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -97,6 +98,36 @@
         ],
         {
             "content_rules" : ["emptyContent"]
+        }
+    ],
+    "keywordRule" : [
+        { 
+            "keywordType" : [false, "place", "stratum", "temporal", "theme", "taxonomic"]
+        },
+        [
+        ],
+        {
+            "content_rules" : ["strContent", "nonEmptyContent"]
+        }
+    ],
+    "keywordSetRule" : [
+        { 
+        },
+        [
+            ["keyword", 1, null],
+            ["keywordThesaurus", 0, 1]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "keywordThesaurusRule" : [
+        { 
+        },
+        [
+        ],
+        {
+            "content_rules" : ["strContent", "nonEmptyContent"]
         }
     ],
     "metadataRule" : [
@@ -143,6 +174,16 @@
         ],
         {
             "content_rules" : ["emptyContent"]
+        }
+    ],
+    "textRule" : [
+        { 
+            "xml:lang": [true]
+        },
+        [
+        ],
+        {
+            "content_rules" : ["strContent"]
         }
     ],
     "valueRule" : [

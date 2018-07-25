@@ -94,6 +94,22 @@ class TestEml_2_1_1(unittest.TestCase):
         self.surName_contact.content = 'Gaucho'
         self.individualName_contact.add_child(self.surName_contact)
 
+        self.keyword_set = Node(names.KEYWORDSET, parent=self.dataset)
+        self.dataset.add_child(self.keyword_set)
+
+        self.keyword_1 = Node(names.KEYWORD, parent=self.keyword_set)
+        self.keyword_1.content = 'phytoplankton ecology'
+        self.keyword_set.add_child(self.keyword_1)
+
+        self.keyword_2 = Node(names.KEYWORD, parent=self.keyword_set)
+        self.keyword_2.add_attribute('keywordType', 'place')
+        self.keyword_2.content = 'lake'
+        self.keyword_set.add_child(self.keyword_2)
+
+        self.keyword_thesaurus = Node(names.KEYWORDTHESAURUS, parent=self.keyword_set)
+        self.keyword_thesaurus.content = 'IRIS keyword thesaurus'
+        self.keyword_set.add_child(self.keyword_thesaurus)
+
         self.additional_metadata = Node(names.ADDITIONALMETADATA, parent=self.eml)
         self.eml.add_child(self.additional_metadata)
         self.metadata = Node(names.METADATA, parent=self.additional_metadata)

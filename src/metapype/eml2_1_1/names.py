@@ -17,6 +17,7 @@ import daiquiri
 logger = daiquiri.getLogger('names: ' + __name__)
 
 # Named constants for EML 2.1.1 metadata element names
+ABSTRACT = 'abstract'
 ACCESS = 'access'
 ADDITIONALMETADATA = 'additionalMetadata'
 ALLOW = 'allow'
@@ -27,6 +28,9 @@ DENY = 'deny'
 EML = 'eml'
 GIVENNAME = 'givenName'
 INDIVIDUALNAME = 'individualName'
+KEYWORD = 'keyword'
+KEYWORDSET = 'keywordSet'
+KEYWORDTHESAURUS = 'keywordThesaurus'
 METADATA = 'metadata'
 ORGANIZATIONNAME = 'organizationName'
 PERMISSION = 'permission'
