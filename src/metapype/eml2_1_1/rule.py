@@ -18,6 +18,7 @@ import os
 import daiquiri
 import json
 
+from metapype.config import Config
 from metapype.eml2_1_1.exceptions import MetapypeRuleError
 from metapype.eml2_1_1 import names
 from metapype.model.node import Node
@@ -42,7 +43,7 @@ def load_rules():
     if 'EML2_1_1_RULES' in os.environ:
         json_path = os.environ['EML2_1_1_RULES']
     else:
-        json_path = './rules.json'
+        json_path = Config.EML2_1_1_RULES
 
     with open(json_path) as fh:
         rules_dict = json.load(fh)
