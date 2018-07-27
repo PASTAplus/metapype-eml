@@ -84,15 +84,10 @@ class TestEml_2_1_1(unittest.TestCase):
         self.value.content = 'Gaucho'
         self.surName_creator.add_child(self.value)
 
-        self.contact = Node(names.CONTACT, parent=self.dataset)
-        self.dataset.add_child(self.contact)
-
-        self.individualName_contact = Node(names.INDIVIDUALNAME, parent=self.contact)
-        self.contact.add_child(self.individualName_contact)
-
-        self.surName_contact = Node(names.SURNAME, parent=self.individualName_contact)
-        self.surName_contact.content = 'Gaucho'
-        self.individualName_contact.add_child(self.surName_contact)
+        self.abstract = Node(names.ABSTRACT, parent=self.dataset)
+        self.abstract.add_attribute('xml:lang', 'en')
+        self.abstract.content = 'This is the text of the document abstract.'
+        self.dataset.add_child(self.abstract)
 
         self.keyword_set = Node(names.KEYWORDSET, parent=self.dataset)
         self.dataset.add_child(self.keyword_set)
@@ -109,6 +104,16 @@ class TestEml_2_1_1(unittest.TestCase):
         self.keyword_thesaurus = Node(names.KEYWORDTHESAURUS, parent=self.keyword_set)
         self.keyword_thesaurus.content = 'IRIS keyword thesaurus'
         self.keyword_set.add_child(self.keyword_thesaurus)
+
+        self.contact = Node(names.CONTACT, parent=self.dataset)
+        self.dataset.add_child(self.contact)
+
+        self.individualName_contact = Node(names.INDIVIDUALNAME, parent=self.contact)
+        self.contact.add_child(self.individualName_contact)
+
+        self.surName_contact = Node(names.SURNAME, parent=self.individualName_contact)
+        self.surName_contact.content = 'Gaucho'
+        self.individualName_contact.add_child(self.surName_contact)
 
         self.additional_metadata = Node(names.ADDITIONALMETADATA, parent=self.eml)
         self.eml.add_child(self.additional_metadata)
