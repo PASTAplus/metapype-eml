@@ -54,8 +54,9 @@
         [
             ["title", 1, null],
             ["creator", 1, null],
-            ["contact", 1, null],
-            ["keywordSet", 0, null]
+            ["abstract", 0, 1],
+            ["keywordSet", 0, null],
+            ["contact", 1, null]
         ],
         {
             "content_rules" : ["emptyContent"]
