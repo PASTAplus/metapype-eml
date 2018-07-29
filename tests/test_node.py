@@ -17,7 +17,8 @@ import unittest
 
 import daiquiri
 
-import metapype.eml2_1_1.names as names
+from metapype.eml2_1_1 import names
+from metapype.eml2_1_1 import validate
 from metapype.model.node import Node
 
 
@@ -33,9 +34,6 @@ class TestNode(unittest.TestCase):
     def tearDown(self):
         self.node = None
 
-    def test_create_node(self):
-        self.assertIsNotNone(self.node)
-
     def test_add_attribute(self):
         self.node.add_attribute('packageId', 'test.1.1')
         self.node.add_attribute('system', 'metapype')
@@ -46,19 +44,24 @@ class TestNode(unittest.TestCase):
             self.assertTrue(value in ['test.1.1', 'metapype'])
 
     def test_add_child(self):
-        access = Node(names.ACCESS)
-        self.node.add_child(access)
+        child_1 = Node(names.ACCESS)
+        self.node.add_child(child_1)
         children = self.node.children
-        for child in children:
-            self.assertIs(access, child)
+        self.assertIs(child_1, children[0])
+        child_2 = Node(names.DATASET)
+        self.node.add_child(child_2, 0)
+        self.assertIs(child_2, children[0])
 
-    def test_remove_child(self):
-        access = Node(names.ACCESS)
-        self.node.add_child(access)
-        child = self.node.children[0]
-        self.assertIs(access,child)
-        self.node.remove_child(child)
-        self.assertListEqual([], self.node.children)
+    def test_copy(self):
+        node = Node(names.GIVENNAME)
+        node.content = 'Chase'
+        validate.node(node)
+        node_copy = node.copy()
+        validate.node(node_copy)
+
+
+    def test_create_node(self):
+        self.assertIsNotNone(self.node)
 
     def test_find_child(self):
         access = Node(names.ACCESS)
@@ -69,6 +72,14 @@ class TestNode(unittest.TestCase):
         self.assertListEqual([], self.node.children)
         child = self.node.find_child('nonesuch')
         self.assertIs(child, None)
+
+    def test_remove_child(self):
+        access = Node(names.ACCESS)
+        self.node.add_child(access)
+        child = self.node.children[0]
+        self.assertIs(access,child)
+        self.node.remove_child(child, 0)
+        self.assertListEqual([], self.node.children)
 
 if __name__ == '__main__':
     unittest.main()
