@@ -59,7 +59,6 @@ class TestNode(unittest.TestCase):
         node_copy = node.copy()
         validate.node(node_copy)
 
-
     def test_create_node(self):
         self.assertIsNotNone(self.node)
 
