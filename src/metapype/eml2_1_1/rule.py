@@ -281,8 +281,10 @@ class Rule(object):
 # Named constants for EML 2.1.1 metadata rules
 RULE_ACCESS = 'accessRule'
 RULE_ADDITIONALMETADATA = 'additionalMetadataRule'
+RULE_ADDRESS = 'addressRule'
 RULE_ALLOW = 'allowRule'
 RULE_ANYNAME = 'anyNameRule'
+RULE_ANYURI = 'anyURIRule'
 RULE_DATASET = 'datasetRule'
 RULE_DENY = 'denyRule'
 RULE_EML = 'emlRule'
@@ -292,9 +294,11 @@ RULE_KEYWORDSET = 'keywordSetRule'
 RULE_KEYWORDTHESAURUS = 'keywordThesaurusRule'
 RULE_METADATA = 'metadataRule'
 RULE_PERMISSION = 'permissionRule'
+RULE_PHONE = 'phoneRule'
 RULE_PRINCIPAL = 'principalRule'
 RULE_RESPONSIBLEPARTY = 'responsiblePartyRule'
 RULE_TEXT = 'textRule'
+RULE_USERID = 'userIdRule'
 RULE_VALUE = 'valueRule'
 
 
@@ -303,11 +307,17 @@ node_mappings = {
     names.ABSTRACT: RULE_TEXT,
     names.ACCESS: RULE_ACCESS,
     names.ADDITIONALMETADATA: RULE_ADDITIONALMETADATA,
+    names.ADDRESS: RULE_ADDRESS,
+    names.ADMINISTRATIVEAREA: RULE_ANYNAME,
     names.ALLOW: RULE_ALLOW,
+    names.CITY: RULE_ANYNAME,
     names.CONTACT: RULE_RESPONSIBLEPARTY,
+    names.COUNTRY: RULE_ANYNAME,
     names.CREATOR: RULE_RESPONSIBLEPARTY,
     names.DATASET: RULE_DATASET,
+    names.DELIVERYPOINT: RULE_ANYNAME,
     names.DENY: RULE_DENY,
+    names.ELECTRONICMAILADDRESS: RULE_ANYNAME,
     names.EML: RULE_EML,
     names.GIVENNAME: RULE_ANYNAME,
     names.INDIVIDUALNAME: RULE_INDIVIDUALNAME,
@@ -315,13 +325,17 @@ node_mappings = {
     names.KEYWORDSET: RULE_KEYWORDSET,
     names.KEYWORDTHESAURUS: RULE_KEYWORDTHESAURUS,
     names.METADATA: RULE_METADATA,
+    names.ONLINEURL: RULE_ANYURI,
     names.ORGANIZATIONNAME: RULE_ANYNAME,
     names.PERMISSION: RULE_PERMISSION,
+    names.PHONE: RULE_PHONE,
     names.POSITIONNAME: RULE_ANYNAME,
+    names.POSTALCODE: RULE_ANYNAME,
     names.PRINCIPAL: RULE_PRINCIPAL,
     names.SALUTATION: RULE_ANYNAME,
     names.SURNAME: RULE_ANYNAME,
     names.TITLE: RULE_ANYNAME,
+    names.USERID: RULE_USERID,
     names.VALUE: RULE_VALUE,
 }
 

@@ -75,6 +75,14 @@ class TestEml_2_1_1(unittest.TestCase):
         self.individualName_creator = Node(names.INDIVIDUALNAME, parent=self.creator)
         self.creator.add_child(self.individualName_creator)
 
+        self.salutation_creator = Node(names.SALUTATION, parent=self.individualName_creator)
+        self.salutation_creator.content = 'Mr.'
+        self.individualName_creator.add_child(self.salutation_creator)
+
+        self.given_name_creator = Node(names.GIVENNAME, parent=self.individualName_creator)
+        self.given_name_creator.content = 'Chase'
+        self.individualName_creator.add_child(self.given_name_creator)
+
         self.surName_creator = Node(names.SURNAME, parent=self.individualName_creator)
         self.surName_creator.content = 'Gaucho'
         self.individualName_creator.add_child(self.surName_creator)
@@ -83,6 +91,51 @@ class TestEml_2_1_1(unittest.TestCase):
         self.value.add_attribute('xml:lang', 'en')
         self.value.content = 'Gaucho'
         self.surName_creator.add_child(self.value)
+
+        self.address = Node(names.ADDRESS, parent=self.creator)
+        self.creator.add_child(self.address)
+
+        self.delivery_point_1 = Node(names.DELIVERYPOINT, parent=self.address)
+        self.delivery_point_1.content = '100 Maple St'
+        self.address.add_child(self.delivery_point_1)
+
+        self.delivery_point_2 = Node(names.DELIVERYPOINT, parent=self.address)
+        self.delivery_point_2.content = 'Apt. 10-B'
+        self.address.add_child(self.delivery_point_2)
+
+        self.city = Node(names.CITY, parent=self.address)
+        self.city.content = "Gotham City"
+        self.address.add_child(self.city)
+
+        self.administrative_area = Node(names.ADMINISTRATIVEAREA, parent=self.address)
+        self.administrative_area.content = "New York"
+        self.address.add_child(self.administrative_area)
+
+        self.postal_code = Node(names.POSTALCODE, parent=self.address)
+        self.postal_code.content = '11111'
+        self.address.add_child(self.postal_code)
+
+        self.country = Node(names.COUNTRY, parent=self.address)
+        self.country.content = 'USA'
+        self.address.add_child(self.country)
+
+        self.phone = Node(names.PHONE, parent=self.creator)
+        self.phone.content = '555-555-5555'
+        self.phone.add_attribute('phonetype', 'voice')
+        self.creator.add_child(self.phone)
+
+        self.electronic_mail_address = Node(names.ELECTRONICMAILADDRESS, parent=self.creator)
+        self.electronic_mail_address.content = 'cgaucho@somecollege.edu'
+        self.creator.add_child(self.electronic_mail_address)
+
+        self.online_url = Node(names.ONLINEURL, parent=self.creator)
+        self.online_url.content = 'https://www.somecollege.edu/people/cgaucho'
+        self.creator.add_child(self.online_url)
+
+        self.user_id = Node(names.USERID, parent=self.creator)
+        self.user_id.content = 'uid=jgaucho,o=EDI,dc=edirepository,dc=org'
+        self.user_id.add_attribute('directory', 'ldap:///ldap.edirepository.org/dc=edirepository,dc=org')
+        self.creator.add_child(self.user_id)
 
         self.abstract = Node(names.ABSTRACT, parent=self.dataset)
         self.abstract.add_attribute('xml:lang', 'en')

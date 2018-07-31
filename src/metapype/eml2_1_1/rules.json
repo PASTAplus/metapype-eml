@@ -26,6 +26,23 @@
             "content_rules" : ["emptyContent"]
         }
     ],
+    "addressRule" : [
+        { 
+            "id": [false],
+            "system": [false],
+            "scope": [false]
+        },
+        [
+            ["deliveryPoint", 0, null],
+            ["city", 0, 1],
+            ["administrativeArea", 0, 1],
+            ["postalCode", 0, 1],
+            ["country", 0, 1]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
     "allowRule" : [
         { 
         },
@@ -46,6 +63,15 @@
         ],
         {
             "content_rules" : ["strContent", "nonEmptyContent"]
+        }
+    ],
+    "anyURIRule" : [
+        { 
+        },
+        [
+        ],
+        {
+            "content_rules" : ["anyURIContent", "nonEmptyContent"]
         }
     ],
     "datasetRule" : [
@@ -150,6 +176,16 @@
             "content_enum" : ["all", "changePermission", "read", "write"]
         }
     ],
+    "phoneRule" : [
+        { 
+            "phonetype" : [false, "facsimile", "tdd", "voice"]
+        },
+        [
+        ],
+        {
+            "content_rules" : ["strContent", "nonEmptyContent"]
+        }
+    ],
     "principalRule" : [
         { 
         },
@@ -185,6 +221,16 @@
         ],
         {
             "content_rules" : ["strContent"]
+        }
+    ],
+    "userIdRule" : [
+        { 
+            "directory": [true]
+        },
+        [
+        ],
+        {
+            "content_rules" : ["strContent", "nonEmptyContent"]
         }
     ],
     "valueRule" : [
