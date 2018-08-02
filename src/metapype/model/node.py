@@ -133,8 +133,9 @@ class Node(object):
 
     def find_child(self, child_name):
         '''
-        Finds the first child that matches the child_name and returns it, or
-        returns None if there is no match.
+        Recursively searches for the first child that matches the 
+        child_name and returns it, or returns None if there is no 
+        match.
 
         Args:
             child_name: Child name to be matched
@@ -146,6 +147,9 @@ class Node(object):
         for child_node in self._children:
             if child_node.name == child_name:
                 child = child_node
+            else:       
+                child = child_node.find_child(child_name=child_name)
+            if child:
                 break
         return child
 

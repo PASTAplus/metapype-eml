@@ -65,13 +65,22 @@ class TestNode(unittest.TestCase):
     def test_find_child(self):
         access = Node(names.ACCESS)
         self.node.add_child(access)
-        child = self.node.find_child('access')
+        child = self.node.find_child(names.ACCESS)
         self.assertIs(access, child)
-        self.node.remove_child(child)
-        self.assertListEqual([], self.node.children)
+
+        allow = Node(names.ALLOW)
+        access.add_child(allow)
+        grandchild = self.node.find_child(names.ALLOW)
+        self.assertIs(grandchild, allow)
+
+        permission = Node(names.PERMISSION)
+        allow.add_child(permission)
+        great_grandchild = self.node.find_child(names.PERMISSION)
+        self.assertIs(great_grandchild, permission)
+
         child = self.node.find_child('nonesuch')
         self.assertIs(child, None)
-
+        
     def test_remove_child(self):
         access = Node(names.ACCESS)
         self.node.add_child(access)
