@@ -19,6 +19,9 @@ import daiquiri
 logger = daiquiri.getLogger('node.py: ' + __name__)
 
 
+tree_hash = {}
+
+
 class Node(object):
     '''
     Model node class representation.
@@ -30,11 +33,15 @@ class Node(object):
     '''
 
     def __init__(self, name: str, parent=None, content: str=None):
+        self._id = id(self)
         self._name = name
         self._parent = parent
         self._content = content
         self._attributes = {} # Attribute key/value pairs
         self._children = [] # Children node objects in add order
+
+        # Add node to tree hash table
+        tree_hash[self._id] = self
 
     def add_attribute(self, name, value):
         self._attributes[name] = value
@@ -128,6 +135,15 @@ class Node(object):
                 children.append(child_node)
         return children
 
+    @property
+    def id(self):
+        '''
+        Returns the unique identifier of the node instance
+        Returns:
+            Int
+        '''
+        return self._id
+
     def list_attributes(self):
         return list(self._attributes.keys())
 
@@ -156,15 +172,6 @@ class Node(object):
     @property
     def name(self):
         return self._name
-
-    @property
-    def node_id(self):
-        '''
-        Returns the unique identifier of the node instance
-        Returns:
-            Int
-        '''
-        return id(self)
 
     @property
     def parent(self):

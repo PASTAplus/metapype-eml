@@ -20,6 +20,7 @@ import daiquiri
 from metapype.eml2_1_1 import names
 from metapype.eml2_1_1 import validate
 from metapype.model.node import Node
+from metapype.model.node import tree_hash
 
 
 sys.path.insert(0, os.path.abspath('../src'))
@@ -88,6 +89,11 @@ class TestNode(unittest.TestCase):
         self.assertIs(access,child)
         self.node.remove_child(child, 0)
         self.assertListEqual([], self.node.children)
+
+    def test_tree_hash(self):
+        access = Node(names.ACCESS)
+        access_from_tree = tree_hash[access.id]
+        self.assertIs(access, access_from_tree)
 
 if __name__ == '__main__':
     unittest.main()

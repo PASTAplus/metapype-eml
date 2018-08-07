@@ -83,7 +83,7 @@ def tree(root: Node, e: dict):
     '''
     evaluation = node(root)
     if evaluation is not None:
-        e[root.node_id] = evaluation
+        e[root.id] = evaluation
     for child in root.children:
         tree(child, e)
 
