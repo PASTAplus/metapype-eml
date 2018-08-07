@@ -63,7 +63,9 @@ class Node(object):
             self._children.insert(index, child)
 
     def attribute_value(self, name):
-        return self._attributes[name]
+        if name in self._attributes:
+            return self._attributes[name]
+        return None
 
     @property
     def attributes(self):
