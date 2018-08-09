@@ -12,6 +12,7 @@
     5/15/18
 """
 import copy
+import uuid
 
 import daiquiri
 
@@ -33,6 +34,7 @@ class Node(object):
     '''
 
     def __init__(self, name: str, parent=None, content: str=None):
+        self._id = str(uuid.uuid1())
         self._name = name
         self._parent = parent
         self._content = content
@@ -40,7 +42,7 @@ class Node(object):
         self._children = [] # Children node objects in add order
 
         # Add node to tree hash table
-        tree_hash[id(self)] = self
+        tree_hash[self._id] = self
 
     def add_attribute(self, name, value):
         self._attributes[name] = value
@@ -141,9 +143,9 @@ class Node(object):
         '''
         Returns the unique identifier of the node instance
         Returns:
-            Int
+            Str
         '''
-        return id(self)
+        return self._id
 
     def list_attributes(self):
         return list(self._attributes.keys())
