@@ -191,21 +191,16 @@ class Node(object):
     def remove_attribute(self, name):
         del self._attributes[name]
 
-    def remove_child(self, child, index=None):
+    def remove_child(self, child):
         '''
-        Removes a the first child object from the children list or at the
-        or at the index location if specified.
+        Removes the child object from the children list.
         Args:
             child: Node
-            index: Int
 
         Returns:
             None
         '''
-        if index is None:
-            self._children.remove(child)
-        else:
-            del self._children[index]
+        self._children.remove(child)
 
 
 def main():
