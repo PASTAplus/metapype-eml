@@ -234,6 +234,7 @@ class TestEml_2_1_1(unittest.TestCase):
         r = rule.get_rule(names.EML)
         dataset = Node(names.DATASET, parent=eml)
         index = r.child_insert_index(eml, dataset)
+        eml.add_child(dataset, index=index)
         self.assertIsInstance(index, int)
 
 
