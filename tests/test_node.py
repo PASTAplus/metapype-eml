@@ -87,8 +87,8 @@ class TestNode(unittest.TestCase):
         self.node.add_child(access)
         child = self.node.children[0]
         self.assertIs(access,child)
-        self.node.remove_child(child, 0)
-        self.assertListEqual([], self.node.children)
+        self.node.remove_child(child)
+        self.assertNotIn(access, self.node.children)
 
     def test_replace_child(self):
         individual_name = Node(names.INDIVIDUALNAME)
