@@ -20,7 +20,7 @@ import daiquiri
 logger = daiquiri.getLogger('node.py: ' + __name__)
 
 
-tree_hash = {}
+node_store = {}
 
 
 class Node(object):
@@ -33,6 +33,18 @@ class Node(object):
         content: Optional string content
     '''
 
+    @staticmethod
+    def get_node_instance(id):
+        '''
+        Returns the instance of a node from its identifier
+        Args:
+            id: Str
+
+        Returns:
+            Node
+        '''
+        return node_store[id]
+
     def __init__(self, name: str, parent=None, content: str=None):
         self._id = str(uuid.uuid1())
         self._name = name
@@ -41,8 +53,8 @@ class Node(object):
         self._attributes = {} # AttTortugaribute key/value pairs
         self._children = [] # Children node objects in add order
 
-        # Add node to tree hash table
-        tree_hash[self._id] = self
+        # Add node to store
+        node_store[self._id] = self
 
     def add_attribute(self, name, value):
         self._attributes[name] = value

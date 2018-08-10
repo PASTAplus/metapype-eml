@@ -104,10 +104,10 @@ class TestNode(unittest.TestCase):
         self.assertNotIn(sur_name_1, individual_name.children)
 
 
-    def test_tree_hash(self):
+    def test_get_node_instance(self):
         access = Node(names.ACCESS)
-        access_from_tree = tree_hash[access.id]
-        self.assertIs(access, access_from_tree)
+        node = Node.get_node_instance(access.id)
+        self.assertIs(access, node)
 
 if __name__ == '__main__':
     unittest.main()

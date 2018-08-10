@@ -22,8 +22,9 @@ from metapype.eml2_1_1 import evaluate
 from metapype.eml2_1_1 import names
 from metapype.eml2_1_1 import rule
 from metapype.eml2_1_1 import validate
-from metapype.model.node import Node
 from metapype.model import io
+from metapype.model import node
+from metapype.model.node import Node
 
 
 logger = daiquiri.getLogger('harness: ' + __name__)
@@ -81,6 +82,8 @@ def main():
     surName_contact = Node(names.SURNAME, parent=individualName_contact)
     surName_contact.content = 'Gaucho'
     individualName_contact.add_child(surName_contact)
+
+    node = Node.get_node_instance(access.id)
 
     access_rule = rule.get_rule(names.ACCESS)
     
