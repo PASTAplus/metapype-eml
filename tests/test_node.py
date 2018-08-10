@@ -20,7 +20,6 @@ import daiquiri
 from metapype.eml2_1_1 import names
 from metapype.eml2_1_1 import validate
 from metapype.model.node import Node
-from metapype.model.node import tree_hash
 
 
 sys.path.insert(0, os.path.abspath('../src'))
