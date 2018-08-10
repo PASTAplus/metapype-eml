@@ -90,6 +90,20 @@ class TestNode(unittest.TestCase):
         self.node.remove_child(child, 0)
         self.assertListEqual([], self.node.children)
 
+    def test_replace_child(self):
+        individual_name = Node(names.INDIVIDUALNAME)
+        sur_name_1 = Node(names.SURNAME, parent=individual_name)
+        sur_name_1.content = 'Gaucho'
+        individual_name.add_child(sur_name_1)
+        sur_name_2 = Node(names.SURNAME, parent=individual_name)
+        sur_name_2.content = 'Carroll'
+        self.assertIn(sur_name_1, individual_name.children)
+        self.assertNotIn(sur_name_2, individual_name.children)
+        individual_name.replace_child(old_child=sur_name_1, new_child=sur_name_2)
+        self.assertIn(sur_name_2, individual_name.children)
+        self.assertNotIn(sur_name_1, individual_name.children)
+
+
     def test_tree_hash(self):
         access = Node(names.ACCESS)
         access_from_tree = tree_hash[access.id]

@@ -202,6 +202,20 @@ class Node(object):
         '''
         self._children.remove(child)
 
+    def replace_child(self, old_child, new_child):
+        '''
+        Replaces the old child with a new child
+        Args:
+            old_child: Node
+            new_child: Node
+
+        Returns:
+            None
+
+        '''
+        new_child.parent = self
+        self._children[self._children.index(old_child)] = new_child
+
 
 def main():
     return 0
