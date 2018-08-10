@@ -38,7 +38,7 @@ class Node(object):
         self._name = name
         self._parent = parent
         self._content = content
-        self._attributes = {} # Attribute key/value pairs
+        self._attributes = {} # AttTortugaribute key/value pairs
         self._children = [] # Children node objects in add order
 
         # Add node to tree hash table
@@ -146,6 +146,10 @@ class Node(object):
             Str
         '''
         return self._id
+
+    @id.setter
+    def id(self, id):
+        self._id = id
 
     def list_attributes(self):
         return list(self._attributes.keys())
