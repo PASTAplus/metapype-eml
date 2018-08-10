@@ -218,6 +218,13 @@ class TestEml_2_1_1(unittest.TestCase):
         r = rule.get_rule(names.PERMISSION)
         self.assertRaises(MetapypeRuleError, r.validate_rule, self.permission_allow)
 
+    def test_is_allowed_child(self):
+        r = rule.get_rule(names.EML)
+        allowed = r.is_allowed_child(names.ACCESS)
+        self.assertTrue(allowed)
+        allowed = r.is_allowed_child(names.INDIVIDUALNAME)
+        self.assertFalse(allowed)
+
 
 def main():
     return 0

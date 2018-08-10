@@ -93,11 +93,24 @@ class Rule(object):
         self._children = rule_data[1]
         self._content = rule_data[2]
 
+    def child_insert_index(self, parent: Node, child: Node):
+        index = None
+        if self.is_allowed_child(child.name):
+            pass
+        return index
+
     def is_required_attribute(self, attribute: str):
         if attribute in self._attributes:
             return self._attributes[attribute][0]
         else:
             raise Exception(f"Unknown attribute {attribute}")
+
+    def is_allowed_child(self, child_name: str):
+        allowed = False
+        for child_list in self._children:
+            if child_name in child_list[:-2]:
+                allowed = True
+        return allowed
 
     def allowed_attribute_values(self, attribute: str):
         values = []
