@@ -41,9 +41,19 @@ class Node(object):
             id: Str
 
         Returns:
-            Node
+            Node if exist; otherwise None
         '''
-        return node_store[id]
+        if id in node_store:
+            return node_store[id]
+        else:
+            return None
+
+    @staticmethod
+    def delete_node_instance(id: str):
+        node = node_store[id]
+        for child in node.children:
+            Node.delete_node_instance(child.id)
+        del node_store[id]
 
     def __init__(self, name: str, parent=None, content: str=None):
         self._id = str(uuid.uuid1())
@@ -161,7 +171,6 @@ class Node(object):
 
     @id.setter
     def id(self, id):
-        del node_store[self._id]
         self._id = id
         node_store[self._id] = self
 
