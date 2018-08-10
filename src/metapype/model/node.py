@@ -34,7 +34,7 @@ class Node(object):
     '''
 
     @staticmethod
-    def get_node_instance(id):
+    def get_node_instance(id: str):
         '''
         Returns the instance of a node from its identifier
         Args:
@@ -161,7 +161,9 @@ class Node(object):
 
     @id.setter
     def id(self, id):
+        del node_store[self._id]
         self._id = id
+        node_store[self._id] = self
 
     def list_attributes(self):
         return list(self._attributes.keys())
