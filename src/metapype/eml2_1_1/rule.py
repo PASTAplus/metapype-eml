@@ -93,11 +93,28 @@ class Rule(object):
         self._children = rule_data[1]
         self._content = rule_data[2]
 
+    def child_insert_index(self, parent: Node, new_child: Node):
+        new_child_name = new_child.name
+        new_child_position = self._get_child_position(new_child_name)
+        for index in range(len(parent.children)-1, -1, -1):
+            child_name = parent.children[index].name
+            child_position = self._get_child_position(child_name)
+            if new_child_position >= child_position:
+                return index + 1
+        return 0
+
     def is_required_attribute(self, attribute: str):
         if attribute in self._attributes:
             return self._attributes[attribute][0]
         else:
             raise Exception(f"Unknown attribute {attribute}")
+
+    def is_allowed_child(self, child_name: str):
+        allowed = False
+        for child_list in self._children:
+            if child_name in child_list[:-2]:
+                allowed = True
+        return allowed
 
     def allowed_attribute_values(self, attribute: str):
         values = []
@@ -128,6 +145,13 @@ class Rule(object):
         self._validate_content(node)
         self._validate_attributes(node)
         self._validate_children(node)
+
+    def _get_child_position(self, node_name: str):
+        for position in range(0,len(self.children)):
+            if node_name in self.children[position][:-2]:
+                return position
+        msg = f'Child "{node_name}" not allowed'
+        raise MetapypeRuleError(msg)
 
     def _validate_content(self, node: Node):
         '''

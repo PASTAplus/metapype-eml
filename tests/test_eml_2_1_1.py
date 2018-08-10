@@ -218,6 +218,25 @@ class TestEml_2_1_1(unittest.TestCase):
         r = rule.get_rule(names.PERMISSION)
         self.assertRaises(MetapypeRuleError, r.validate_rule, self.permission_allow)
 
+    def test_is_allowed_child(self):
+        r = rule.get_rule(names.EML)
+        allowed = r.is_allowed_child(names.ACCESS)
+        self.assertTrue(allowed)
+        allowed = r.is_allowed_child(names.INDIVIDUALNAME)
+        self.assertFalse(allowed)
+
+    def test_child_insert_index(self):
+        eml = Node(names.EML)
+        access = Node(names.ACCESS, parent=eml)
+        eml.add_child(access)
+        additional_metadata = Node(names.ADDITIONALMETADATA, parent=eml)
+        eml.add_child(additional_metadata)
+        r = rule.get_rule(names.EML)
+        dataset = Node(names.DATASET, parent=eml)
+        index = r.child_insert_index(eml, dataset)
+        self.assertIsInstance(index, int)
+
+
 
 def main():
     return 0
