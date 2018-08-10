@@ -45,16 +45,18 @@ def from_json(json_node: dict, parent: Node = None) -> Node:
     if parent is not None:
         node.parent = parent
 
-    attributes = body[0]['attributes']
+    node.id = body[0]['id']
+
+    attributes = body[1]['attributes']
     if attributes is not None:
         for attribute in attributes:
             node.add_attribute(attribute, attributes[attribute])
 
-    content = body[1]['content']
+    content = body[2]['content']
     if content is not None:
         node.content = content
 
-    children = body[2]['children']
+    children = body[3]['children']
     for child in children:
         if child is not None:
             child_node = from_json(child, node)
@@ -111,6 +113,9 @@ def to_json(node: Node, level: int = 0, comma: str = '') -> str:
 
     open_tag = '{"' + name + '":[\n'
     json += indent + open_tag
+
+    id = '{"id":"' + node.id + '"},\n'
+    json += indent + space + id
 
     attributes = '{"attributes":null},'
     if len(node.attributes) > 0:
