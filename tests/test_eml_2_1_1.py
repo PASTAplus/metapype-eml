@@ -225,6 +225,18 @@ class TestEml_2_1_1(unittest.TestCase):
         allowed = r.is_allowed_child(names.INDIVIDUALNAME)
         self.assertFalse(allowed)
 
+    def test_child_insert_index(self):
+        eml = Node(names.EML)
+        access = Node(names.ACCESS, parent=eml)
+        eml.add_child(access)
+        additional_metadata = Node(names.ADDITIONALMETADATA, parent=eml)
+        eml.add_child(additional_metadata)
+        r = rule.get_rule(names.EML)
+        dataset = Node(names.DATASET, parent=eml)
+        index = r.child_insert_index(eml, dataset)
+        self.assertIsInstance(index, int)
+
+
 
 def main():
     return 0
