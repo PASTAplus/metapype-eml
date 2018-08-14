@@ -20,7 +20,6 @@ import daiquiri
 from metapype.eml2_1_1 import names
 from metapype.eml2_1_1 import validate
 from metapype.model.node import Node
-from metapype.model.node import node_store
 
 
 sys.path.insert(0, os.path.abspath('../src'))
@@ -104,12 +103,12 @@ class TestNode(unittest.TestCase):
         self.assertNotIn(sur_name_1, individual_name.children)
 
 
-    def test_get_node_instance(self):
+    def test_get_node(self):
         access = Node(names.ACCESS)
         node = Node.get_node_instance(access.id)
         self.assertIs(access, node)
 
-    def test_delete_node_instance(self):
+    def test_delete_node(self):
         eml = Node(names.EML)
         eml.add_attribute('packageId', 'edi.23.1')
         eml.add_attribute('system', 'metapype')
@@ -128,8 +127,28 @@ class TestNode(unittest.TestCase):
         node = Node.get_node_instance(principal.id)
         self.assertIs(principal, node)
         Node.delete_node_instance(eml.id)
-        self.assertNotIn(principal.id, node_store)
+        self.assertNotIn(principal.id, Node.store)
 
+    def test_delete_node_no_children(self):
+        eml = Node(names.EML)
+        eml.add_attribute('packageId', 'edi.23.1')
+        eml.add_attribute('system', 'metapype')
+        access = Node(names.ACCESS, parent=eml)
+        access.add_attribute('authSystem', 'pasta')
+        access.add_attribute('order', 'allowFirst')
+        eml.add_child(access)
+        allow = Node(names.ALLOW, parent=access)
+        access.add_child(allow)
+        principal = Node(names.PRINCIPAL, parent=allow)
+        principal.content = 'uid=gaucho,o=EDI,dc=edirepository,dc=org'
+        allow.add_child(principal)
+        permission = Node(names.PERMISSION, parent=allow)
+        permission.content = 'all'
+        allow.add_child(permission)
+        node = Node.get_node_instance(principal.id)
+        self.assertIs(principal, node)
+        Node.delete_node_instance(eml.id, children=False)
+        self.assertIn(principal.id, Node.store)
 
 if __name__ == '__main__':
     unittest.main()

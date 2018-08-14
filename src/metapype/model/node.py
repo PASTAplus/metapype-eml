@@ -16,11 +16,7 @@ import uuid
 
 import daiquiri
 
-
 logger = daiquiri.getLogger('node.py: ' + __name__)
-
-
-node_store = {}
 
 
 class Node(object):
@@ -29,47 +25,75 @@ class Node(object):
 
     Attributes:
         name: Required string of metadata element name being modeled
+        id: Optional node identifier
         parent: Optional parent node
         content: Optional string content
     '''
 
-    @staticmethod
-    def get_node_instance(id: str):
+    def __init__(self, name: str, id: str = None, parent=None,
+                 content: str = None):
+        if id is None:
+            self._id = str(uuid.uuid1())
+        else:
+            self._id = id
+        self._name = name
+        self._parent = parent
+        self._content = content
+        self._attributes = {}
+        self._children = []
+        Node.set_node_instance(self)
+
+    store = {}
+
+    @classmethod
+    def delete_node_instance(cls, id: str, children: bool=True):
+        '''
+        Removes the node instance from the store; if children set to True, then
+        remove all children recursively.
+
+        Args:
+            id: str node identifier
+            children: bool
+
+        Returns:
+            None
+        '''
+        if children:
+            node = cls.get_node_instance(id)
+            for child in node.children:
+                cls.delete_node_instance(child.id)
+        del Node.store[id]
+
+    @classmethod
+    def get_node_instance(cls, id: str):
         '''
         Returns the instance of a node from its identifier
+
         Args:
             id: Str
 
         Returns:
-            Node if exist; otherwise None
+            Node
         '''
-        if id in node_store:
-            return node_store[id]
-        else:
-            return None
+        return cls.store[id]
 
-    @staticmethod
-    def delete_node_instance(id: str):
-        node = node_store[id]
-        for child in node.children:
-            Node.delete_node_instance(child.id)
-        del node_store[id]
+    @classmethod
+    def set_node_instance(cls, node):
+        '''
+        Sets the node instance in the node store
 
-    def __init__(self, name: str, parent=None, content: str=None):
-        self._id = str(uuid.uuid1())
-        self._name = name
-        self._parent = parent
-        self._content = content
-        self._attributes = {} # AttTortugaribute key/value pairs
-        self._children = [] # Children node objects in add order
+        Args:
+            node:
 
-        # Add node to store
-        node_store[self._id] = self
+        Returns:
+            None
+        '''
+        cls.store[node._id] = node
 
     def add_attribute(self, name, value):
         self._attributes[name] = value
 
-    def add_child(self, child, index=None ):
+    def add_child(self, child, index=None):
         '''
         Adds a child object into the children list at either the end of
         the list or at the index location if specified.
@@ -169,11 +193,6 @@ class Node(object):
         '''
         return self._id
 
-    @id.setter
-    def id(self, id):
-        self._id = id
-        node_store[self._id] = self
-
     def list_attributes(self):
         return list(self._attributes.keys())
 
@@ -193,7 +212,7 @@ class Node(object):
         for child_node in self._children:
             if child_node.name == child_name:
                 child = child_node
-            else:       
+            else:
                 child = child_node.find_child(child_name=child_name)
             if child:
                 break
