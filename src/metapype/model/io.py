@@ -40,12 +40,10 @@ def from_json(json_node: dict, parent: Node = None) -> Node:
     _ = json_node.popitem()
     name = _[0]
     body = _[1]
-    node = Node(name)
+    node = Node(name, id=body[0]['id'])
 
     if parent is not None:
         node.parent = parent
-
-    node.id = body[0]['id']
 
     attributes = body[1]['attributes']
     if attributes is not None:
@@ -77,7 +75,7 @@ def graph(node: Node, level: int) -> str:
         str: String representation of the model instance.
     '''
     indent = '  ' * level
-    name = node.name
+    name = f'{node.name}[{node.id}]'
     if node.content is not None:
         name += ': {}'.format(node.content)
     if len(node.attributes) > 0:
