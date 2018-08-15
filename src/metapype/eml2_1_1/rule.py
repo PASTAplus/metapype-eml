@@ -34,6 +34,7 @@ TYPE_STR = 'str'
 TYPE_INT = 'int'
 TYPE_FLOAT = 'float'
 TYPE_DATETIME = 'datetime'
+TYPE_YEARDATE = 'yearDate'
 
 
 def load_rules():
@@ -176,6 +177,8 @@ class Rule(object):
                 self._validate_non_empty_content(node)
             elif content_rule == 'strContent':
                 self._validate_str_content(node)
+            elif content_rule == 'yearDateContent':
+                self._validate_yeardate_content(node)
 
         if self.has_enum_content():
             enum_values = self._content['content_enum']
@@ -194,6 +197,12 @@ class Rule(object):
     def _validate_str_content(self, node: Node):
         if node.content is not None and type(node.content) is not str:
             msg = f'Node "{node.name}" content should be type "{TYPE_STR}", not "{type(node.content)}"'
+            raise MetapypeRuleError(msg)
+
+    def _validate_yeardate_content(self, node: Node):
+        # TODO: Need to develop a test for the yearDate type
+        if node.content is not None and type(node.content) is not str:
+            msg = f'Node "{node.name}" content should be type "{TYPE_YEARDATE}", not "{type(node.content)}"'
             raise MetapypeRuleError(msg)
 
     def _validate_enum_content(self, node: Node, enum_values: list):
@@ -320,6 +329,7 @@ RULE_METADATA = 'metadataRule'
 RULE_PERMISSION = 'permissionRule'
 RULE_PHONE = 'phoneRule'
 RULE_PRINCIPAL = 'principalRule'
+RULE_PUBDATE = 'pubDateRule'
 RULE_RESPONSIBLEPARTY = 'responsiblePartyRule'
 RULE_TEXT = 'textRule'
 RULE_USERID = 'userIdRule'
@@ -334,6 +344,7 @@ node_mappings = {
     names.ADDRESS: RULE_ADDRESS,
     names.ADMINISTRATIVEAREA: RULE_ANYNAME,
     names.ALLOW: RULE_ALLOW,
+    names.ASSOCIATEDPARTY: RULE_RESPONSIBLEPARTY,
     names.CITY: RULE_ANYNAME,
     names.CONTACT: RULE_RESPONSIBLEPARTY,
     names.COUNTRY: RULE_ANYNAME,
@@ -349,6 +360,7 @@ node_mappings = {
     names.KEYWORDSET: RULE_KEYWORDSET,
     names.KEYWORDTHESAURUS: RULE_KEYWORDTHESAURUS,
     names.METADATA: RULE_METADATA,
+    names.METADATAPROVIDER: RULE_RESPONSIBLEPARTY,
     names.ONLINEURL: RULE_ANYURI,
     names.ORGANIZATIONNAME: RULE_ANYNAME,
     names.PERMISSION: RULE_PERMISSION,
@@ -356,6 +368,7 @@ node_mappings = {
     names.POSITIONNAME: RULE_ANYNAME,
     names.POSTALCODE: RULE_ANYNAME,
     names.PRINCIPAL: RULE_PRINCIPAL,
+    names.PUBDATE: RULE_PUBDATE,
     names.SALUTATION: RULE_ANYNAME,
     names.SURNAME: RULE_ANYNAME,
     names.TITLE: RULE_ANYNAME,

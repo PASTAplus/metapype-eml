@@ -69,6 +69,10 @@ def main():
     surName_creator.content = 'Gaucho'
     individualName_creator.add_child(surName_creator)
 
+    pubdate = Node(names.PUBDATE, parent=dataset)
+    pubdate.content = '2018'
+    dataset.add_child(pubdate)
+
     contact = Node(names.CONTACT, parent=dataset)
     dataset.add_child(contact)
 

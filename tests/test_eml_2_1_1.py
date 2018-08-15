@@ -137,6 +137,10 @@ class TestEml_2_1_1(unittest.TestCase):
         self.user_id.add_attribute('directory', 'ldap:///ldap.edirepository.org/dc=edirepository,dc=org')
         self.creator.add_child(self.user_id)
 
+        self.pubdate = Node(names.PUBDATE, parent=self.dataset)
+        self.pubdate.content = '2018'
+        self.dataset.add_child(self.pubdate)
+
         self.abstract = Node(names.ABSTRACT, parent=self.dataset)
         self.abstract.add_attribute('xml:lang', 'en')
         self.abstract.content = 'This is the text of the document abstract.'

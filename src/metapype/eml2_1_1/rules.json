@@ -80,6 +80,9 @@
         [
             ["title", 1, null],
             ["creator", 1, null],
+            ["metadataProvider", 0, null],
+            ["associatedParty", 0, null],
+            ["pubDate", 0, 1],
             ["abstract", 0, 1],
             ["keywordSet", 0, null],
             ["contact", 1, null]
@@ -193,6 +196,15 @@
         ],
         {
             "content_rules" : ["strContent", "nonEmptyContent"]
+        }
+    ],
+    "pubDateRule" : [
+        { 
+        },
+        [
+        ],
+        {
+            "content_rules" : ["yearDateContent", "nonEmptyContent"]
         }
     ],
     "responsiblePartyRule" : [
