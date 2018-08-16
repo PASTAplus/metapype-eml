@@ -126,7 +126,7 @@ def to_json(node: Node, level: int = 0, comma: str = '') -> str:
 
     content = '{"content":null},'
     if node.content is not None:
-        _ = '"' + node.content + '"'
+        _ = '"' + str(node.content) + '"'
         content = content.replace('null', _)
     json += indent + space + content + '\n'
 

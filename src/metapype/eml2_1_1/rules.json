@@ -65,6 +65,15 @@
             "content_rules" : ["strContent", "nonEmptyContent"]
         }
     ],
+    "anyStringRule" : [
+        { 
+        },
+        [
+        ],
+        {
+            "content_rules" : ["strContent", "nonEmptyContent"]
+        }
+    ],
     "anyURIRule" : [
         { 
         },
@@ -72,6 +81,41 @@
         ],
         {
             "content_rules" : ["anyURIContent", "nonEmptyContent"]
+        }
+    ],
+    "boundingCoordinateRule" : [
+        { 
+        },
+        [
+        ],
+        {
+            "content_rules" : ["decimalContent", "nonEmptyContent"]
+        }
+    ],
+    "boundingCoordinatesRule" : [
+        { 
+        },
+        [
+            ["westBoundingCoordinate", 1, 1],
+            ["eastBoundingCoordinate", 1, 1],
+            ["northBoundingCoordinate", 1, 1],
+            ["southBoundingCoordinate", 1, 1]
+       ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "coverageRule" : [
+        { 
+            "id": [false],
+            "system": [false],
+            "scope": [false]
+        },
+        [
+            ["geographicCoverage", "temporalCoverage", "taxonomicCoverage", 1, null]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
         }
     ],
     "datasetRule" : [
@@ -113,6 +157,20 @@
             ["access", 0, 1],
             ["dataset", "citation", "software", "protocol", 1, 1],
             ["additionalMetadata", 0, null]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "geographicCoverageRule" : [
+        { 
+            "id": [false],
+            "system": [false],
+            "scope": [false]
+        },
+        [
+            ["geographicDescription", 1, 1],
+            ["boundingCoordinates", 1, 1]
         ],
         {
             "content_rules" : ["emptyContent"]

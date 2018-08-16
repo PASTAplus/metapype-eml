@@ -41,7 +41,7 @@ def to_xml(node: Node, level: int=0) -> str:
     close_tag = '</' + name + '>'
     xml += indent + open_tag
     if node.content is not None:
-        xml += node.content + close_tag + '\n'
+        xml += str(node.content) + close_tag + '\n'
     else:
         xml += '\n'
     for child in node.children:

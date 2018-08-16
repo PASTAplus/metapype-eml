@@ -73,6 +73,26 @@ def main():
     pubdate.content = '2018'
     dataset.add_child(pubdate)
 
+    coverage = Node(names.COVERAGE, parent=dataset)
+    dataset.add_child(coverage)
+    geographic_coverage = Node(names.GEOGRAPHICCOVERAGE, parent=coverage)
+    coverage.add_child(geographic_coverage)
+    geographic_description = Node(names.GEOGRAPHICDESCRIPTION, parent=geographic_coverage)
+    geographic_description.content = "Somewhere in the Rocky Mountains"
+    geographic_coverage.add_child(geographic_description)
+    wbc = Node(names.WESTBOUNDINGCOORDINATE, parent=geographic_coverage)
+    wbc.content = -107.55538624999997
+    geographic_coverage.add_child(wbc)
+    ebc = Node(names.EASTBOUNDINGCOORDINATE, parent=geographic_coverage)
+    ebc.content = -106.45675343749997
+    geographic_coverage.add_child(ebc)
+    nbc = Node(names.NORTHBOUNDINGCOORDINATE, parent=geographic_coverage)
+    nbc.content = 39.48496522541802
+    geographic_coverage.add_child(nbc)
+    sbc = Node(names.SOUTHBOUNDINGCOORDINATE, parent=geographic_coverage)
+    sbc.content = 38.9530013453599
+    geographic_coverage.add_child(sbc)
+
     contact = Node(names.CONTACT, parent=dataset)
     dataset.add_child(contact)
 
