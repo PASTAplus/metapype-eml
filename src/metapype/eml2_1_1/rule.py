@@ -16,6 +16,7 @@
 import os
 
 import daiquiri
+import datetime
 import json
 
 from metapype.config import Config
@@ -83,6 +84,22 @@ class Rule(object):
             raise Exception("Child list must contain at least 3 elements")
         max_occurrences = child_list[-1]
         return max_occurrences
+
+
+    @staticmethod
+    def is_yeardate(val:str=None):
+        '''
+        Boolean to determine whether node content is a valid yearDate value.
+        '''
+        is_valid = False
+        if val and type(val) is str:
+            for yeardate_format in ['%Y', '%Y-%m-%d']:
+                try:
+                    datetime.datetime.strptime(val, yeardate_format)
+                    is_valid = True
+                except ValueError:
+                    pass
+        return is_valid
 
 
     def __init__(self, rule_name=None):
@@ -200,9 +217,9 @@ class Rule(object):
             raise MetapypeRuleError(msg)
 
     def _validate_yeardate_content(self, node: Node):
-        # TODO: Need to develop a test for the yearDate type
-        if node.content is not None and type(node.content) is not str:
-            msg = f'Node "{node.name}" content should be type "{TYPE_YEARDATE}", not "{type(node.content)}"'
+        val = node.content
+        if val is not None and not Rule.is_yeardate(val):
+            msg = f'Node "{node.name}" format should be year ("YYYY") or date ("YYYY-MM-DD")'
             raise MetapypeRuleError(msg)
 
     def _validate_enum_content(self, node: Node, enum_values: list):

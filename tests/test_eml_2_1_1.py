@@ -241,6 +241,13 @@ class TestEml_2_1_1(unittest.TestCase):
         eml.add_child(dataset, index=index)
         self.assertIsInstance(index, int)
 
+    def test_is_yeardate(self):
+        good_vals = ['1980', '2020', '1980-01-01', '2020-12-31']
+        bad_vals = ['nineteen-eighty', 2020, '01-01-1980', '2020-31-12']
+        for good_val in good_vals:
+            self.assertTrue(rule.Rule.is_yeardate(good_val))
+        for bad_val in bad_vals:
+            self.assertFalse(rule.Rule.is_yeardate(bad_val))
 
 
 def main():
