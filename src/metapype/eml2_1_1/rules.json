@@ -129,6 +129,7 @@
             ["pubDate", 0, 1],
             ["abstract", 0, 1],
             ["keywordSet", 0, null],
+            ["coverage", 0, 1],
             ["contact", 1, null]
         ],
         {
