@@ -137,6 +137,10 @@ class TestEml_2_1_1(unittest.TestCase):
         self.user_id.add_attribute('directory', 'ldap:///ldap.edirepository.org/dc=edirepository,dc=org')
         self.creator.add_child(self.user_id)
 
+        self.pubdate = Node(names.PUBDATE, parent=self.dataset)
+        self.pubdate.content = '2018'
+        self.dataset.add_child(self.pubdate)
+
         self.abstract = Node(names.ABSTRACT, parent=self.dataset)
         self.abstract.add_attribute('xml:lang', 'en')
         self.abstract.content = 'This is the text of the document abstract.'
@@ -237,6 +241,13 @@ class TestEml_2_1_1(unittest.TestCase):
         eml.add_child(dataset, index=index)
         self.assertIsInstance(index, int)
 
+    def test_is_yeardate(self):
+        good_vals = ['1980', '2020', '1980-01-01', '2020-12-31']
+        bad_vals = ['nineteen-eighty', 2020, '01-01-1980', '2020-31-12']
+        for good_val in good_vals:
+            self.assertTrue(rule.Rule.is_yeardate(good_val))
+        for bad_val in bad_vals:
+            self.assertFalse(rule.Rule.is_yeardate(bad_val))
 
 
 def main():

@@ -16,6 +16,7 @@
 import os
 
 import daiquiri
+import datetime
 import json
 
 from metapype.config import Config
@@ -34,6 +35,7 @@ TYPE_STR = 'str'
 TYPE_INT = 'int'
 TYPE_FLOAT = 'float'
 TYPE_DATETIME = 'datetime'
+TYPE_YEARDATE = 'yearDate'
 
 
 def load_rules():
@@ -82,6 +84,22 @@ class Rule(object):
             raise Exception("Child list must contain at least 3 elements")
         max_occurrences = child_list[-1]
         return max_occurrences
+
+
+    @staticmethod
+    def is_yeardate(val:str=None):
+        '''
+        Boolean to determine whether node content is a valid yearDate value.
+        '''
+        is_valid = False
+        if val and type(val) is str:
+            for yeardate_format in ['%Y', '%Y-%m-%d']:
+                try:
+                    datetime.datetime.strptime(val, yeardate_format)
+                    is_valid = True
+                except ValueError:
+                    pass
+        return is_valid
 
 
     def __init__(self, rule_name=None):
@@ -176,6 +194,8 @@ class Rule(object):
                 self._validate_non_empty_content(node)
             elif content_rule == 'strContent':
                 self._validate_str_content(node)
+            elif content_rule == 'yearDateContent':
+                self._validate_yeardate_content(node)
 
         if self.has_enum_content():
             enum_values = self._content['content_enum']
@@ -194,6 +214,12 @@ class Rule(object):
     def _validate_str_content(self, node: Node):
         if node.content is not None and type(node.content) is not str:
             msg = f'Node "{node.name}" content should be type "{TYPE_STR}", not "{type(node.content)}"'
+            raise MetapypeRuleError(msg)
+
+    def _validate_yeardate_content(self, node: Node):
+        val = node.content
+        if val is not None and not Rule.is_yeardate(val):
+            msg = f'Node "{node.name}" format should be year ("YYYY") or date ("YYYY-MM-DD")'
             raise MetapypeRuleError(msg)
 
     def _validate_enum_content(self, node: Node, enum_values: list):
@@ -308,10 +334,15 @@ RULE_ADDITIONALMETADATA = 'additionalMetadataRule'
 RULE_ADDRESS = 'addressRule'
 RULE_ALLOW = 'allowRule'
 RULE_ANYNAME = 'anyNameRule'
+RULE_ANYSTRING = 'anyStringRule'
 RULE_ANYURI = 'anyURIRule'
+RULE_BOUNDINGCOORDINATE = 'boundingCoordinateRule'
+RULE_BOUNDINGCOORDINATES = 'boundingCoordinatesRule'
+RULE_COVERAGE = 'coverageRule'
 RULE_DATASET = 'datasetRule'
 RULE_DENY = 'denyRule'
 RULE_EML = 'emlRule'
+RULE_GEOGRAPHICCOVERAGE = 'geographicCoverageRule'
 RULE_INDIVIDUALNAME = 'individualNameRule'
 RULE_KEYWORD = 'keywordRule'
 RULE_KEYWORDSET = 'keywordSetRule'
@@ -320,7 +351,10 @@ RULE_METADATA = 'metadataRule'
 RULE_PERMISSION = 'permissionRule'
 RULE_PHONE = 'phoneRule'
 RULE_PRINCIPAL = 'principalRule'
+RULE_PUBDATE = 'pubDateRule'
 RULE_RESPONSIBLEPARTY = 'responsiblePartyRule'
+RULE_TAXONOMICCOVERAGE = 'taxonomicCoverageRule'
+RULE_TEMPORALCOVERAGE = 'temporalCoverageRule'
 RULE_TEXT = 'textRule'
 RULE_USERID = 'userIdRule'
 RULE_VALUE = 'valueRule'
@@ -334,21 +368,29 @@ node_mappings = {
     names.ADDRESS: RULE_ADDRESS,
     names.ADMINISTRATIVEAREA: RULE_ANYNAME,
     names.ALLOW: RULE_ALLOW,
+    names.ASSOCIATEDPARTY: RULE_RESPONSIBLEPARTY,
+    names.BOUNDINGCOORDINATES: RULE_BOUNDINGCOORDINATES,
     names.CITY: RULE_ANYNAME,
     names.CONTACT: RULE_RESPONSIBLEPARTY,
     names.COUNTRY: RULE_ANYNAME,
+    names.COVERAGE: RULE_COVERAGE,
     names.CREATOR: RULE_RESPONSIBLEPARTY,
     names.DATASET: RULE_DATASET,
     names.DELIVERYPOINT: RULE_ANYNAME,
     names.DENY: RULE_DENY,
+    names.EASTBOUNDINGCOORDINATE: RULE_BOUNDINGCOORDINATE,
     names.ELECTRONICMAILADDRESS: RULE_ANYNAME,
     names.EML: RULE_EML,
     names.GIVENNAME: RULE_ANYNAME,
+    names.GEOGRAPHICCOVERAGE: RULE_GEOGRAPHICCOVERAGE,
+    names.GEOGRAPHICDESCRIPTION: RULE_ANYSTRING,
     names.INDIVIDUALNAME: RULE_INDIVIDUALNAME,
     names.KEYWORD: RULE_KEYWORD,
     names.KEYWORDSET: RULE_KEYWORDSET,
     names.KEYWORDTHESAURUS: RULE_KEYWORDTHESAURUS,
     names.METADATA: RULE_METADATA,
+    names.METADATAPROVIDER: RULE_RESPONSIBLEPARTY,
+    names.NORTHBOUNDINGCOORDINATE: RULE_BOUNDINGCOORDINATE,
     names.ONLINEURL: RULE_ANYURI,
     names.ORGANIZATIONNAME: RULE_ANYNAME,
     names.PERMISSION: RULE_PERMISSION,
@@ -356,11 +398,16 @@ node_mappings = {
     names.POSITIONNAME: RULE_ANYNAME,
     names.POSTALCODE: RULE_ANYNAME,
     names.PRINCIPAL: RULE_PRINCIPAL,
+    names.PUBDATE: RULE_PUBDATE,
     names.SALUTATION: RULE_ANYNAME,
+    names.SOUTHBOUNDINGCOORDINATE: RULE_BOUNDINGCOORDINATE,
     names.SURNAME: RULE_ANYNAME,
+    names.TAXONOMICCOVERAGE: RULE_TAXONOMICCOVERAGE,
+    names.TEMPORALCOVERAGE: RULE_TEMPORALCOVERAGE,
     names.TITLE: RULE_ANYNAME,
     names.USERID: RULE_USERID,
     names.VALUE: RULE_VALUE,
+    names.WESTBOUNDINGCOORDINATE: RULE_BOUNDINGCOORDINATE
 }
 
 
