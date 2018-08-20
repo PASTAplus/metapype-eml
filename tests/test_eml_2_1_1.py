@@ -249,6 +249,15 @@ class TestEml_2_1_1(unittest.TestCase):
         for bad_val in bad_vals:
             self.assertFalse(rule.Rule.is_yeardate(bad_val))
 
+    # Test whether a value is, or can be converted to, a float
+    def test_is_float(self):
+        good_vals = ['34.555', '-120.0000', '34', -120]
+        bad_vals = ['nineteen-eighty', 'foo', '01-01-1980', '-0000-']
+        for good_val in good_vals:
+            self.assertTrue(rule.Rule.is_float(good_val))
+        for bad_val in bad_vals:
+            self.assertFalse(rule.Rule.is_float(bad_val))
+
 
 def main():
     return 0
