@@ -103,6 +103,18 @@ class TestNode(unittest.TestCase):
         self.assertIn(sur_name_2, individual_name.children)
         self.assertNotIn(sur_name_1, individual_name.children)
 
+        # Test for old child removal from node store
+        self.assertNotIn(sur_name_1.id, Node.store)
+
+        # Test for child node type mismatch
+        given_name = Node(names.GIVENNAME)
+        given_name.content = 'Chase'
+        try:
+            individual_name.replace_child(old_child=sur_name_2, new_child=given_name)
+        except ValueError as e:
+            self.assertIsNotNone(e)
+
+
     def test_shift(self):
         individual_name_1 = Node(names.INDIVIDUALNAME)
         individual_name_2 = Node(names.INDIVIDUALNAME)

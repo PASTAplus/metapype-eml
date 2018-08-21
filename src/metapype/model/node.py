@@ -262,8 +262,13 @@ class Node(object):
         Returns:
             None
         """
+        if new_child.name != old_child.name:
+            msg = f'Child type "{new_child.name}" and "{old_child.name}" mismatch'
+            raise ValueError(msg)
+
         new_child.parent = self
         self._children[self._children.index(old_child)] = new_child
+        Node.delete_node_instance(id=old_child.id)
 
     def shift(self, child, direction: Shift):
         """
