@@ -12,6 +12,7 @@
     5/15/18
 """
 import copy
+from enum import Enum
 import uuid
 
 import daiquiri
@@ -19,8 +20,13 @@ import daiquiri
 logger = daiquiri.getLogger('node.py: ' + __name__)
 
 
+class Shift(Enum):
+    LEFT = 0
+    RIGHT = 1
+
+
 class Node(object):
-    '''
+    """
     Model node class representation.
 
     Attributes:
@@ -28,7 +34,7 @@ class Node(object):
         id: Optional node identifier
         parent: Optional parent node
         content: Optional string content
-    '''
+    """
 
     def __init__(self, name: str, id: str = None, parent=None,
                  content: str = None):
@@ -47,7 +53,7 @@ class Node(object):
 
     @classmethod
     def delete_node_instance(cls, id: str, children: bool=True):
-        '''
+        """
         Removes the node instance from the store; if children set to True, then
         remove all children recursively.
 
@@ -57,7 +63,7 @@ class Node(object):
 
         Returns:
             None
-        '''
+        """
         if children:
             node = cls.get_node_instance(id)
             for child in node.children:
@@ -66,7 +72,7 @@ class Node(object):
 
     @classmethod
     def get_node_instance(cls, id: str):
-        '''
+        """
         Returns the instance of a node from its identifier
 
         Args:
@@ -74,12 +80,12 @@ class Node(object):
 
         Returns:
             Node
-        '''
+        """
         return cls.store[id]
 
     @classmethod
     def set_node_instance(cls, node):
-        '''
+        """
         Sets the node instance in the node store
 
         Args:
@@ -87,14 +93,14 @@ class Node(object):
 
         Returns:
             None
-        '''
+        """
         cls.store[node._id] = node
 
     def add_attribute(self, name, value):
         self._attributes[name] = value
 
     def add_child(self, child, index=None):
-        '''
+        """
         Adds a child object into the children list at either the end of
         the list or at the index location if specified.
         Args:
@@ -103,7 +109,7 @@ class Node(object):
 
         Returns:
             None
-        '''
+        """
         if index is None:
             self._children.append(child)
         else:
@@ -123,7 +129,7 @@ class Node(object):
         self._attributes = attributes
 
     def child_index(self, child):
-        '''
+        """
         Returns the child index value of where it is found in the children
         list
 
@@ -133,7 +139,7 @@ class Node(object):
         Returns:
             Int index value
 
-        '''
+        """
         index = None
         try:
             index = self._children.index(child)
@@ -158,17 +164,17 @@ class Node(object):
         self._content = content
 
     def copy(self):
-        '''
+        """
         Returns a deep copy (including all children) of the node.
 
         Returns:
             Node
 
-        '''
+        """
         return copy.deepcopy(self)
 
     def find_all_children(self, child_name):
-        '''
+        """
         Returns a list of all children that matches the child_name, or returns
         an empty list if there are no matches.
 
@@ -177,7 +183,7 @@ class Node(object):
 
         Returns:
             List
-        '''
+        """
         children = []
         for child_node in self._children:
             if child_node.name == child_name:
@@ -186,18 +192,18 @@ class Node(object):
 
     @property
     def id(self):
-        '''
+        """
         Returns the unique identifier of the node instance
         Returns:
             Str
-        '''
+        """
         return self._id
 
     def list_attributes(self):
         return list(self._attributes.keys())
 
     def find_child(self, child_name):
-        '''
+        """
         Recursively searches for the first child that matches the 
         child_name and returns it, or returns None if there is no 
         match.
@@ -207,7 +213,7 @@ class Node(object):
 
         Returns
             Node or None
-        '''
+        """
         child = None
         for child_node in self._children:
             if child_node.name == child_name:
@@ -234,29 +240,60 @@ class Node(object):
         del self._attributes[name]
 
     def remove_child(self, child):
-        '''
-        Removes the child object from the children list.
+        """
+        Removes the child object from the children list
+
         Args:
             child: Node
 
         Returns:
             None
-        '''
+        """
         self._children.remove(child)
 
     def replace_child(self, old_child, new_child):
-        '''
+        """
         Replaces the old child with a new child
+
         Args:
             old_child: Node
             new_child: Node
 
         Returns:
             None
-
-        '''
+        """
         new_child.parent = self
         self._children[self._children.index(old_child)] = new_child
+
+    def shift(self, child, direction: Shift):
+        """
+        Shifts a child's position either left or right of its current position
+        or not at all of already at local edge
+
+        Args:
+            child: Node to be swapped
+            direction: shift (LEFT, RIGHT)
+
+        Returns:
+            int of new index location or same if no change
+        """
+        index = self.children.index(child)
+        if direction == Shift.RIGHT:
+            if (index + 1) < len(self.children) and \
+                    self.children[index + 1].name == child.name:
+                self.children[index], self.children[index + 1] = \
+                    self.children[index + 1], self.children[index]
+                index = index + 1
+        elif direction == Shift.LEFT:
+            if index > 0 and self.children[index - 1].name == child.name:
+                self.children[index - 1], self.children[index] = \
+                    self.children[index], self.children[index - 1]
+                index = index - 1
+        else:
+            msg = 'Expected direction to be either Shift.RIGHT or Shift.LEFT'
+            raise ValueError(msg)
+
+        return index
 
 
 def main():
