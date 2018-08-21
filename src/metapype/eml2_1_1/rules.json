@@ -257,13 +257,15 @@
             "content_rules" : ["strContent", "nonEmptyContent"]
         }
     ],
-    "pubDateRule" : [
+    "rangeOfDatesRule" : [
         { 
         },
         [
+            ["beginDate", 1, 1],
+            ["endDate", 1, 1]
         ],
         {
-            "content_rules" : ["yearDateContent", "nonEmptyContent"]
+            "content_rules" : ["emptyContent"]
         }
     ],
     "responsiblePartyRule" : [
@@ -279,6 +281,29 @@
             ["electronicMailAddress", 0, null],
             ["onlineUrl", 0, null],
             ["userId", 0, null]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "singleDateTimeRule" : [
+        { 
+        },
+        [
+            ["calendarDate", 1, 1]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "temporalCoverageRule" : [
+        { 
+            "id": [false],
+            "system": [false],
+            "scope": [false]
+        },
+        [
+            ["singleDateTime", "rangeOfDates", 1, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -312,6 +337,15 @@
         ],
         {
             "content_rules" : ["strContent"]
+        }
+    ],
+    "yearDateRule" : [
+        { 
+        },
+        [
+        ],
+        {
+            "content_rules" : ["yearDateContent", "nonEmptyContent"]
         }
     ]
 }
