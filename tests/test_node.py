@@ -20,6 +20,7 @@ import daiquiri
 from metapype.eml2_1_1 import names
 from metapype.eml2_1_1 import validate
 from metapype.model.node import Node
+from metapype.model.node import Shift
 
 
 sys.path.insert(0, os.path.abspath('../src'))
@@ -101,6 +102,75 @@ class TestNode(unittest.TestCase):
         individual_name.replace_child(old_child=sur_name_1, new_child=sur_name_2)
         self.assertIn(sur_name_2, individual_name.children)
         self.assertNotIn(sur_name_1, individual_name.children)
+
+    def test_shift(self):
+        individual_name_1 = Node(names.INDIVIDUALNAME)
+        individual_name_2 = Node(names.INDIVIDUALNAME)
+        individual_name_3 = Node(names.INDIVIDUALNAME)
+        organization_name = Node(names.ORGANIZATIONNAME)
+        position_name = Node(names.POSITIONNAME)
+
+        # Test shift right
+        contact = Node(names.CONTACT)
+        contact.add_child(child=organization_name)
+        contact.add_child(child=individual_name_1)
+        contact.add_child(child=individual_name_2)
+        contact.add_child(child=individual_name_3)
+        contact.add_child(child=position_name)
+        shift_index = contact.shift(child=individual_name_2, direction=Shift.RIGHT)
+        self.assertEqual(shift_index, 3)
+        self.assertIs(contact.children[3], individual_name_2)
+
+        # Test shift left
+        contact = Node(names.CONTACT)
+        contact.add_child(child=organization_name)
+        contact.add_child(child=individual_name_1)
+        contact.add_child(child=individual_name_2)
+        contact.add_child(child=individual_name_3)
+        contact.add_child(child=position_name)
+        shift_index = contact.shift(child=individual_name_2, direction=Shift.LEFT)
+        self.assertEqual(shift_index, 1)
+        self.assertIs(contact.children[1], individual_name_2)
+
+        # Test shift on edge right
+        contact = Node(names.CONTACT)
+        contact.add_child(child=organization_name)
+        contact.add_child(child=individual_name_1)
+        contact.add_child(child=individual_name_2)
+        contact.add_child(child=individual_name_3)
+        contact.add_child(child=position_name)
+        index = contact.children.index(individual_name_3)
+        shift_index = contact.shift(child=individual_name_3, direction=Shift.RIGHT)
+        self.assertEqual(index, shift_index)
+
+        # Test shift on edge left
+        contact = Node(names.CONTACT)
+        contact.add_child(child=organization_name)
+        contact.add_child(child=individual_name_1)
+        contact.add_child(child=individual_name_2)
+        contact.add_child(child=individual_name_3)
+        contact.add_child(child=position_name)
+        index = contact.children.index(individual_name_1)
+        shift_index = contact.shift(child=individual_name_1, direction=Shift.LEFT)
+        self.assertEqual(index, shift_index)
+
+        # Test hard shift on edge right
+        contact.add_child(child=organization_name)
+        contact.add_child(child=individual_name_1)
+        contact.add_child(child=individual_name_2)
+        contact.add_child(child=individual_name_3)
+        index = contact.children.index(individual_name_3)
+        shift_index = contact.shift(child=individual_name_3, direction=Shift.RIGHT)
+        self.assertEqual(index, shift_index)
+
+        # Test hard shift on edge left
+        contact.add_child(child=organization_name)
+        contact.add_child(child=individual_name_1)
+        contact.add_child(child=individual_name_2)
+        contact.add_child(child=individual_name_3)
+        index = contact.children.index(individual_name_1)
+        shift_index = contact.shift(child=individual_name_1, direction=Shift.LEFT)
+        self.assertEqual(index, shift_index)
 
 
     def test_get_node(self):
