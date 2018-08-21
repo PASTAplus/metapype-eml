@@ -87,6 +87,22 @@ class Rule(object):
 
 
     @staticmethod
+    def is_float(val:str=None):
+        '''
+        Boolean to determine whether node content is
+        (or can be converted to) a valid float value.
+        '''
+        is_valid = False
+        if val:
+            try:
+                __ = float(val)
+                is_valid = True
+            except ValueError:
+                pass
+        return is_valid
+
+
+    @staticmethod
     def is_yeardate(val:str=None):
         '''
         Boolean to determine whether node content is a valid yearDate value.
@@ -206,6 +222,17 @@ class Rule(object):
             msg = f'Node "{node.name}" content should be empty'
             raise MetapypeRuleError(msg)
 
+    def _validate_enum_content(self, node: Node, enum_values: list):
+        if node.content not in enum_values:
+            msg = f'Node "{node.name}" content should be one of "{enum_values}", not "{node.content}"'
+            raise MetapypeRuleError(msg)
+
+    def _validate_float_content(self, node: Node):
+        val = node.content
+        if val is not None and not Rule.is_float(val):
+            msg = f'Node "{node.name}" content should by type "{TYPE_FLOAT}", not "{type(node.content)}"'
+            raise MetapypeRuleError(msg)
+
     def _validate_non_empty_content(self, node: Node):
         if len(node.children) == 0 and node.content is None:
             msg = f'Node "{node.name}" content should not be empty'
@@ -220,11 +247,6 @@ class Rule(object):
         val = node.content
         if val is not None and not Rule.is_yeardate(val):
             msg = f'Node "{node.name}" format should be year ("YYYY") or date ("YYYY-MM-DD")'
-            raise MetapypeRuleError(msg)
-
-    def _validate_enum_content(self, node: Node, enum_values: list):
-        if node.content not in enum_values:
-            msg = f'Node "{node.name}" content should be one of "{enum_values}", not "{node.content}"'
             raise MetapypeRuleError(msg)
 
     def _validate_attributes(self, node: Node) -> None:

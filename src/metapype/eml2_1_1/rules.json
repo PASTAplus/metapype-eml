@@ -89,7 +89,7 @@
         [
         ],
         {
-            "content_rules" : ["decimalContent", "nonEmptyContent"]
+            "content_rules" : ["floatContent", "nonEmptyContent"]
         }
     ],
     "boundingCoordinatesRule" : [
