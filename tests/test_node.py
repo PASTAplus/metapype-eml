@@ -19,6 +19,7 @@ import daiquiri
 
 from metapype.eml2_1_1 import names
 from metapype.eml2_1_1 import validate
+import metapype.model.io as io
 from metapype.model.node import Node
 from metapype.model.node import Shift
 
@@ -114,11 +115,11 @@ class TestNode(unittest.TestCase):
         except ValueError as e:
             self.assertIsNotNone(e)
 
-
     def test_shift(self):
         individual_name_1 = Node(names.INDIVIDUALNAME)
         individual_name_2 = Node(names.INDIVIDUALNAME)
         individual_name_3 = Node(names.INDIVIDUALNAME)
+        individual_name_4 = Node(names.INDIVIDUALNAME)
         organization_name = Node(names.ORGANIZATIONNAME)
         position_name = Node(names.POSITIONNAME)
 
@@ -167,6 +168,7 @@ class TestNode(unittest.TestCase):
         self.assertEqual(index, shift_index)
 
         # Test hard shift on edge right
+        contact = Node(names.CONTACT)
         contact.add_child(child=organization_name)
         contact.add_child(child=individual_name_1)
         contact.add_child(child=individual_name_2)
@@ -176,6 +178,7 @@ class TestNode(unittest.TestCase):
         self.assertEqual(index, shift_index)
 
         # Test hard shift on edge left
+        contact = Node(names.CONTACT)
         contact.add_child(child=organization_name)
         contact.add_child(child=individual_name_1)
         contact.add_child(child=individual_name_2)
@@ -184,6 +187,29 @@ class TestNode(unittest.TestCase):
         shift_index = contact.shift(child=individual_name_1, direction=Shift.LEFT)
         self.assertEqual(index, shift_index)
 
+        # Test distant sibling shift right
+        contact = Node(names.CONTACT)
+        contact.add_child(child=organization_name)
+        contact.add_child(child=individual_name_1)
+        contact.add_child(child=individual_name_2)
+        contact.add_child(child=individual_name_3)
+        contact.add_child(child=position_name)
+        contact.add_child(child=individual_name_4)
+        shift_index = contact.shift(child=individual_name_3, direction=Shift.RIGHT)
+        index = contact.children.index(individual_name_3)
+        self.assertEqual(index, shift_index)
+
+        # Test distant sibling shift left
+        contact = Node(names.CONTACT)
+        contact.add_child(child=individual_name_1)
+        contact.add_child(child=organization_name)
+        contact.add_child(child=individual_name_2)
+        contact.add_child(child=individual_name_3)
+        contact.add_child(child=individual_name_4)
+        contact.add_child(child=position_name)
+        shift_index = contact.shift(child=individual_name_2, direction=Shift.LEFT)
+        index = contact.children.index(individual_name_2)
+        self.assertEqual(index, shift_index)
 
     def test_get_node(self):
         access = Node(names.ACCESS)

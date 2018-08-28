@@ -282,18 +282,22 @@ class Node(object):
         Returns:
             int of new index location or same if no change
         """
-        index = self.children.index(child)
+        index = self._children.index(child)
+        name = self._children[index].name
         if direction == Shift.RIGHT:
-            if (index + 1) < len(self.children) and \
-                    self.children[index + 1].name == child.name:
-                self.children[index], self.children[index + 1] = \
-                    self.children[index + 1], self.children[index]
-                index = index + 1
+            for sib_index in range(index+1, len(self._children)):
+                if self._children[sib_index].name == name:
+                    self.children[index], self.children[sib_index] = \
+                    self.children[sib_index], self.children[index]
+                    index = sib_index
+                    break
         elif direction == Shift.LEFT:
-            if index > 0 and self.children[index - 1].name == child.name:
-                self.children[index - 1], self.children[index] = \
-                    self.children[index], self.children[index - 1]
-                index = index - 1
+            for sib_index in range(index-1, -1, -1):
+                if self._children[sib_index].name == name:
+                    self.children[index], self.children[sib_index] = \
+                        self.children[sib_index], self.children[index]
+                    index = sib_index
+                    break
         else:
             msg = 'Expected direction to be either Shift.RIGHT or Shift.LEFT'
             raise ValueError(msg)
