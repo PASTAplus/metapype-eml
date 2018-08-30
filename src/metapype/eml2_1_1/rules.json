@@ -296,6 +296,36 @@
             "content_rules" : ["emptyContent"]
         }
     ],
+    "taxonomicClassificationRule" : [
+        { 
+            "id": [false],
+            "system": [false],
+            "scope": [false]
+        },
+        [
+            ["taxonRankName", 0, 1],
+            ["taxonRankValue", 0, 1],
+            ["commonName", 0, null],
+            ["taxonomicClassification", 0, null]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "taxonomicCoverageRule" : [
+        { 
+            "id": [false],
+            "system": [false],
+            "scope": [false]
+        },
+        [
+            ["generalTaxonomicCoverage", 0, 1],
+            ["taxonomicClassification", 1, null]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
     "temporalCoverageRule" : [
         { 
             "id": [false],

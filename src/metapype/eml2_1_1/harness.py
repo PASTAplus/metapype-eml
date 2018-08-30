@@ -76,21 +76,62 @@ def main():
     dataset.add_child(coverage)
     geographic_coverage = Node(names.GEOGRAPHICCOVERAGE, parent=coverage)
     coverage.add_child(geographic_coverage)
-    geographic_description = Node(names.GEOGRAPHICDESCRIPTION, parent=geographic_coverage)
+    geographic_description = Node(names.GEOGRAPHICDESCRIPTION, 
+                                  parent=geographic_coverage)
     geographic_description.content = "Somewhere in the Rocky Mountains"
     geographic_coverage.add_child(geographic_description)
-    wbc = Node(names.WESTBOUNDINGCOORDINATE, parent=geographic_coverage)
+    bounding_coordinates = Node(names.BOUNDINGCOORDINATES, 
+                                parent=geographic_coverage)
+    geographic_coverage.add_child(bounding_coordinates)
+    wbc = Node(names.WESTBOUNDINGCOORDINATE, parent=bounding_coordinates)
     wbc.content = -107.55538624999997
-    geographic_coverage.add_child(wbc)
-    ebc = Node(names.EASTBOUNDINGCOORDINATE, parent=geographic_coverage)
+    bounding_coordinates.add_child(wbc)
+    ebc = Node(names.EASTBOUNDINGCOORDINATE, parent=bounding_coordinates)
     ebc.content = -106.45675343749997
-    geographic_coverage.add_child(ebc)
-    nbc = Node(names.NORTHBOUNDINGCOORDINATE, parent=geographic_coverage)
+    bounding_coordinates.add_child(ebc)
+    nbc = Node(names.NORTHBOUNDINGCOORDINATE, parent=bounding_coordinates)
     nbc.content = 39.48496522541802
-    geographic_coverage.add_child(nbc)
-    sbc = Node(names.SOUTHBOUNDINGCOORDINATE, parent=geographic_coverage)
+    bounding_coordinates.add_child(nbc)
+    sbc = Node(names.SOUTHBOUNDINGCOORDINATE, parent=bounding_coordinates)
     sbc.content = 38.9530013453599
-    geographic_coverage.add_child(sbc)
+    bounding_coordinates.add_child(sbc)
+
+    taxonomic_coverage = Node(names.TAXONOMICCOVERAGE, parent=coverage)
+    coverage.add_child(taxonomic_coverage)
+    general_taxonomic_coverage = Node(names.GENERALTAXONOMICCOVERAGE, 
+                                      parent=taxonomic_coverage)
+    taxonomic_coverage.add_child(general_taxonomic_coverage)
+    general_taxonomic_coverage.content = "All vascular plants were \
+identified to family or species, mosses and lichens were \
+identified as moss or lichen."
+    
+    taxonomic_classification_genus = Node(names.TAXONOMICCLASSIFICATION, 
+                                          parent=taxonomic_coverage)
+    taxonomic_coverage.add_child(taxonomic_classification_genus)
+
+    taxon_rank_name_genus = Node(names.TAXONRANKNAME, 
+                                 parent=taxonomic_classification_genus)
+    taxonomic_classification_genus.add_child(taxon_rank_name_genus)
+    taxon_rank_name_genus.content = "Genus"
+
+    taxon_rank_value_genus = Node(names.TAXONRANKVALUE, 
+                                  parent=taxonomic_classification_genus)
+    taxonomic_classification_genus.add_child(taxon_rank_value_genus)
+    taxon_rank_value_genus.content = "Escherichia"
+
+    taxonomic_classification_species = Node(names.TAXONOMICCLASSIFICATION, 
+                                       parent=taxonomic_classification_genus)
+    taxonomic_classification_genus.add_child(taxonomic_classification_species)
+
+    taxon_rank_name_species = Node(names.TAXONRANKNAME, 
+                              parent=taxonomic_classification_species)
+    taxonomic_classification_species.add_child(taxon_rank_name_species)
+    taxon_rank_name_species.content = "Species"
+
+    taxon_rank_value_species = Node(names.TAXONRANKVALUE,
+                               parent=taxonomic_classification_species)
+    taxonomic_classification_species.add_child(taxon_rank_value_species)
+    taxon_rank_value_species.content = "coli"
 
     contact = Node(names.CONTACT, parent=dataset)
     dataset.add_child(contact)

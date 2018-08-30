@@ -162,6 +162,43 @@ class TestEml_2_1_1(unittest.TestCase):
         self.keyword_thesaurus.content = 'IRIS keyword thesaurus'
         self.keyword_set.add_child(self.keyword_thesaurus)
 
+        self.coverage = Node(names.COVERAGE, parent=self.dataset)
+        self.dataset.add_child(self.coverage)
+
+        self.taxonomic_coverage = Node(names.TAXONOMICCOVERAGE, parent=self.coverage)
+        self.coverage.add_child(self.taxonomic_coverage)
+        self.general_taxonomic_coverage = Node(names.GENERALTAXONOMICCOVERAGE, 
+                                               parent=self.taxonomic_coverage)
+        self.taxonomic_coverage.add_child(self.general_taxonomic_coverage)
+        self.general_taxonomic_coverage.content = "All vascular plants were \
+            identified to family or species, mosses and lichens were \
+            identified as moss or lichen."
+    
+        self.taxonomic_classification_genus = Node(names.TAXONOMICCLASSIFICATION, 
+                                                   parent=self.taxonomic_coverage)
+        self.taxonomic_coverage.add_child(self.taxonomic_classification_genus)
+
+        self.taxon_rank_name_genus = Node(names.TAXONRANKNAME, 
+                                          parent=self.taxonomic_classification_genus)
+        self.taxonomic_classification_genus.add_child(self.taxon_rank_name_genus)
+        self.taxon_rank_name_genus.content = "Genus"
+
+        self.taxon_rank_value_genus = Node(names.TAXONRANKVALUE, parent=self.taxonomic_classification_genus)
+        self.taxonomic_classification_genus.add_child(self.taxon_rank_value_genus)
+        self.taxon_rank_value_genus.content = "Escherichia"
+
+        self.taxonomic_classification_species = Node(names.TAXONOMICCLASSIFICATION, 
+                                                     parent=self.taxonomic_classification_genus)
+        self.taxonomic_classification_genus.add_child(self.taxonomic_classification_species)
+
+        self.taxon_rank_name_species = Node(names.TAXONRANKNAME, parent=self.taxonomic_classification_species)
+        self.taxonomic_classification_species.add_child(self.taxon_rank_name_species)
+        self.taxon_rank_name_species.content = "Species"
+
+        self.taxon_rank_value_species = Node(names.TAXONRANKVALUE, parent=self.taxonomic_classification_species)
+        self.taxonomic_classification_species.add_child(self.taxon_rank_value_species)
+        self.taxon_rank_value_species.content = "coli"
+
         self.contact = Node(names.CONTACT, parent=self.dataset)
         self.dataset.add_child(self.contact)
 
