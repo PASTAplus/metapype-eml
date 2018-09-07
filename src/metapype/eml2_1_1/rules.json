@@ -54,6 +54,16 @@
             "content_rules" : ["emptyContent"]
         }
     ],
+    "alternateIdentifierRule" : [
+        { 
+            "system": [false]
+        },
+        [
+        ],
+        {
+            "content_rules" : ["strContent", "nonEmptyContent"]
+        }
+    ],
     "anyNameRule" : [
         { 
             "lang": [false]
@@ -81,6 +91,16 @@
         ],
         {
             "content_rules" : ["anyURIContent", "nonEmptyContent"]
+        }
+    ],
+    "authenticationRule" : [
+        { 
+            "method": [false]
+        },
+        [
+        ],
+        {
+            "content_rules" : ["strContent", "nonEmptyContent"]
         }
     ],
     "boundingCoordinateRule" : [
@@ -118,6 +138,16 @@
             "content_rules" : ["emptyContent"]
         }
     ],
+    "dataFormatRule" : [
+        { 
+        },
+        [
+            ["textFormat", "externallyDefinedFormat", "binaryRasterFormat", 1, 1]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
     "datasetRule" : [
         { 
         },
@@ -130,7 +160,28 @@
             ["abstract", 0, 1],
             ["keywordSet", 0, null],
             ["coverage", 0, 1],
-            ["contact", 1, null]
+            ["contact", 1, null],
+            ["dataTable", 0, null]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "dataTableRule" : [
+        { 
+            "id": [false],
+            "system": [false],
+            "scope": [false]
+        },
+        [
+            ["alternateIdentifier", 0, null],
+            ["entityName", 1, 1],
+            ["entityDescription", 0, 1],
+            ["physical", 0, null],
+            ["coverage", 0, 1],
+            ["methods", 0, 1],
+            ["additionalInfo", 0, null],
+            ["attributeList", 1, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -147,6 +198,20 @@
             "content_rules" : ["emptyContent"]
         }
     ],
+    "distributionRule" : [
+        { 
+            "id": [false],
+            "system": [false],
+            "scope": [false]
+        },
+        [
+            ["online", "offline", "inline", 1, 1],
+            ["access", 0, 1]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
     "emlRule" : [
         { 
             "packageId" : [true],
@@ -158,6 +223,18 @@
             ["access", 0, 1],
             ["dataset", "citation", "software", "protocol", 1, 1],
             ["additionalMetadata", 0, null]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "externallyDefinedFormatRule" : [
+        { 
+        },
+        [
+            ["formatName", 1, 1],
+            ["formatVersion", 0, 1],
+            ["citation", 0, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -228,6 +305,44 @@
             "content_rules" : ["strContent"]
         }
     ],
+    "methodsRule" : [
+        { 
+        },
+            ["methodStep", 1, null],
+            ["sampling", 0, 1],
+            ["qualityControl", 0, null],
+        [
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "offlineRule" : [
+        { 
+        },
+        [
+            ["mediumName", 1, 1],
+            ["mediumDensity", 0, 1],
+            ["mediumDensityUnits", 0, 1],
+            ["mediumVolume", 0, 1],
+            ["mediumFormat", 0, null],
+            ["mediumNote", 0, 1]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "onlineRule" : [
+        { 
+        },
+        [
+            ["onlineDescription", 0, 1],
+            ["url", "connection", 1, 1]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
     "permissionRule" : [
         { 
         },
@@ -246,6 +361,25 @@
         ],
         {
             "content_rules" : ["strContent", "nonEmptyContent"]
+        }
+    ],
+    "physicalRule" : [
+        { 
+            "id": [false],
+            "system": [false],
+            "scope": [false]
+        },
+        [
+            ["objectName", 1, 1],
+            ["size", 0, 1],
+            ["authentication", 0, null],
+            ["compressionMethod", "encodingMethod", 0, null],
+            ["characterEncoding", 0, 1],
+            ["dataFormat", 1, 1],
+            ["distribution", 0, null]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
         }
     ],
     "principalRule" : [
@@ -281,6 +415,19 @@
             ["electronicMailAddress", 0, null],
             ["onlineUrl", 0, null],
             ["userId", 0, null]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "simpleDelimitedRule" : [
+        { 
+        },
+        [
+            ["fieldDelimiter", 1, null],
+            ["collapseDelimiters", 0, 1],
+            ["quoteCharacter", 0, null],
+            ["literalCharacter", 0, null]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -339,6 +486,23 @@
             "content_rules" : ["emptyContent"]
         }
     ],
+    "textFormatRule" : [
+        { 
+        },
+        [
+            ["numHeaderLines", 0, 1],
+            ["numFooterLines", 0, 1],
+            ["recordDelimiter", 0, null],
+            ["physicalLineDelimiter", 0, null],
+            ["numPhysicalLinesPerRecord", 0, 1],
+            ["maxRecordLength", 0, 1],
+            ["attributeOrientation", 1, 1],
+            ["simpleDelimited", "complex", 1, 1]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
     "textRule" : [
         { 
             "xml:lang": [true]
@@ -347,6 +511,16 @@
         ],
         {
             "content_rules" : ["strContent"]
+        }
+    ],
+    "urlRule" : [
+        { 
+            "function": [false]
+        },
+        [
+        ],
+        {
+            "content_rules" : ["anyURIContent", "nonEmptyContent"]
         }
     ],
     "userIdRule" : [
