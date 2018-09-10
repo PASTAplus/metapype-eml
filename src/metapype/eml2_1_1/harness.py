@@ -147,6 +147,112 @@ identified as moss or lichen."
     surName_contact.content = 'Gaucho'
     individualName_contact.add_child(surName_contact)
 
+    datatable = Node(names.DATATABLE, parent=dataset)
+    dataset.add_child(datatable)
+
+    alternate_identifier = Node(names.ALTERNATEIDENTIFIER, parent=datatable)
+    datatable.add_child(alternate_identifier)
+    alternate_identifier.add_attribute('system', 'EDI')
+    alternate_identifier.content = 'https://portal.edirepository.org/nis/dataviewer?packageid=edi.23.1&entityid=ce5438fb9318b1f04d06b8a0276754d6'
+
+    entity_name = Node(names.ENTITYNAME, parent=datatable)
+    datatable.add_child(entity_name)
+    entity_name.content = '14CO2 data'
+
+    entity_description = Node(names.ENTITYDESCRIPTION, parent=datatable)
+    datatable.add_child(entity_description)
+    entity_description.content = 'Radiocarbon content of soil-respired air'
+ 
+    physical = Node(names.PHYSICAL, parent=datatable)
+    datatable.add_child(physical)
+    physical.add_attribute('system', 'EDI')
+
+    object_name = Node(names.OBJECTNAME, parent=physical)
+    physical.add_child(object_name)
+    object_name.content = 'tvan_14co2.jk.data.csv'
+
+    size = Node(names.SIZE, parent=physical)
+    physical.add_child(size)
+    size.add_attribute('unit', 'MB')
+    size.content = '20'
+
+    authentication = Node(names.AUTHENTICATION, parent=physical)
+    physical.add_child(authentication)
+    authentication.add_attribute('method', 'password')
+    authentication.content = 'LDAP'
+
+    compression_method = Node(names.COMPRESSIONMETHOD, parent=physical)
+    physical.add_child(compression_method)
+    compression_method.content = 'zip'
+
+    encoding_method = Node(names.ENCODINGMETHOD, parent=physical)
+    physical.add_child(encoding_method)
+    encoding_method.content = 'base64'
+
+    character_encoding = Node(names.CHARACTERENCODING, parent=physical)
+    physical.add_child(character_encoding)
+    character_encoding.content = 'UTF-8'
+
+    data_format = Node(names.DATAFORMAT, parent=physical)
+    physical.add_child(data_format)
+
+    text_format = Node(names.TEXTFORMAT, parent=data_format)
+    data_format.add_child(text_format)
+
+    num_header_lines = Node(names.NUMHEADERLINES, parent=text_format)
+    text_format.add_child(num_header_lines)
+    num_header_lines.content = '3'
+    
+    num_footer_lines = Node(names.NUMFOOTERLINES, parent=text_format)
+    text_format.add_child(num_footer_lines)
+    num_footer_lines.content = '0'
+
+    record_delimiter = Node(names.RECORDDELIMITER, parent=text_format)
+    text_format.add_child(record_delimiter)
+    record_delimiter.content = '\\r\\n'
+
+    physical_line_delimiter = Node(names.PHYSICALLINEDELIMITER)
+    text_format.add_child(physical_line_delimiter)
+    physical_line_delimiter.content = '\\r\\n'
+
+    num_physical_lines_per_record = Node(names.NUMPHYSICALLINESPERRECORD)
+    text_format.add_child(num_physical_lines_per_record)
+    num_physical_lines_per_record.content = '1'
+
+    max_record_length = Node(names.MAXRECORDLENGTH)
+    text_format.add_child(max_record_length)
+    max_record_length.content = '597'
+
+    attribute_orientation = Node(names.ATTRIBUTEORIENTATION)
+    text_format.add_child(attribute_orientation)
+    attribute_orientation.content = 'column'
+
+    simple_delimited = Node(names.SIMPLEDELIMITED, parent=text_format)
+    text_format.add_child(simple_delimited)
+
+    field_delimiter = Node(names.FIELDDELIMITER, parent=simple_delimited)
+    simple_delimited.add_child(field_delimiter)
+    field_delimiter.content = '\\t'
+
+    collapse_delimiters = Node(names.COLLAPSEDELIMITERS, parent=simple_delimited)
+    simple_delimited.add_child(collapse_delimiters)
+    collapse_delimiters.content = 'no'
+
+    quote_character = Node(names.QUOTECHARACTER, parent=simple_delimited)
+    simple_delimited.add_child(quote_character)
+    quote_character.content = "'"
+
+    literal_character = Node(names.LITERALCHARACTER, parent=simple_delimited)
+    simple_delimited.add_child(literal_character)
+    literal_character.content = '/'   # Usually a backslash, but that causes an error
+
+
+    datatable_rule = rule.get_rule(names.DATATABLE)
+    try:
+        datatable_rule.validate_rule(datatable)
+    except MetapypeRuleError as e:
+        logger.error(e)
+
     node = Node.get_node_instance(access.id)
 
     access_rule = rule.get_rule(names.ACCESS)
@@ -177,18 +283,17 @@ identified as moss or lichen."
     print(attr)
     children = access_rule.children
     print(children)
-    #
+
     print(access.list_attributes())
 
     json_str = io.to_json(eml)
     print(json_str)
     with open('test_eml.json', 'w') as f:
         f.write(json_str)
-    #
+
     m = json.loads(json_str)
     node = io.from_json(m)
-    #
-    #
+
     try:
         validate.tree(node)
     except  MetapypeRuleError as e:

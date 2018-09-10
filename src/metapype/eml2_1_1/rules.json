@@ -443,6 +443,16 @@
             "content_rules" : ["emptyContent"]
         }
     ],
+    "sizeRule" : [
+        { 
+            "unit": [false]
+        },
+        [
+        ],
+        {
+            "content_rules" : ["strContent", "nonEmptyContent"]
+        }
+    ],
     "taxonomicClassificationRule" : [
         { 
             "id": [false],
