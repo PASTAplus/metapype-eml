@@ -14,6 +14,17 @@
             "content_rules" : ["emptyContent"]
         }
     ],
+    "accurracyRule" : [
+        { 
+        },
+        [
+            ["attributeAccuracyReport", 1, 1],
+            ["quantitativeAttributeAccuracyAssessment", 0, null]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
     "additionalMetadataRule" : [
         { 
             "id": [false]
@@ -93,6 +104,38 @@
             "content_rules" : ["anyURIContent", "nonEmptyContent"]
         }
     ],
+    "attributeListRule" : [
+        { 
+            "id": [false]
+        },
+        [
+            ["attribute", 1, null]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "attributeRule" : [
+        { 
+            "id": [false],
+            "system": [false],
+            "scope": [false]
+        },
+        [
+            ["attributeName", 1, 1],
+            ["attributeLabel", 0, null],
+            ["attributeDefinitino", 1, 1],
+            ["storageType", 0, null],
+            ["measurementScale", 1, 1],
+            ["missingValueCode", 0, null],
+            ["accuracy", 0, 1],
+            ["coverage", 0, 1],
+            ["methods", 0, 1]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
     "authenticationRule" : [
         { 
             "method": [false]
@@ -138,6 +181,19 @@
             ["northBoundingCoordinate", 1, 1],
             ["southBoundingCoordinate", 1, 1]
        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "codeDefinitionRule" : [
+        { 
+            "order": [false]
+        },
+        [
+            ["code", 1, 1],
+            ["definition", 1, 1],
+            ["source", 0, 1]
+        ],
         {
             "content_rules" : ["emptyContent"]
         }
@@ -255,6 +311,28 @@
             "content_rules" : ["emptyContent"]
         }
     ],
+    "enumeratedDomainRule" : [
+        { 
+            "enforced": [false]
+        },
+        [
+            ["codeDefinition", "externalCodeSet", "entityCodeSet", 1, null]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "externalCodeSetRule" : [
+        { 
+        },
+        [
+            ["codesetName", 1, 1],
+            ["citation", "codesetURL", 1, null]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
     "externallyDefinedFormatRule" : [
         { 
         },
@@ -323,6 +401,16 @@
             "content_rules" : ["strContent", "nonEmptyContent"]
         }
     ],
+    "measurementScaleRule" : [
+        { 
+        },
+        [
+            ["nominal", "ordinal", "interval", "ratio", "dateTime", 1, 1]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
     "metadataRule" : [
         { 
         },
@@ -344,6 +432,17 @@
             "content_rules" : ["emptyContent"]
         }
     ],
+    "missingValueCodeRule" : [
+        { 
+        },
+        [
+            ["code", 1, 1],
+            ["codeExplanation", 1, 1]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
     "multiBandRule" : [
         { 
         },
@@ -351,6 +450,17 @@
             ["nbands", 1, 1],
             ["layout", 1, 1]
        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "nonNumericDomainRule" : [
+        { 
+            "id": [false]
+        },
+        [
+            ["enumeratedDomain", "textDomain", 1, null]
+        ],
         {
             "content_rules" : ["emptyContent"]
         }
@@ -415,6 +525,17 @@
             ["characterEncoding", 0, 1],
             ["dataFormat", 1, 1],
             ["distribution", 0, null]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "quantitativeAttributeAccuracyAssessmentRule" : [
+        { 
+        },
+        [
+            ["attributeAccuracyValue", 1, 1],
+            ["attributeAccuracyExplanation", 1, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -491,6 +612,16 @@
             "content_rules" : ["strContent", "nonEmptyContent"]
         }
     ],
+    "storageTypeRule" : [
+        { 
+            "typeSystem": [false]
+        },
+        [
+        ],
+        {
+            "content_rules" : ["strContent"]
+        }
+    ],
     "taxonomicClassificationRule" : [
         { 
             "id": [false],
@@ -543,6 +674,18 @@
             ["lineNumber", 0, 1],
             ["quoteCharacter", 0, null],
             ["literalCharacter", 0, null]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "textDomainRule" : [
+        { 
+        },
+        [
+            ["definition", 1, 1],
+            ["pattern", 0, null],
+            ["source", 0, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
