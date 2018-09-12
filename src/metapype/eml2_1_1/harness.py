@@ -96,6 +96,37 @@ def main():
     sbc.content = 38.9530013453599
     bounding_coordinates.add_child(sbc)
 
+
+    temporal_coverage = Node(names.TEMPORALCOVERAGE, parent=coverage)
+    coverage.add_child(temporal_coverage)
+
+    single_date_time = Node(names.SINGLEDATETIME, parent=temporal_coverage)
+    temporal_coverage.add_child(single_date_time)
+    single_date_time.content = '2018'
+
+    range_of_dates = Node(names.RANGEOFDATES, parent=temporal_coverage)
+    temporal_coverage.add_child(range_of_dates)
+    
+    begin_date = Node(names.BEGINDATE, parent=range_of_dates)
+    range_of_dates.add_child(begin_date)
+
+    calendar_date_begin = Node(names.CALENDARDATE, parent=begin_date)
+    begin_date.add_child(calendar_date_begin)
+    calendar_date_begin.content = '2000'
+
+    end_date = Node(names.ENDDATE, parent=range_of_dates)
+    range_of_dates.add_child(end_date)
+
+    calendar_date_end = Node(names.CALENDARDATE, parent=end_date)
+    end_date.add_child(calendar_date_end)
+    calendar_date_end.content = '2018'
+
+    temporal_coverage_rule = rule.get_rule(names.TEMPORALCOVERAGE)
+    try:
+        temporal_coverage_rule.validate_rule(temporal_coverage)
+    except MetapypeRuleError as e:
+        logger.error(e)
+
     taxonomic_coverage = Node(names.TAXONOMICCOVERAGE, parent=coverage)
     coverage.add_child(taxonomic_coverage)
     general_taxonomic_coverage = Node(names.GENERALTAXONOMICCOVERAGE, 
@@ -246,10 +277,134 @@ identified as moss or lichen."
     simple_delimited.add_child(literal_character)
     literal_character.content = '/'   # Usually a backslash, but that causes an error
 
+    complex = Node(names.COMPLEX, parent=text_format)
+    text_format.add_child(complex)
+
+    text_fixed = Node(names.TEXTFIXED, parent=complex)
+    complex.add_child(text_fixed)
+
+    field_width = Node(names.FIELDWIDTH, parent=text_fixed)
+    text_fixed.add_child(field_width)
+    field_width.content = '12'
+
+    line_number = Node(names.LINENUMBER, parent=text_fixed)
+    text_fixed.add_child(line_number)
+    line_number.content = '3'
+
+    field_start_column = Node(names.FIELDSTARTCOLUMN, parent=text_fixed)
+    text_fixed.add_child(field_start_column)
+    field_start_column.content = '58'
+
+    text_delimited = Node(names.TEXTDELIMITED, parent=complex)
+    complex.add_child(text_delimited)
+
+    field_delimiter_2 = Node(names.FIELDDELIMITER, parent=text_delimited)
+    text_delimited.add_child(field_delimiter_2)
+    field_delimiter_2.content = ','
+    
+    collapse_delimiters_2 = Node(names.COLLAPSEDELIMITERS, parent=text_delimited)
+    text_delimited.add_child(collapse_delimiters_2)
+    collapse_delimiters_2.content = 'no'
+
+    line_number_2 = Node(names.LINENUMBER, parent=text_delimited)
+    text_delimited.add_child(line_number_2)
+    line_number_2.content = '2'
+
+    quote_character_2 = Node(names.QUOTECHARACTER, parent=text_delimited)
+    text_delimited.add_child(quote_character_2)
+    quote_character_2.content = "'"
+
+    literal_character_2 = Node(names.LITERALCHARACTER, parent=text_delimited)
+    text_delimited.add_child(literal_character_2)
+    literal_character_2.content = '/'   # Usually a backslash, but that causes an error
+
+    externally_defined_format = Node(names.EXTERNALLYDEFINEDFORMAT, parent=data_format)
+    data_format.add_child(externally_defined_format)
+
+    format_name = Node(names.FORMATNAME, parent=externally_defined_format)
+    externally_defined_format.add_child(format_name)
+    format_name.content = 'Microsoft Excel'
+
+    format_version = Node(names.FORMATVERSION, parent=externally_defined_format)
+    externally_defined_format.add_child(format_version)
+    format_version.content = '2000 (9.0.2720)'
+
+    binary_raster_format = Node(names.BINARYRASTERFORMAT, parent=data_format)
+    data_format.add_child(binary_raster_format)
+
+    row_column_orientation = Node(names.ROWCOLUMNORIENTATION, parent=binary_raster_format)
+    binary_raster_format.add_child(row_column_orientation)
+    row_column_orientation.content = 'column'
+
+    multi_band = Node(names.MULTIBAND, parent=binary_raster_format)
+    binary_raster_format.add_child(multi_band)
+
+    nbands = Node(names.NBANDS, parent=multi_band)
+    multi_band.add_child(nbands)
+    nbands.content = '2'
+
+    layout = Node(names.LAYOUT, parent=multi_band)
+    multi_band.add_child(layout)
+    layout.content = 'bil'
+
+    nbits = Node(names.NBITS, parent=binary_raster_format)
+    binary_raster_format.add_child(nbits)
+    nbits.content = '16'
+
+    byteorder = Node(names.BYTEORDER, parent=binary_raster_format)
+    binary_raster_format.add_child(byteorder)
+    byteorder.content = 'little-endian'
+
+    skipbytes = Node(names.SKIPBYTES, parent=binary_raster_format)
+    binary_raster_format.add_child(skipbytes)
+    skipbytes.content = '0'
+
+    bandrowbytes = Node(names.BANDROWBYTES, parent=binary_raster_format)
+    binary_raster_format.add_child(bandrowbytes)
+    bandrowbytes.content = '3'
+
+    totalrowbytes = Node(names.TOTALROWBYTES, parent=binary_raster_format)
+    binary_raster_format.add_child(totalrowbytes)
+    totalrowbytes.content = '8'
+
+    bandgapbytes = Node(names.BANDGAPBYTES, parent= binary_raster_format)
+    binary_raster_format.add_child(bandgapbytes)
+    bandgapbytes.content = '1'
+
+    distribution = Node(names.DISTRIBUTION, parent=physical)
+    physical.add_child(distribution)
+
+    online = Node(names.ONLINE, parent=distribution)
+    distribution.add_child(online)
+
+    online_description = Node(names.ONLINEDESCRIPTION, parent=online)
+    online.add_child(online_description)
+    online_description.content = 'network server'
+
+    url = Node(names.URL, parent=online)
+    online.add_child(url)
+    url.add_attribute('function', 'download')
+    url.content = 'https://data.abc.edu/somedataset/data'
+
+    connection = Node(names.CONNECTION, parent=online)
+    online.add_child(connection)
+    connection.content = 'This is not a real connection element because it is only a string.'
 
     datatable_rule = rule.get_rule(names.DATATABLE)
     try:
         datatable_rule.validate_rule(datatable)
+    except MetapypeRuleError as e:
+        logger.error(e)
+
+    text_format_rule = rule.get_rule(names.TEXTFORMAT)
+    try:
+        text_format_rule.validate_rule(text_format)
+    except MetapypeRuleError as e:
+        logger.error(e)
+
+    online_rule = rule.get_rule(names.ONLINE)
+    try:
+        online_rule.validate_rule(online)
     except MetapypeRuleError as e:
         logger.error(e)
 
