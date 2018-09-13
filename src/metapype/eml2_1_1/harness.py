@@ -96,7 +96,6 @@ def main():
     sbc.content = 38.9530013453599
     bounding_coordinates.add_child(sbc)
 
-
     temporal_coverage = Node(names.TEMPORALCOVERAGE, parent=coverage)
     coverage.add_child(temporal_coverage)
 
@@ -390,6 +389,134 @@ identified as moss or lichen."
     online.add_child(connection)
     connection.content = 'This is not a real connection element because it is only a string.'
 
+    offline = Node(names.OFFLINE, parent=distribution)
+    distribution.add_child(offline)
+
+    medium_name = Node(names.MEDIUMNAME, parent=offline)
+    offline.add_child(medium_name)
+    medium_name.content = 'hardcopy'
+
+    medium_density = Node(names.MEDIUMDENSITY, parent=offline)
+    offline.add_child(medium_density)
+    medium_density.content = 'High Density (HD)'
+
+    medium_density_units = Node(names.MEDIUMDENSITYUNITS, parent=offline)
+    offline.add_child(medium_density_units)
+    medium_density_units.content = 'B/cm'
+
+    medium_volume =Node(names.MEDIUMVOLUME, parent=offline)
+    offline.add_child(medium_volume)
+    medium_volume.content = '650 MB'
+
+    medium_format = Node(names.MEDIUMFORMAT, parent=offline)
+    offline.add_child(medium_format)
+    medium_format.content = 'NTFS'
+
+    medium_note = Node(names.MEDIUMNOTE, parent=offline)
+    offline.add_child(medium_note)
+    medium_note.content = 'Some additional pertinent information about the media'
+
+    inline = Node(names.INLINE, parent=distribution)
+    distribution.add_child(inline)
+    inline.content=('1,2,3,4,5,6,7,8,9')
+
+    datatable_access = Node(names.ACCESS, parent=distribution)
+    datatable_access.add_attribute('authSystem', 'pasta')
+    datatable_access.add_attribute('order', 'allowFirst')
+    distribution.add_child(datatable_access)
+
+    datatable_allow = Node(names.ALLOW, parent=datatable_access)
+    datatable_access.add_child(datatable_allow)
+
+    datatable_principal = Node(names.PRINCIPAL, parent=datatable_allow)
+    datatable_principal.content = 'uid=ucarroll,o=EDI,dc=edirepository,dc=org'
+    datatable_allow.add_child(datatable_principal)
+
+    datatable_permission = Node(names.PERMISSION, parent=datatable_allow)
+    datatable_permission.content = 'write'
+    datatable_allow.add_child(datatable_permission)
+
+    attribute_list = Node(names.ATTRIBUTELIST, parent=datatable)
+    datatable.add_child(attribute_list)
+
+    attribute_1 = Node(names.ATTRIBUTE, parent=attribute_list)
+    attribute_list.add_child(attribute_1)
+    attribute_name_1 = Node(names.ATTRIBUTENAME, parent=attribute_1)
+    attribute_1.add_child(attribute_name_1)
+    attribute_name_1.content = 'att-1'
+    att_label_1 = Node(names.ATTRIBUTELABEL, parent=attribute_1)
+    attribute_1.add_child(att_label_1)
+    att_label_1.content = "Attribute Label 1"
+    ms_1 = Node(names.MEASUREMENTSCALE, parent=attribute_1)
+    attribute_1.add_child(ms_1)
+    nominal = Node(names.NOMINAL, parent=ms_1)
+    ms_1.add_child(nominal)
+    non_numeric_domain_1 = Node(names.NONNUMERICDOMAIN, parent=nominal)
+    nominal.add_child(non_numeric_domain_1)
+    enumerated_domain = Node(names.ENUMERATEDDOMAIN, parent=non_numeric_domain_1)
+    non_numeric_domain_1.add_child(enumerated_domain)
+
+    attribute_2 = Node(names.ATTRIBUTE, parent=attribute_list)
+    attribute_list.add_child(attribute_2)
+    attribute_name_2 = Node(names.ATTRIBUTENAME, parent=attribute_2)
+    attribute_2.add_child(attribute_name_2)
+    attribute_name_2.content = 'att-2'
+    att_label_2 = Node(names.ATTRIBUTELABEL, parent=attribute_2)
+    attribute_2.add_child(att_label_2)
+    att_label_2.content = "Attribute Label 2"
+    ms_2 = Node(names.MEASUREMENTSCALE, parent=attribute_2)
+    attribute_2.add_child(ms_2)
+    ordinal = Node(names.ORDINAL, parent=ms_2)
+    ms_2.add_child(ordinal)
+    non_numeric_domain_2 = Node(names.NONNUMERICDOMAIN, parent=ordinal)
+    ordinal.add_child(non_numeric_domain_2)
+    text_domain = Node(names.TEXTDOMAIN, parent=non_numeric_domain_2)
+    non_numeric_domain_2.add_child(text_domain)
+
+    attribute_3 = Node(names.ATTRIBUTE, parent=attribute_list)
+    attribute_list.add_child(attribute_3)
+    attribute_name_3 = Node(names.ATTRIBUTENAME, parent=attribute_3)
+    attribute_3.add_child(attribute_name_3)
+    attribute_name_3.content = 'att-3'
+    att_label_3 = Node(names.ATTRIBUTELABEL, parent=attribute_3)
+    attribute_3.add_child(att_label_3)
+    att_label_3.content = "Attribute Label 3"
+    storage_type = Node(names.STORAGETYPE, parent=attribute_3)
+    attribute_3.add_child(storage_type)
+    storage_type.add_attribute("typeSystem", "http://www.w3.org/2001/XMLSchema-datatypes")
+    storage_type.content = 'integer'
+    ms_3 = Node(names.MEASUREMENTSCALE, parent=attribute_3)
+    attribute_3.add_child(ms_3)
+    interval = Node(names.INTERVAL, parent=ms_3)
+    ms_3.add_child(interval)
+
+    attribute_4 = Node(names.ATTRIBUTE, parent=attribute_list)
+    attribute_list.add_child(attribute_4)
+    attribute_name_4 = Node(names.ATTRIBUTENAME, parent=attribute_4)
+    attribute_4.add_child(attribute_name_4)
+    attribute_name_4.content = 'att-4'
+    att_label_4 = Node(names.ATTRIBUTELABEL, parent=attribute_4)
+    attribute_4.add_child(att_label_4)
+    att_label_4.content = "Attribute Label 4"
+    ms_4 = Node(names.MEASUREMENTSCALE, parent=attribute_4)
+    attribute_4.add_child(ms_4)
+    ratio = Node(names.RATIO, parent=ms_4)
+    ms_4.add_child(ratio)
+
+    attribute_5 = Node(names.ATTRIBUTE, parent=attribute_list)
+    attribute_list.add_child(attribute_5)
+    attribute_name_5 = Node(names.ATTRIBUTENAME, parent=attribute_5)
+    attribute_5.add_child(attribute_name_5)
+    attribute_name_5.content = 'att-5'
+    att_label_5 = Node(names.ATTRIBUTELABEL, parent=attribute_5)
+    attribute_5.add_child(att_label_5)
+    att_label_5.content = "Attribute Label 5"
+    ms_5 = Node(names.MEASUREMENTSCALE, parent=attribute_5)
+    attribute_5.add_child(ms_5)
+    datetime = Node(names.DATETIME, parent=ms_5)
+    ms_5.add_child(datetime)
+
+  
     datatable_rule = rule.get_rule(names.DATATABLE)
     try:
         datatable_rule.validate_rule(datatable)

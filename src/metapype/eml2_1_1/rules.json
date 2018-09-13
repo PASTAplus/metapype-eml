@@ -311,6 +311,19 @@
             "content_rules" : ["emptyContent"]
         }
     ],
+    "entityCodeListRule" : [
+        { 
+        },
+        [
+            ["entityReference", 1, 1],
+            ["valueAttributeReference", 1, 1],
+            ["definitionAttributeReference", 1, 1],
+            ["orderAttributeReference", 0, 1]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
     "enumeratedDomainRule" : [
         { 
             "enforced": [false]
@@ -366,6 +379,18 @@
             ["salutation", 0, null],
             ["givenName", 0, null],
             ["surName", 1, 1]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "intervalRatioRule" : [
+        { 
+        },
+        [
+            ["unit", 1, 1],
+            ["precision", 0, 1],
+            ["numericDomain", 1, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -432,6 +457,16 @@
             "content_rules" : ["emptyContent"]
         }
     ],
+    "minMaxRule" : [
+        { 
+            "exclusive": [true]
+        },
+        [
+        ],
+        {
+            "content_rules" : ["nonEmptyContent"]
+        }
+    ],
     "missingValueCodeRule" : [
         { 
         },
@@ -460,6 +495,18 @@
         },
         [
             ["enumeratedDomain", "textDomain", 1, null]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "numericDomainRule" : [
+        { 
+            "id": [false]
+        },
+        [
+            ["numberType", 1, 1],
+            ["bounds", 0, null]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -728,6 +775,16 @@
         ],
         {
             "content_rules" : ["strContent"]
+        }
+    ],
+    "unitRule" : [
+        { 
+        },
+        [
+            ["standardUnit", "customUnit", 1, 1]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
         }
     ],
     "urlRule" : [
