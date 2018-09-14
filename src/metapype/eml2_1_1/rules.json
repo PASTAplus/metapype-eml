@@ -185,6 +185,17 @@
             "content_rules" : ["emptyContent"]
         }
     ],
+    "boundsRule" : [
+        { 
+        },
+        [
+            ["minimum", 1, 1],
+            ["maximum", 1, 1]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
     "codeDefinitionRule" : [
         { 
             "order": [false]
@@ -265,6 +276,29 @@
             ["methods", 0, 1],
             ["additionalInfo", 0, null],
             ["attributeList", 1, 1]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "dateTimeRule" : [
+        { 
+        },
+        [
+            ["formatString", 1, 1],
+            ["dateTimePrecision", 0, 1],
+            ["dateTimeDomain", 0, 1]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "dateTimeDomainRule" : [
+        { 
+            "id": [false]
+        },
+        [
+            ["bounds", 0, null]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -485,6 +519,18 @@
             ["nbands", 1, 1],
             ["layout", 1, 1]
        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "nominalOrdinalRule" : [
+        { 
+            "id": [false]
+        },
+        [
+            ["nonNumericDomain", 1, 1]
+        ],
+
         {
             "content_rules" : ["emptyContent"]
         }

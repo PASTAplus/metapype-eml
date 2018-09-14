@@ -455,6 +455,44 @@ identified as moss or lichen."
     nominal.add_child(non_numeric_domain_1)
     enumerated_domain = Node(names.ENUMERATEDDOMAIN, parent=non_numeric_domain_1)
     non_numeric_domain_1.add_child(enumerated_domain)
+    enumerated_domain.add_attribute('enforced', 'yes')
+    code_definition = Node(names.CODEDEFINITION, parent=enumerated_domain)
+    enumerated_domain.add_child(code_definition)
+    code_definition.add_attribute('order', '3')
+    code = Node(names.CODE, parent=code_definition)
+    code_definition.add_child(code)
+    code.content = 'HIGH'
+    definition = Node(names.DEFINITION, parent=code_definition)
+    code_definition.add_child(definition)
+    definition.content = 'high density, above 10 per square meter'
+    source = Node(names.SOURCE, parent=code_definition)
+    code_definition.add_child(source)
+    source.content = 'ISO country codes'
+    external_code_set = Node(names.EXTERNALCODESET, parent=enumerated_domain)
+    enumerated_domain.add_child(external_code_set)
+    codeset_name = Node(names.CODESETNAME, parent=external_code_set)
+    external_code_set.add_child(codeset_name)
+    codeset_name.content = 'FIPS State Abbreviation Codes'
+    citation = Node(names.CITATION, parent=external_code_set)
+    external_code_set.add_child(citation)
+    citation.content = 'This is not an actual citation element'
+    codeset_url = Node(names.CODESETURL, parent=external_code_set)
+    external_code_set.add_child(codeset_url)
+    codeset_url.content = 'https://codesets.abc.edu/fips_state_abbreviation_codes'
+    entity_code_list = Node(names.ENTITYCODELIST, parent=enumerated_domain)
+    enumerated_domain.add_child(entity_code_list)
+    entity_reference = Node(names.ENTITYREFERENCE, parent=entity_code_list)
+    entity_code_list.add_child(entity_reference)
+    entity_reference.content = 'entity_id_1'
+    value_attribute_reference = Node(names.VALUEATTRIBUTEREFERENCE, parent=entity_code_list)
+    entity_code_list.add_child(value_attribute_reference)
+    value_attribute_reference.content = 'attribute_id_1'
+    definition_attribute_reference = Node(names.DEFINITIONATTRIBUTEREFERENCE, parent=entity_code_list)
+    entity_code_list.add_child(definition_attribute_reference)
+    definition_attribute_reference.content = 'attribute_id_1'
+    order_attribute_reference =Node(names.ORDERATTRIBUTEREFERENCE, parent=entity_code_list)
+    entity_code_list.add_child(order_attribute_reference)
+    order_attribute_reference.content = 'attribute_id_1'
 
     attribute_2 = Node(names.ATTRIBUTE, parent=attribute_list)
     attribute_list.add_child(attribute_2)
@@ -472,6 +510,15 @@ identified as moss or lichen."
     ordinal.add_child(non_numeric_domain_2)
     text_domain = Node(names.TEXTDOMAIN, parent=non_numeric_domain_2)
     non_numeric_domain_2.add_child(text_domain)
+    definition_2 = Node(names.DEFINITION, parent=text_domain)
+    text_domain.add_child(definition_2)
+    definition_2.content = 'US telephone numbers in the format (999) 888-7777'
+    pattern = Node(names.PATTERN, parent=text_domain)
+    text_domain.add_child(pattern)
+    pattern.content = '[0-9a-zA-Z] matches simple alphanumeric strings'
+    source_2 = Node(names.SOURCE, parent=text_domain)
+    text_domain.add_child(source_2)
+    source_2.content = 'ISO country codes'
 
     attribute_3 = Node(names.ATTRIBUTE, parent=attribute_list)
     attribute_list.add_child(attribute_3)
@@ -489,6 +536,32 @@ identified as moss or lichen."
     attribute_3.add_child(ms_3)
     interval = Node(names.INTERVAL, parent=ms_3)
     ms_3.add_child(interval)
+    unit = Node(names.UNIT, parent=interval)
+    interval.add_child(unit)
+    standard_unit = Node(names.STANDARDUNIT, parent=unit)
+    unit.add_child(standard_unit)
+    standard_unit.content = 'meter'
+    custom_unit = Node(names.CUSTOMUNIT, parent=unit)
+    unit.add_child(custom_unit)
+    custom_unit.content = 'metersPerOneThirdGram'
+    precision = Node(names.PRECISION, parent=interval)
+    interval.add_child(precision)
+    precision.content = '0.1'
+    numeric_domain = Node(names.NUMERICDOMAIN, parent=interval)
+    interval.add_child(numeric_domain)
+    number_type = Node(names.NUMBERTYPE, parent=numeric_domain)
+    numeric_domain.add_child(number_type)
+    number_type.content = 'integer'
+    bounds = Node(names.BOUNDS, parent=numeric_domain)
+    numeric_domain.add_child(bounds)
+    minimum = Node(names.MINIMUM, parent=bounds)
+    bounds.add_child(minimum)
+    minimum.add_attribute('exclusive', 'false')
+    minimum.content = '0'
+    maximum = Node(names.MAXIMUM, parent=bounds)
+    bounds.add_child(maximum)
+    maximum.add_attribute('exclusive', 'false')
+    maximum.content = '10'
 
     attribute_4 = Node(names.ATTRIBUTE, parent=attribute_list)
     attribute_list.add_child(attribute_4)
@@ -502,7 +575,33 @@ identified as moss or lichen."
     attribute_4.add_child(ms_4)
     ratio = Node(names.RATIO, parent=ms_4)
     ms_4.add_child(ratio)
-
+    unit_ratio = Node(names.UNIT, parent=ratio)
+    ratio.add_child(unit_ratio)
+    standard_unit_ratio = Node(names.STANDARDUNIT, parent=unit_ratio)
+    unit_ratio.add_child(standard_unit_ratio)
+    standard_unit_ratio.content = 'grams'
+    custom_unit_ratio = Node(names.CUSTOMUNIT, parent=unit_ratio)
+    unit_ratio.add_child(custom_unit_ratio)
+    custom_unit_ratio.content = 'gramsPerOneThirdMeter'
+    precision_ratio = Node(names.PRECISION, parent=ratio)
+    ratio.add_child(precision_ratio)
+    precision_ratio.content = '0.01'
+    numeric_domain_ratio = Node(names.NUMERICDOMAIN, parent=ratio)
+    ratio.add_child(numeric_domain_ratio)
+    number_type_ratio = Node(names.NUMBERTYPE, parent=numeric_domain_ratio)
+    numeric_domain_ratio.add_child(number_type_ratio)
+    number_type_ratio.content = 'float'
+    bounds_ratio = Node(names.BOUNDS, parent=numeric_domain_ratio)
+    numeric_domain_ratio.add_child(bounds_ratio)
+    minimum_ratio = Node(names.MINIMUM, parent=bounds_ratio)
+    bounds_ratio.add_child(minimum_ratio)
+    minimum_ratio.add_attribute('exclusive', 'false')
+    minimum_ratio.content = '0.0'
+    maximum_ratio = Node(names.MAXIMUM, parent=bounds_ratio)
+    bounds_ratio.add_child(maximum_ratio)
+    maximum_ratio.add_attribute('exclusive', 'false')
+    maximum_ratio.content = '10.0'
+    
     attribute_5 = Node(names.ATTRIBUTE, parent=attribute_list)
     attribute_list.add_child(attribute_5)
     attribute_name_5 = Node(names.ATTRIBUTENAME, parent=attribute_5)
@@ -515,7 +614,55 @@ identified as moss or lichen."
     attribute_5.add_child(ms_5)
     datetime = Node(names.DATETIME, parent=ms_5)
     ms_5.add_child(datetime)
+    format_string = Node(names.FORMATSTRING, parent=datetime)
+    datetime.add_child(format_string)
+    format_string.content = 'YYYY-MM-DD'
+    datetime_precision = Node(names.DATETIMEPRECISION, parent=datetime)
+    datetime.add_child(datetime_precision)
+    datetime_precision.content = '1'
+    datetime_domain = Node(names.DATETIMEDOMAIN, parent=datetime)
+    datetime.add_child(datetime_domain)
+    datetime_domain.add_attribute('id', 'dtd-1')
+    bounds_datetime = Node(names.BOUNDS, parent=datetime_domain)
+    datetime_domain.add_child(bounds_datetime)
+    minimum_datetime = Node(names.MINIMUM, parent=bounds_datetime)
+    bounds_datetime.add_child(minimum_datetime)
+    minimum_datetime.add_attribute('exclusive', 'false')
+    minimum_datetime.content = '2003-10-15'
+    maximum_datetime = Node(names.MAXIMUM, parent=bounds_datetime)
+    bounds_datetime.add_child(maximum_datetime)
+    maximum_datetime.add_attribute('exclusive', 'false')
+    maximum_datetime.content = '2019-06-30'
+    
+    missing_value_code = Node(names.MISSINGVALUECODE, parent=attribute_1)
+    attribute_1.add_child(missing_value_code)
+    code_mvc = Node(names.CODE, parent=missing_value_code)
+    missing_value_code.add_child(code_mvc)
+    code_mvc.content = 'SDT'
+    code_explanation = Node(names.CODEEXPLANATION, parent=missing_value_code)
+    missing_value_code.add_child(code_explanation)
+    code_explanation.content = "Sensor Downtime"
+    accuracy = Node(names.ACCURACY, parent=attribute_1)
+    attribute_1.add_child(accuracy)
+    attribute_accuracy_report = Node(names.ATTRIBUTEACCURACYREPORT, parent=accuracy)
+    accuracy.add_child(attribute_accuracy_report)
+    attribute_accuracy_report.content = 'An explanation of the accuracy of the observation recorded in this attribute'
+    qaaa = Node(names.QUANTITATIVEATTRIBUTEACCURACYASSESSMENT, parent=accuracy)
+    accuracy.add_child(qaaa)
+    attribute_accuracy_value = Node(names.ATTRIBUTEACCURACYVALUE, parent=qaaa)
+    qaaa.add_child(attribute_accuracy_value)
+    attribute_accuracy_value.content = 'An estimate of the accuracy of the identification'
+    attribute_accuracy_explanation = Node(names.ATTRIBUTEACCURACYEXPLANATION, parent=qaaa)
+    qaaa.add_child(attribute_accuracy_explanation)
+    attribute_accuracy_explanation.content = 'The identification of the test that yielded the Attribute Accuracy Value'
 
+    case_sensitive = Node(names.CASESENSITIVE, parent=datatable)
+    datatable.add_child(case_sensitive)
+    case_sensitive.content = 'yes'
+
+    number_of_records = Node(names.NUMBEROFRECORDS, parent=datatable)
+    datatable.add_child(number_of_records)
+    number_of_records.content = '454'
   
     datatable_rule = rule.get_rule(names.DATATABLE)
     try:
