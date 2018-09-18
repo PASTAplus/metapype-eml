@@ -275,7 +275,9 @@
             ["coverage", 0, 1],
             ["methods", 0, 1],
             ["additionalInfo", 0, null],
-            ["attributeList", 1, 1]
+            ["attributeList", 1, 1],
+            ["caseSensitive", 0, 1],
+            ["numberOfRecords", 0, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
