@@ -124,7 +124,7 @@
         [
             ["attributeName", 1, 1],
             ["attributeLabel", 0, null],
-            ["attributeDefinitino", 1, 1],
+            ["attributeDefinition", 1, 1],
             ["storageType", 0, null],
             ["measurementScale", 1, 1],
             ["missingValueCode", 0, null],
