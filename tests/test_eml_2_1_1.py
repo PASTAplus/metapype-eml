@@ -88,7 +88,7 @@ class TestEml_2_1_1(unittest.TestCase):
         self.individualName_creator.add_child(self.surName_creator)
 
         self.value = Node(names.VALUE, parent=self.surName_creator)
-        self.value.add_attribute('xml:lang', 'en')
+        self.value.add_attribute('lang', 'en')
         self.value.content = 'Gaucho'
         self.surName_creator.add_child(self.value)
 
@@ -142,8 +142,13 @@ class TestEml_2_1_1(unittest.TestCase):
         self.dataset.add_child(self.pubdate)
 
         self.abstract = Node(names.ABSTRACT, parent=self.dataset)
-        self.abstract.add_attribute('xml:lang', 'en')
-        self.abstract.content = 'This is the text of the document abstract.'
+        self.abstract.add_attribute('lang', 'en')
+        self.section = Node(names.SECTION, parent=self.abstract)
+        self.abstract.add_child(self.section)
+        self.section.content = "abstract section"
+        self.para = Node(names.PARA, parent=self.abstract)
+        self.abstract.add_child(self.para)
+        self.para.content = "para section"
         self.dataset.add_child(self.abstract)
 
         self.keyword_set = Node(names.KEYWORDSET, parent=self.dataset)

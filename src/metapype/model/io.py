@@ -15,6 +15,7 @@
 import json
 
 import daiquiri
+import os
 
 from metapype.model.node import Node
 
@@ -160,8 +161,13 @@ def to_json(node: Node, level: int = 0, comma: str = '') -> str:
 
 
 def main():
-    return 0
-
-
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    print(f'********** {dir_path} **********')
+    with open(f'{dir_path}/mobrien.1.1.json') as fh:
+        json_node = json.load(fh)
+        eml_node = io.from_json(json_node)
+        graph(eml_node, 4)
+    fh.close()
+ 
 if __name__ == "__main__":
     main()

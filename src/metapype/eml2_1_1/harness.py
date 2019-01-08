@@ -72,6 +72,25 @@ def main():
     pubdate.content = '2018'
     dataset.add_child(pubdate)
 
+    abstract = Node(names.ABSTRACT, parent=dataset)
+    dataset.add_child(abstract)
+
+    section_1 = Node(names.SECTION, parent=abstract)
+    abstract.add_child(section_1)
+    section_1.content = 'This is abstract Section 1'
+
+    section_2 = Node(names.SECTION, parent=abstract)
+    abstract.add_child(section_2)
+    section_2.content = 'This is abstract Section 2'
+
+    para_1 = Node(names.PARA, parent=abstract)
+    abstract.add_child(para_1)
+    para_1.content = 'This is abstract Para 1'
+
+    para_2 = Node(names.PARA, parent=abstract)
+    abstract.add_child(para_2)
+    para_2.content = 'This is abstract Para 2'
+
     coverage = Node(names.COVERAGE, parent=dataset)
     dataset.add_child(coverage)
     geographic_coverage = Node(names.GEOGRAPHICCOVERAGE, parent=coverage)
@@ -124,6 +143,9 @@ def main():
     try:
         temporal_coverage_rule.validate_rule(temporal_coverage)
     except MetapypeRuleError as e:
+        # We should see an error like: 
+        #   Maximum occurrence of "['singleDateTime', 'rangeOfDates']" 
+        #   exceeded for "temporalCoverage"
         logger.error(e)
 
     taxonomic_coverage = Node(names.TAXONOMICCOVERAGE, parent=coverage)
@@ -176,6 +198,39 @@ identified as moss or lichen."
     surName_contact = Node(names.SURNAME, parent=individualName_contact)
     surName_contact.content = 'Gaucho'
     individualName_contact.add_child(surName_contact)
+
+    methods = Node(names.METHODS, parent=dataset)
+    dataset.add_child(methods)
+
+    method_step = Node(names.METHODSTEP, parent=methods)
+    methods.add_child(method_step)
+
+    description = Node(names.DESCRIPTION, parent=method_step)
+    method_step.add_child(description)
+
+    section_1 = Node(names.SECTION, parent=description)
+    description.add_child(section_1)
+    section_1.content = 'This is description Section 1'
+
+    section_2 = Node(names.SECTION, parent=description)
+    description.add_child(section_2)
+    section_2.content = 'This is description Section 2'
+
+    para_1 = Node(names.PARA, parent=description)
+    description.add_child(para_1)
+    para_1.content = 'This is description Para 1'
+
+    para_2 = Node(names.PARA, parent=description)
+    description.add_child(para_2)
+    para_2.content = 'This is description Para 2'
+
+    instrumentation_1 = Node(names.INSTRUMENTATION, parent=method_step)
+    method_step.add_child(instrumentation_1)
+    instrumentation_1.content = 'Instrument #1'
+
+    instrumentation_2 = Node(names.INSTRUMENTATION, parent=method_step)
+    method_step.add_child(instrumentation_2)
+    instrumentation_2.content = 'Instrument #2'
 
     datatable = Node(names.DATATABLE, parent=dataset)
     dataset.add_child(datatable)

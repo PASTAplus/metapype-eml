@@ -255,6 +255,7 @@
             ["keywordSet", 0, null],
             ["coverage", 0, 1],
             ["contact", 1, null],
+            ["methods", 0, 1],
             ["dataTable", 0, null]
         ],
         {
@@ -312,6 +313,17 @@
         [
             ["principal", 1, null],
             ["permission", 1, null]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "descriptionRule" : [
+        { 
+            "lang": [false]
+        },
+       [
+            ["section", "para", 0, null]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -488,6 +500,17 @@
             ["sampling", 0, 1],
             ["qualityControl", 0, null],
         [
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "methodStepRule" : [
+        { 
+        },
+        [
+            ["description", 1, 1],
+            ["instrumentation", 0, null]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -817,12 +840,13 @@
     ],
     "textRule" : [
         { 
-            "xml:lang": [true]
+            "lang": [false]
         },
-        [
+       [
+            ["section", "para", 0, null]
         ],
         {
-            "content_rules" : ["strContent"]
+            "content_rules" : ["emptyContent"]
         }
     ],
     "unitRule" : [
@@ -857,7 +881,7 @@
     ],
     "valueRule" : [
         { 
-            "xml:lang": [true]
+            "lang": [true]
         },
         [
         ],
