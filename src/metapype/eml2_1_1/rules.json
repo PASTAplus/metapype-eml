@@ -722,7 +722,7 @@
             "content_rules" : ["emptyContent"]
         }
     ],
-    "responsiblePartyWithRolesRule" : [
+    "responsiblePartyWithRoleRule" : [
         { 
             "id": [false],
             "system": [false],
@@ -735,7 +735,7 @@
             ["electronicMailAddress", 0, null],
             ["onlineUrl", 0, null],
             ["userId", 0, null],
-            ["role", 1, null]
+            ["role", 1, 1]
          ],
         {
             "content_rules" : ["emptyContent"]

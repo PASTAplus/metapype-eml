@@ -425,13 +425,9 @@ identified as moss or lichen."
     surName_personnel.content = 'Duffington'
     individualName_personnel.add_child(surName_personnel)
 
-    project_role_1 = Node(names.ROLE, parent=personnel)
-    personnel.add_child(project_role_1)
-    project_role_1.content = 'principalInvestigator'
-    
-    project_role_2 = Node(names.ROLE, parent=personnel)
-    personnel.add_child(project_role_2)
-    project_role_2.content = 'fieldStationManager'
+    project_role = Node(names.ROLE, parent=personnel)
+    personnel.add_child(project_role)
+    project_role.content = 'principalInvestigator'
     
     datatable = Node(names.DATATABLE, parent=dataset)
     dataset.add_child(datatable)
