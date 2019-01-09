@@ -232,6 +232,207 @@ identified as moss or lichen."
     method_step.add_child(instrumentation_2)
     instrumentation_2.content = 'Instrument #2'
 
+    sampling = Node(names.SAMPLING, parent=methods)
+    methods.add_child(sampling)
+
+    study_extent = Node(names.STUDYEXTENT, parent=sampling)
+    sampling.add_child(study_extent)
+
+    study_extent_coverage = Node(names.COVERAGE, parent=study_extent)
+    study_extent.add_child(study_extent_coverage)
+
+    study_extent_geographic_coverage = Node(names.GEOGRAPHICCOVERAGE, parent=study_extent_coverage)
+    study_extent_coverage.add_child(study_extent_geographic_coverage)
+
+    study_extent_geographic_description = Node(names.GEOGRAPHICDESCRIPTION, 
+                                  parent=study_extent_geographic_coverage)
+    study_extent_geographic_description.content = "Somewhere in the Rocky Mountains"
+    study_extent_geographic_coverage.add_child(study_extent_geographic_description)
+
+    study_extent_bounding_coordinates = Node(names.BOUNDINGCOORDINATES, 
+                                parent=study_extent_geographic_coverage)
+    study_extent_geographic_coverage.add_child(study_extent_bounding_coordinates)
+
+    study_extent_wbc = Node(names.WESTBOUNDINGCOORDINATE, parent=study_extent_bounding_coordinates)
+    study_extent_wbc.content = -107.55538624999997
+    study_extent_bounding_coordinates.add_child(study_extent_wbc)
+    study_extent_ebc = Node(names.EASTBOUNDINGCOORDINATE, parent=study_extent_bounding_coordinates)
+    study_extent_ebc.content = -106.45675343749997
+    study_extent_bounding_coordinates.add_child(study_extent_ebc)
+    study_extent_nbc = Node(names.NORTHBOUNDINGCOORDINATE, parent=study_extent_bounding_coordinates)
+    study_extent_nbc.content = 39.48496522541802
+    study_extent_bounding_coordinates.add_child(study_extent_nbc)
+    study_extent_sbc = Node(names.SOUTHBOUNDINGCOORDINATE, parent=study_extent_bounding_coordinates)
+    study_extent_sbc.content = 38.9530013453599
+    study_extent_bounding_coordinates.add_child(study_extent_sbc)
+
+    study_extent_temporal_coverage = Node(names.TEMPORALCOVERAGE, parent=study_extent_coverage)
+    study_extent_coverage.add_child(study_extent_temporal_coverage)
+
+    study_extent_single_date_time = Node(names.SINGLEDATETIME, parent=study_extent_temporal_coverage)
+    study_extent_temporal_coverage.add_child(study_extent_single_date_time)
+    study_extent_single_date_time.content = '2018'
+
+    study_extent_range_of_dates = Node(names.RANGEOFDATES, parent=study_extent_temporal_coverage)
+    study_extent_temporal_coverage.add_child(study_extent_range_of_dates)
+    
+    study_extent_begin_date = Node(names.BEGINDATE, parent=study_extent_range_of_dates)
+    study_extent_range_of_dates.add_child(study_extent_begin_date)
+
+    study_extent_calendar_date_begin = Node(names.CALENDARDATE, parent=study_extent_begin_date)
+    study_extent_begin_date.add_child(study_extent_calendar_date_begin)
+    study_extent_calendar_date_begin.content = '2000'
+
+    study_extent_end_date = Node(names.ENDDATE, parent=study_extent_range_of_dates)
+    study_extent_range_of_dates.add_child(study_extent_end_date)
+
+    study_extent_calendar_date_end = Node(names.CALENDARDATE, parent=study_extent_end_date)
+    study_extent_end_date.add_child(study_extent_calendar_date_end)
+    study_extent_calendar_date_end.content = '2018'
+
+    study_extent_temporal_coverage_rule = rule.get_rule(names.TEMPORALCOVERAGE)
+    try:
+        study_extent_temporal_coverage_rule.validate_rule(temporal_coverage)
+    except MetapypeRuleError as e:
+        # We should see an error like: 
+        #   Maximum occurrence of "['singleDateTime', 'rangeOfDates']" 
+        #   exceeded for "temporalCoverage"
+        logger.error(e)
+
+    study_extent_taxonomic_coverage = Node(names.TAXONOMICCOVERAGE, parent=study_extent_coverage)
+    study_extent_coverage.add_child(study_extent_taxonomic_coverage)
+    study_extent_general_taxonomic_coverage = Node(names.GENERALTAXONOMICCOVERAGE, 
+                                      parent=study_extent_taxonomic_coverage)
+    study_extent_taxonomic_coverage.add_child(study_extent_general_taxonomic_coverage)
+    study_extent_general_taxonomic_coverage.content = "All vascular plants were \
+identified to family or species, mosses and lichens were \
+identified as moss or lichen."
+    
+    study_extent_taxonomic_classification_genus = Node(names.TAXONOMICCLASSIFICATION, 
+                                          parent=study_extent_taxonomic_coverage)
+    study_extent_taxonomic_coverage.add_child(study_extent_taxonomic_classification_genus)
+
+    study_extent_taxon_rank_name_genus = Node(names.TAXONRANKNAME, 
+                                 parent=study_extent_taxonomic_classification_genus)
+    study_extent_taxonomic_classification_genus.add_child(study_extent_taxon_rank_name_genus)
+    study_extent_taxon_rank_name_genus.content = "Genus"
+
+    study_extent_taxon_rank_value_genus = Node(names.TAXONRANKVALUE, 
+                                  parent=study_extent_taxonomic_classification_genus)
+    study_extent_taxonomic_classification_genus.add_child(study_extent_taxon_rank_value_genus)
+    study_extent_taxon_rank_value_genus.content = "Escherichia"
+
+    study_extent_taxonomic_classification_species = Node(names.TAXONOMICCLASSIFICATION, 
+                                       parent=study_extent_taxonomic_classification_genus)
+    study_extent_taxonomic_classification_genus.add_child(study_extent_taxonomic_classification_species)
+
+    study_extent_taxon_rank_name_species = Node(names.TAXONRANKNAME, 
+                              parent=study_extent_taxonomic_classification_species)
+    study_extent_taxonomic_classification_species.add_child(study_extent_taxon_rank_name_species)
+    study_extent_taxon_rank_name_species.content = "Species"
+
+    study_extent_taxon_rank_value_species = Node(names.TAXONRANKVALUE,
+                               parent=study_extent_taxonomic_classification_species)
+    study_extent_taxonomic_classification_species.add_child(study_extent_taxon_rank_value_species)
+    study_extent_taxon_rank_value_species.content = "coli"
+
+    study_extent_description = Node(names.DESCRIPTION, parent=study_extent)
+    study_extent.add_child(study_extent_description)
+
+    study_extent_section_1 = Node(names.SECTION, parent=study_extent_description)
+    study_extent_description.add_child(study_extent_section_1)
+    study_extent_section_1.content = 'This is study_extent_description Section 1'
+
+    study_extent_section_2 = Node(names.SECTION, parent=study_extent_description)
+    study_extent_description.add_child(study_extent_section_2)
+    study_extent_section_2.content = 'This is study_extent_description Section 2'
+
+    study_extent_para_1 = Node(names.PARA, parent=study_extent_description)
+    study_extent_description.add_child(study_extent_para_1)
+    study_extent_para_1.content = 'This is study_extent_description Para 1'
+
+    study_extent_para_2 = Node(names.PARA, parent=study_extent_description)
+    study_extent_description.add_child(study_extent_para_2)
+    study_extent_para_2.content = 'This is study_extent_description Para 2'
+
+    sampling_description = Node(names.SAMPLINGDESCRIPTION, parent=sampling)
+    sampling.add_child(sampling_description)
+
+    sampling_description_section_1 = Node(names.SECTION, parent=sampling_description)
+    sampling_description.add_child(sampling_description_section_1)
+    sampling_description_section_1.content = 'This is sampling_description Section 1'
+
+    sampling_description_section_2 = Node(names.SECTION, parent=sampling_description)
+    sampling_description.add_child(sampling_description_section_2)
+    sampling_description_section_2.content = 'This is sampling_description Section 2'
+
+    sampling_description_para_1 = Node(names.PARA, parent=sampling_description)
+    sampling_description.add_child(sampling_description_para_1)
+    sampling_description_para_1.content = 'This is sampling_description Para 1'
+
+    sampling_description_para_2 = Node(names.PARA, parent=sampling_description)
+    sampling_description.add_child(sampling_description_para_2)
+    sampling_description_para_2.content = 'This is sampling_description Para 2'
+
+    quality_control = Node(names.QUALITYCONTROL, parent=methods)
+    methods.add_child(quality_control)
+
+    quality_control_description = Node(names.DESCRIPTION, parent=quality_control)
+    quality_control.add_child(quality_control_description)
+
+    quality_control_description_section_1 = Node(names.SECTION, parent=quality_control_description)
+    quality_control_description.add_child(quality_control_description_section_1)
+    quality_control_description_section_1.content = 'This is quality_control_description Section 1'
+
+    quality_control_description_section_2 = Node(names.SECTION, parent=quality_control_description)
+    quality_control_description.add_child(quality_control_description_section_2)
+    quality_control_description_section_2.content = 'This is quality_control_description Section 2'
+
+    quality_control_description_para_1 = Node(names.PARA, parent=quality_control_description)
+    quality_control_description.add_child(quality_control_description_para_1)
+    quality_control_description_para_1.content = 'This is quality_control_description Para 1'
+
+    quality_control_description_para_2 = Node(names.PARA, parent=quality_control_description)
+    quality_control_description.add_child(quality_control_description_para_2)
+    quality_control_description_para_2.content = 'This is quality_control_description Para 2'
+
+    quality_control_instrumentation_1 = Node(names.INSTRUMENTATION, parent=quality_control)
+    quality_control.add_child(quality_control_instrumentation_1)
+    quality_control_instrumentation_1.content = "Quality Control Instrumentation string 1"
+
+    quality_control_instrumentation_2 = Node(names.INSTRUMENTATION, parent=quality_control)
+    quality_control.add_child(quality_control_instrumentation_2)
+    quality_control_instrumentation_2.content = "Quality Control Instrumentation string 2"
+
+    project = Node(names.PROJECT, parent=dataset)
+    dataset.add_child(project)
+
+    project_title = Node(names.TITLE, parent=project)
+    project.add_child(project_title)
+    project_title.content = 'The Title of the Project'
+
+    personnel = Node(names.PERSONNEL, parent=project)
+    project.add_child(personnel)
+
+    individualName_personnel = Node(names.INDIVIDUALNAME, parent=personnel)
+    personnel.add_child(individualName_personnel)
+
+    givenName_personnel = Node(names.GIVENNAME, parent=individualName_personnel)
+    givenName_personnel.content = 'Baxter'
+    individualName_personnel.add_child(givenName_personnel)
+
+    surName_personnel = Node(names.SURNAME, parent=individualName_personnel)
+    surName_personnel.content = 'Duffington'
+    individualName_personnel.add_child(surName_personnel)
+
+    project_role_1 = Node(names.ROLE, parent=personnel)
+    personnel.add_child(project_role_1)
+    project_role_1.content = 'principalInvestigator'
+    
+    project_role_2 = Node(names.ROLE, parent=personnel)
+    personnel.add_child(project_role_2)
+    project_role_2.content = 'fieldStationManager'
+    
     datatable = Node(names.DATATABLE, parent=dataset)
     dataset.add_child(datatable)
 

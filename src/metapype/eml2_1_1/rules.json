@@ -648,6 +648,40 @@
             "content_rules" : ["emptyContent"]
         }
     ],
+    "principalRule" : [
+        { 
+        },
+        [
+        ],
+        {
+            "content_rules" : ["strContent", "nonEmptyContent"]
+        }
+    ],
+    "projectRule" : [
+        { 
+            "id": [false],
+            "system": [false],
+            "scope": [false]
+        },
+        [
+            ["title", "personnel", 1, null],
+            ["abstract", "funding", 0, 1]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "qualityControlRule" : [
+        { 
+        },
+        [
+            ["description", 1, 1],
+            ["instrumentation", 0, null]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
     "quantitativeAttributeAccuracyAssessmentRule" : [
         { 
         },
@@ -657,15 +691,6 @@
         ],
         {
             "content_rules" : ["emptyContent"]
-        }
-    ],
-    "principalRule" : [
-        { 
-        },
-        [
-        ],
-        {
-            "content_rules" : ["strContent", "nonEmptyContent"]
         }
     ],
     "rangeOfDatesRule" : [
@@ -692,6 +717,36 @@
             ["electronicMailAddress", 0, null],
             ["onlineUrl", 0, null],
             ["userId", 0, null]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "responsiblePartyWithRolesRule" : [
+        { 
+            "id": [false],
+            "system": [false],
+            "scope": [false]
+        },
+        [
+            ["individualName", "organizationName", "positionName", 1, null],
+            ["address", 0, null],
+            ["phone", 0, null],
+            ["electronicMailAddress", 0, null],
+            ["onlineUrl", 0, null],
+            ["userId", 0, null],
+            ["role", 1, null]
+         ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "samplingRule" : [
+        { 
+        },
+        [
+            ["studyExtent", "organizationName", "positionName", 1, null],
+            ["samplingDescription", 1, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -738,6 +793,17 @@
         ],
         {
             "content_rules" : ["strContent"]
+        }
+    ],
+    "studyExtentRule" : [
+        { 
+        },
+        [
+            ["coverage", "organizationName", "positionName", 1, 1],
+            ["description", 1, 1]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
         }
     ],
     "taxonomicClassificationRule" : [
