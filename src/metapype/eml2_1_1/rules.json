@@ -496,9 +496,11 @@
     "methodsRule" : [
         { 
         },
+        [
             ["methodStep", 1, null],
             ["sampling", 0, 1],
-            ["qualityControl", 0, null],
+            ["qualityControl", 0, null]
+        ],
         [
         ],
         {
