@@ -1,7 +1,7 @@
 language:
   python
 dist:
-  trusty
+  xenial
 python:
   - 3.7
 addons:
