@@ -19,7 +19,6 @@ import daiquiri
 
 from metapype.eml2_1_1 import names
 from metapype.eml2_1_1 import validate
-import metapype.model.io as io
 from metapype.model.node import Node
 from metapype.model.node import Shift
 
@@ -257,6 +256,7 @@ class TestNode(unittest.TestCase):
         self.assertIs(principal, node)
         Node.delete_node_instance(eml.id, children=False)
         self.assertIn(principal.id, Node.store)
+
 
 if __name__ == '__main__':
     unittest.main()
