@@ -493,19 +493,19 @@ identified as moss or lichen."
     text_format.add_child(record_delimiter)
     record_delimiter.content = '\\r\\n'
 
-    physical_line_delimiter = Node(names.PHYSICALLINEDELIMITER)
+    physical_line_delimiter = Node(names.PHYSICALLINEDELIMITER, parent=text_format)
     text_format.add_child(physical_line_delimiter)
     physical_line_delimiter.content = '\\r\\n'
 
-    num_physical_lines_per_record = Node(names.NUMPHYSICALLINESPERRECORD)
+    num_physical_lines_per_record = Node(names.NUMPHYSICALLINESPERRECORD, parent=text_format)
     text_format.add_child(num_physical_lines_per_record)
     num_physical_lines_per_record.content = '1'
 
-    max_record_length = Node(names.MAXRECORDLENGTH)
+    max_record_length = Node(names.MAXRECORDLENGTH, parent=text_format)
     text_format.add_child(max_record_length)
     max_record_length.content = '597'
 
-    attribute_orientation = Node(names.ATTRIBUTEORIENTATION)
+    attribute_orientation = Node(names.ATTRIBUTEORIENTATION, parent=text_format)
     text_format.add_child(attribute_orientation)
     attribute_orientation.content = 'column'
 
@@ -977,7 +977,7 @@ identified as moss or lichen."
 
     try:
         validate.tree(node)
-    except  MetapypeRuleError as e:
+    except MetapypeRuleError as e:
         logger.error(e)
     #
     xml = export.to_xml(eml)

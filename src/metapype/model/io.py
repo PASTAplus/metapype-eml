@@ -57,9 +57,8 @@ def from_json(json_node: dict, parent: Node = None) -> Node:
 
     children = body[3]['children']
     for child in children:
-        if child is not None:
-            child_node = from_json(child, node)
-            node.add_child(child_node)
+        child_node = from_json(child, node)
+        node.add_child(child_node)
 
     return node
 
@@ -89,85 +88,40 @@ def graph(node: Node, level: int) -> str:
         graph(child, level + 1)
 
 
-def to_json(node: Node, level: int = 0, comma: str = '') -> str:
-    '''
-    Converts a model instance from the root node to a JSON compliant
+def objectify(node: Node) -> dict:
+    """
+    Converts a model instance into a single Python object instance in
+    preparation for JSON
+
+    Args:
+        node:
+
+    Returns:
+        dict: serialized object of the model instance
+
+    """
+    j = {node.name: []}
+    j[node.name].append({'id': node.id})
+    j[node.name].append({'attributes': node.attributes})
+    j[node.name].append({'content': node.content})
+    children = []
+    for child in node.children:
+        children.append(objectify(child))
+    j[node.name].append({'children': children})
+    return j
+
+
+def to_json(node: Node):
+    """
+    Converts a serialized object of the model instance to a JSON compliant
     string.
 
     Args:
         node: Root node of the model instance
-        level: Indention level
-        comma: String representation of a comma if condition dictates
 
     Returns:
-        str: JSON representation of the model instance.
+        str: JSON representation of the model instance
 
-    '''
-    json = ''
-    name = node.name
-    if level == 0:
-        indent = ''
-    else:
-        indent = space * level
-
-    open_tag = '{"' + name + '":[\n'
-    json += indent + open_tag
-
-    id = '{"id":"' + node.id + '"},\n'
-    json += indent + space + id
-
-    attributes = '{"attributes":null},'
-    if len(node.attributes) > 0:
-        # Creates comma delimited list of attributes
-        _ = '{' + ','.join(
-            ['"' + key + '":"' + node.attributes[key] + '"' for key in
-             node.attributes]) + '}'
-        attributes = attributes.replace('null', _)
-    json += indent + space + attributes + '\n'
-
-    content = '{"content":null},'
-    if node.content is not None:
-        _ = '"' + str(node.content) + '"'
-        content = content.replace('null', _)
-    json += indent + space + content + '\n'
-
-    children = '{"children":[null]}'
-    if len(node.children) > 0:
-        _ = ''
-        for child in node.children:
-            # Special formatting necessary for first and last child to
-            # cleanly represent indention and commas to be JSON
-            # compliant
-            newline = ''
-            if child is node.children[0]:
-                newline = '\n'
-            if child is node.children[-1]:
-                _ += newline + to_json(child, level + 2, comma='')
-            else:
-                _ += newline + to_json(child, level + 2, comma=',')
-        children = children.replace('null]}', _)
-        json += indent + space + children
-        json += indent + space + ']}\n'
-    else:
-        json += indent + space + children + '\n'
-
-    if level == 0:
-        close_tag = indent + ']}'
-    else:
-        close_tag = indent + ']}' + comma + '\n'
-    json += close_tag
-
-    return json
-
-
-def main():
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    print(f'********** {dir_path} **********')
-    with open(f'{dir_path}/mobrien.1.1.json') as fh:
-        json_node = json.load(fh)
-        eml_node = io.from_json(json_node)
-        graph(eml_node, 4)
-    fh.close()
- 
-if __name__ == "__main__":
-    main()
+    """
+    j = objectify(node)
+    return json.dumps(j, indent=2)
