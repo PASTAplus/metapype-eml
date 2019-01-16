@@ -906,7 +906,7 @@ identified as moss or lichen."
     attribute_accuracy_value.content = 'An estimate of the accuracy of the identification'
     attribute_accuracy_explanation = Node(names.ATTRIBUTEACCURACYEXPLANATION, parent=qaaa)
     qaaa.add_child(attribute_accuracy_explanation)
-    attribute_accuracy_explanation.content = 'The identification of the test that yielded the Attribute Accuracy Value'
+    attribute_accuracy_explanation.content = 'The identification of the test that yielded the "Attribute Accuracy Value"'
 
     case_sensitive = Node(names.CASESENSITIVE, parent=datatable)
     datatable.add_child(case_sensitive)
