@@ -256,6 +256,7 @@
             ["coverage", 0, 1],
             ["contact", 1, null],
             ["methods", 0, 1],
+            ["project", 0, 1],
             ["dataTable", 0, null]
         ],
         {
