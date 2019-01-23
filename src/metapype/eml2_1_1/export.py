@@ -21,6 +21,7 @@ space = '    '
 
 def to_xml(node: Node, level: int=0) -> str:
     xml=''
+    closed = False
     boiler = 'xmlns:eml="eml://ecoinformatics.org/eml-2.1.1" ' + \
              'xmlns:stmml="http://www.xml-cml.org/schema/stmml-1.1" ' + \
              'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' + \
@@ -42,15 +43,14 @@ def to_xml(node: Node, level: int=0) -> str:
     xml += indent + open_tag
     if node.content is not None:
         xml += str(node.content) + close_tag + '\n'
+        closed = True
     else:
         xml += '\n'
     for child in node.children:
        xml += to_xml(child, level + 1)
 
-    if len(node.children) > 0:
-        xml += indent + close_tag
-        if level > 0:
-            xml += '\n'
+    if not closed:
+        xml += indent + close_tag + '\n'
 
     return xml
 
