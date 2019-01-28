@@ -14,7 +14,7 @@
 import setuptools
 
 setuptools.setup(name='metapype',
-                 version='2019.1.23',
+                 version='2019.1.28',
                  description='Metapype for EML',
                  author='EDI',
                  url='https://github.com/PASTAplus/metapype-eml',
