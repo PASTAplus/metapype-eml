@@ -91,6 +91,25 @@ def main():
     abstract.add_child(para_2)
     para_2.content = 'This is abstract Para 2'
 
+    intellectualRights = Node(names.INTELLECTUALRIGHTS, parent=dataset)
+    dataset.add_child(intellectualRights)
+
+    section_3 = Node(names.SECTION, parent=intellectualRights)
+    intellectualRights.add_child(section_3)
+    section_3.content = 'This is intellectualRights Section 3'
+
+    section_4 = Node(names.SECTION, parent=intellectualRights)
+    intellectualRights.add_child(section_4)
+    section_4.content = 'This is intellectualRights Section 4'
+
+    para_3 = Node(names.PARA, parent=intellectualRights)
+    intellectualRights.add_child(para_3)
+    para_3.content = 'This is intellectualRights Para 3'
+
+    para_4 = Node(names.PARA, parent=intellectualRights)
+    intellectualRights.add_child(para_4)
+    para_4.content = 'This is intellectualRights Para 4'
+
     coverage = Node(names.COVERAGE, parent=dataset)
     dataset.add_child(coverage)
     geographic_coverage = Node(names.GEOGRAPHICCOVERAGE, parent=coverage)

@@ -253,6 +253,7 @@
             ["pubDate", 0, 1],
             ["abstract", 0, 1],
             ["keywordSet", 0, null],
+            ["intellectualRights", 0, 1],
             ["coverage", 0, 1],
             ["contact", 1, null],
             ["methods", 0, 1],
