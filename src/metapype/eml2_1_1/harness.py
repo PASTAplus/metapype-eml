@@ -935,6 +935,269 @@ identified as moss or lichen."
     datatable.add_child(number_of_records)
     number_of_records.content = '454'
   
+    other_entity = Node(names.OTHERENTITY, parent=dataset)
+    dataset.add_child(other_entity)
+
+    alternate_identifier = Node(names.ALTERNATEIDENTIFIER, parent=other_entity)
+    other_entity.add_child(alternate_identifier)
+    alternate_identifier.add_attribute('system', 'EDI')
+    alternate_identifier.content = 'https://portal.edirepository.org/nis/dataviewer?packageid=edi.23.1&entityid=ce5438fb9318b1f04d06b8a0276754d6'
+
+    entity_name = Node(names.ENTITYNAME, parent=other_entity)
+    other_entity.add_child(entity_name)
+    entity_name.content = 'Some Other Entity Data'
+
+    entity_description = Node(names.ENTITYDESCRIPTION, parent=other_entity)
+    other_entity.add_child(entity_description)
+    entity_description.content = 'Radiocarbon content of soil-respired air'
+ 
+    physical = Node(names.PHYSICAL, parent=other_entity)
+    other_entity.add_child(physical)
+    physical.add_attribute('system', 'EDI')
+
+    object_name = Node(names.OBJECTNAME, parent=physical)
+    physical.add_child(object_name)
+    object_name.content = 'tvan_14co2.jk.data.csv'
+
+    size = Node(names.SIZE, parent=physical)
+    physical.add_child(size)
+    size.add_attribute('unit', 'MB')
+    size.content = '20'
+
+    authentication = Node(names.AUTHENTICATION, parent=physical)
+    physical.add_child(authentication)
+    authentication.add_attribute('method', 'password')
+    authentication.content = 'LDAP'
+
+    compression_method = Node(names.COMPRESSIONMETHOD, parent=physical)
+    physical.add_child(compression_method)
+    compression_method.content = 'zip'
+
+    encoding_method = Node(names.ENCODINGMETHOD, parent=physical)
+    physical.add_child(encoding_method)
+    encoding_method.content = 'base64'
+
+    character_encoding = Node(names.CHARACTERENCODING, parent=physical)
+    physical.add_child(character_encoding)
+    character_encoding.content = 'UTF-8'
+
+    data_format = Node(names.DATAFORMAT, parent=physical)
+    physical.add_child(data_format)
+
+    text_format = Node(names.TEXTFORMAT, parent=data_format)
+    data_format.add_child(text_format)
+
+    num_header_lines = Node(names.NUMHEADERLINES, parent=text_format)
+    text_format.add_child(num_header_lines)
+    num_header_lines.content = '3'
+    
+    num_footer_lines = Node(names.NUMFOOTERLINES, parent=text_format)
+    text_format.add_child(num_footer_lines)
+    num_footer_lines.content = '0'
+
+    record_delimiter = Node(names.RECORDDELIMITER, parent=text_format)
+    text_format.add_child(record_delimiter)
+    record_delimiter.content = '\\r\\n'
+
+    physical_line_delimiter = Node(names.PHYSICALLINEDELIMITER, parent=text_format)
+    text_format.add_child(physical_line_delimiter)
+    physical_line_delimiter.content = '\\r\\n'
+
+    num_physical_lines_per_record = Node(names.NUMPHYSICALLINESPERRECORD, parent=text_format)
+    text_format.add_child(num_physical_lines_per_record)
+    num_physical_lines_per_record.content = '1'
+
+    max_record_length = Node(names.MAXRECORDLENGTH, parent=text_format)
+    text_format.add_child(max_record_length)
+    max_record_length.content = '597'
+
+    attribute_orientation = Node(names.ATTRIBUTEORIENTATION, parent=text_format)
+    text_format.add_child(attribute_orientation)
+    attribute_orientation.content = 'column'
+
+    simple_delimited = Node(names.SIMPLEDELIMITED, parent=text_format)
+    text_format.add_child(simple_delimited)
+
+    field_delimiter = Node(names.FIELDDELIMITER, parent=simple_delimited)
+    simple_delimited.add_child(field_delimiter)
+    field_delimiter.content = '\\t'
+
+    collapse_delimiters = Node(names.COLLAPSEDELIMITERS, parent=simple_delimited)
+    simple_delimited.add_child(collapse_delimiters)
+    collapse_delimiters.content = 'no'
+
+    quote_character = Node(names.QUOTECHARACTER, parent=simple_delimited)
+    simple_delimited.add_child(quote_character)
+    quote_character.content = "'"
+
+    literal_character = Node(names.LITERALCHARACTER, parent=simple_delimited)
+    simple_delimited.add_child(literal_character)
+    literal_character.content = '/'   # Usually a backslash, but that causes an error
+
+    complex = Node(names.COMPLEX, parent=text_format)
+    text_format.add_child(complex)
+
+    text_fixed = Node(names.TEXTFIXED, parent=complex)
+    complex.add_child(text_fixed)
+
+    field_width = Node(names.FIELDWIDTH, parent=text_fixed)
+    text_fixed.add_child(field_width)
+    field_width.content = '12'
+
+    line_number = Node(names.LINENUMBER, parent=text_fixed)
+    text_fixed.add_child(line_number)
+    line_number.content = '3'
+
+    field_start_column = Node(names.FIELDSTARTCOLUMN, parent=text_fixed)
+    text_fixed.add_child(field_start_column)
+    field_start_column.content = '58'
+
+    text_delimited = Node(names.TEXTDELIMITED, parent=complex)
+    complex.add_child(text_delimited)
+
+    field_delimiter_2 = Node(names.FIELDDELIMITER, parent=text_delimited)
+    text_delimited.add_child(field_delimiter_2)
+    field_delimiter_2.content = ','
+    
+    collapse_delimiters_2 = Node(names.COLLAPSEDELIMITERS, parent=text_delimited)
+    text_delimited.add_child(collapse_delimiters_2)
+    collapse_delimiters_2.content = 'no'
+
+    line_number_2 = Node(names.LINENUMBER, parent=text_delimited)
+    text_delimited.add_child(line_number_2)
+    line_number_2.content = '2'
+
+    quote_character_2 = Node(names.QUOTECHARACTER, parent=text_delimited)
+    text_delimited.add_child(quote_character_2)
+    quote_character_2.content = "'"
+
+    literal_character_2 = Node(names.LITERALCHARACTER, parent=text_delimited)
+    text_delimited.add_child(literal_character_2)
+    literal_character_2.content = '/'   # Usually a backslash, but that causes an error
+
+    externally_defined_format = Node(names.EXTERNALLYDEFINEDFORMAT, parent=data_format)
+    data_format.add_child(externally_defined_format)
+
+    format_name = Node(names.FORMATNAME, parent=externally_defined_format)
+    externally_defined_format.add_child(format_name)
+    format_name.content = 'Microsoft Excel'
+
+    format_version = Node(names.FORMATVERSION, parent=externally_defined_format)
+    externally_defined_format.add_child(format_version)
+    format_version.content = '2000 (9.0.2720)'
+
+    binary_raster_format = Node(names.BINARYRASTERFORMAT, parent=data_format)
+    data_format.add_child(binary_raster_format)
+
+    row_column_orientation = Node(names.ROWCOLUMNORIENTATION, parent=binary_raster_format)
+    binary_raster_format.add_child(row_column_orientation)
+    row_column_orientation.content = 'column'
+
+    multi_band = Node(names.MULTIBAND, parent=binary_raster_format)
+    binary_raster_format.add_child(multi_band)
+
+    nbands = Node(names.NBANDS, parent=multi_band)
+    multi_band.add_child(nbands)
+    nbands.content = '2'
+
+    layout = Node(names.LAYOUT, parent=multi_band)
+    multi_band.add_child(layout)
+    layout.content = 'bil'
+
+    nbits = Node(names.NBITS, parent=binary_raster_format)
+    binary_raster_format.add_child(nbits)
+    nbits.content = '16'
+
+    byteorder = Node(names.BYTEORDER, parent=binary_raster_format)
+    binary_raster_format.add_child(byteorder)
+    byteorder.content = 'little-endian'
+
+    skipbytes = Node(names.SKIPBYTES, parent=binary_raster_format)
+    binary_raster_format.add_child(skipbytes)
+    skipbytes.content = '0'
+
+    bandrowbytes = Node(names.BANDROWBYTES, parent=binary_raster_format)
+    binary_raster_format.add_child(bandrowbytes)
+    bandrowbytes.content = '3'
+
+    totalrowbytes = Node(names.TOTALROWBYTES, parent=binary_raster_format)
+    binary_raster_format.add_child(totalrowbytes)
+    totalrowbytes.content = '8'
+
+    bandgapbytes = Node(names.BANDGAPBYTES, parent= binary_raster_format)
+    binary_raster_format.add_child(bandgapbytes)
+    bandgapbytes.content = '1'
+
+    distribution = Node(names.DISTRIBUTION, parent=physical)
+    physical.add_child(distribution)
+
+    online = Node(names.ONLINE, parent=distribution)
+    distribution.add_child(online)
+
+    online_description = Node(names.ONLINEDESCRIPTION, parent=online)
+    online.add_child(online_description)
+    online_description.content = 'network server'
+
+    url = Node(names.URL, parent=online)
+    online.add_child(url)
+    url.add_attribute('function', 'download')
+    url.content = 'https://data.abc.edu/somedataset/other_entity_data'
+
+    connection = Node(names.CONNECTION, parent=online)
+    online.add_child(connection)
+    connection.content = 'This is not a real connection element because it is only a string.'
+
+    offline = Node(names.OFFLINE, parent=distribution)
+    distribution.add_child(offline)
+
+    medium_name = Node(names.MEDIUMNAME, parent=offline)
+    offline.add_child(medium_name)
+    medium_name.content = 'hardcopy'
+
+    medium_density = Node(names.MEDIUMDENSITY, parent=offline)
+    offline.add_child(medium_density)
+    medium_density.content = 'High Density (HD)'
+
+    medium_density_units = Node(names.MEDIUMDENSITYUNITS, parent=offline)
+    offline.add_child(medium_density_units)
+    medium_density_units.content = 'B/cm'
+
+    medium_volume =Node(names.MEDIUMVOLUME, parent=offline)
+    offline.add_child(medium_volume)
+    medium_volume.content = '650 MB'
+
+    medium_format = Node(names.MEDIUMFORMAT, parent=offline)
+    offline.add_child(medium_format)
+    medium_format.content = 'NTFS'
+
+    medium_note = Node(names.MEDIUMNOTE, parent=offline)
+    offline.add_child(medium_note)
+    medium_note.content = 'Some additional pertinent information about the media'
+
+    inline = Node(names.INLINE, parent=distribution)
+    distribution.add_child(inline)
+    inline.content=('1,2,3,4,5,6,7,8,9')
+
+    other_entity_access = Node(names.ACCESS, parent=distribution)
+    other_entity_access.add_attribute('authSystem', 'pasta')
+    other_entity_access.add_attribute('order', 'allowFirst')
+    distribution.add_child(other_entity_access)
+
+    other_entity_allow = Node(names.ALLOW, parent=other_entity_access)
+    other_entity_access.add_child(other_entity_allow)
+
+    other_entity_principal = Node(names.PRINCIPAL, parent=other_entity_allow)
+    other_entity_principal.content = 'uid=ucarroll,o=EDI,dc=edirepository,dc=org'
+    other_entity_allow.add_child(other_entity_principal)
+
+    other_entity_permission = Node(names.PERMISSION, parent=other_entity_allow)
+    other_entity_permission.content = 'write'
+    other_entity_allow.add_child(other_entity_permission)
+
+    entity_type = Node(names.ENTITYTYPE, parent=other_entity)
+    other_entity.add_child(entity_type)
+    entity_type.content = "Unknown Entity Type"
+
     datatable_rule = rule.get_rule(names.DATATABLE)
     try:
         datatable_rule.validate_rule(datatable)
@@ -1009,6 +1272,12 @@ identified as moss or lichen."
     evaluate.tree(eml, evaluation)
     for e in evaluation:
         print('{0}: {1}'.format(e, evaluation[e]))
+
+    other_entity_rule = rule.get_rule(names.OTHERENTITY)
+    try:
+        other_entity_rule.validate_rule(other_entity)
+    except MetapypeRuleError as e:
+        logger.error(e)
 
     return 0
 

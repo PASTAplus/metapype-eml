@@ -613,6 +613,27 @@
             "content_rules" : ["emptyContent"]
         }
     ],
+    "otherEntityRule" : [
+        { 
+            "id": [false],
+            "system": [false],
+            "scope": [false]
+        },
+        [
+            ["alternateIdentifier", 0, null],
+            ["entityName", 1, 1],
+            ["entityDescription", 0, 1],
+            ["physical", 0, null],
+            ["coverage", 0, 1],
+            ["methods", 0, 1],
+            ["additionalInfo", 0, null],
+            ["attributeList", 0, 1],
+            ["entityType", 1, 1]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
     "permissionRule" : [
         { 
         },
