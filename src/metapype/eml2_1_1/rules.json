@@ -258,7 +258,8 @@
             ["contact", 1, null],
             ["methods", 0, 1],
             ["project", 0, 1],
-            ["dataTable", 0, null]
+            ["dataTable", 0, null],
+            ["otherEntity", 0, null]
         ],
         {
             "content_rules" : ["emptyContent"]
