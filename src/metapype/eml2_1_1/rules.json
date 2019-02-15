@@ -256,6 +256,8 @@
             ["intellectualRights", 0, 1],
             ["coverage", 0, 1],
             ["contact", 1, null],
+            ["publisher", 0, 1],
+            ["pubPlace", 0, 1],
             ["methods", 0, 1],
             ["project", 0, 1],
             ["dataTable", 0, null],

@@ -218,6 +218,24 @@ identified as moss or lichen."
     surName_contact.content = 'Gaucho'
     individualName_contact.add_child(surName_contact)
 
+    publisher = Node(names.PUBLISHER, parent=dataset)
+    dataset.add_child(publisher)
+
+    individualName_publisher = Node(names.INDIVIDUALNAME, parent=publisher)
+    publisher.add_child(individualName_publisher)
+
+    givenName_publisher = Node(names.GIVENNAME, parent=individualName_publisher)
+    givenName_publisher.content = 'Utah'
+    individualName_publisher.add_child(givenName_publisher)
+
+    surName_publisher = Node(names.SURNAME, parent=individualName_publisher)
+    surName_publisher.content = 'Carroll'
+    individualName_publisher.add_child(surName_publisher)
+
+    pubplace = Node(names.PUBPLACE, parent=dataset)
+    dataset.add_child(pubplace)
+    pubplace.content = "University of New Mexico Dept. of Biology"
+
     methods = Node(names.METHODS, parent=dataset)
     dataset.add_child(methods)
 
