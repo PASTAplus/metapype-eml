@@ -18,7 +18,7 @@ import unittest
 import daiquiri
 
 from metapype.eml2_1_1 import names
-from metapype.model import io
+from metapype.model import mp_io
 from metapype.model.node import Node
 
 
@@ -50,7 +50,7 @@ class TestIO(unittest.TestCase):
         permission = Node(names.PERMISSION, parent=allow)
         permission.content = 'all'
         allow.add_child(permission)
-        j = io.to_json(eml)
+        j = mp_io.to_json(eml)
         self.assertIsInstance(j, str)
 
 
