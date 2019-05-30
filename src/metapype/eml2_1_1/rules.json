@@ -692,8 +692,10 @@
             "scope": [false, "document", "system"]
         },
         [
-            ["title", "personnel", 1, null],
-            ["abstract", "funding", 0, 1]
+            ["title", 1, null],
+            ["personnel", 1, null],
+            ["abstract", 0, 1],
+            ["funding", 0, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -936,11 +938,11 @@
         { 
             "lang": [false]
         },
-       [
+        [
             ["section", "para", 0, null]
         ],
         {
-            "content_rules" : ["emptyContent"]
+            "content_rules" : ["strContent"]
         }
     ],
     "unitRule" : [
