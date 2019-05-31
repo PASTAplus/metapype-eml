@@ -1,6 +1,6 @@
 {
     "accessRule" : [
-        { 
+        {
             "id": [false],
             "system": [false],
             "scope": [false, "document", "system"],
@@ -637,6 +637,15 @@
             "content_rules" : ["emptyContent"]
         }
     ],
+    "paraRule" : [
+        {
+        },
+        [
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
     "permissionRule" : [
         { 
         },
@@ -775,8 +784,22 @@
         { 
         },
         [
-            ["studyExtent", "organizationName", "positionName", 1, null],
-            ["samplingDescription", 1, 1]
+            ["studyExtent", 1, 1],
+            ["samplingDescription", 1, 1],
+            ["spatialSamplingUnits", 0, 1],
+            ["citation", 0, null]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "sectionRule" : [
+        {
+            "lang": [false]
+        },
+        [
+            ["title", 0, 1],
+            ["para", "section", 0, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -829,8 +852,7 @@
         { 
         },
         [
-            ["coverage", "organizationName", "positionName", 1, 1],
-            ["description", 1, 1]
+            ["coverage", "description", 1, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
