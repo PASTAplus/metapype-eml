@@ -44,13 +44,14 @@ def to_xml(node: Node, level: int=0) -> str:
     if node.content is not None:
         xml += str(node.content) + close_tag + '\n'
         closed = True
-    else:
+    elif len(node.children) > 0:
         xml += '\n'
     for child in node.children:
-       xml += to_xml(child, level + 1)
-
+        xml += to_xml(child, level + 1)
     if not closed:
-        xml += indent + close_tag + '\n'
+        if len(node.children) > 0:
+            xml += indent
+        xml += close_tag + '\n'
 
     return xml
 
