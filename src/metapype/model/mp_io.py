@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-""":Mod: io
+""":Mod: mp_io
 
 :Synopsis:
-    Utilities for reading and writing a model instance
+    Utilities for reading and writing a metapype model instance
 
 :Author:
     servilla
