@@ -1,9 +1,9 @@
 {
     "accessRule" : [
-        { 
+        {
             "id": [false],
             "system": [false],
-            "scope": [false],
+            "scope": [false, "document", "system"],
             "order": [false, "allowFirst", "denyFirst"],
             "authSystem": [true]
         },
@@ -14,7 +14,7 @@
             "content_rules" : ["emptyContent"]
         }
     ],
-    "accurracyRule" : [
+    "accuracyRule" : [
         { 
         },
         [
@@ -41,7 +41,7 @@
         { 
             "id": [false],
             "system": [false],
-            "scope": [false]
+            "scope": [false, "document", "system"]
         },
         [
             ["deliveryPoint", 0, null],
@@ -119,7 +119,7 @@
         { 
             "id": [false],
             "system": [false],
-            "scope": [false]
+            "scope": [false, "document", "system"]
         },
         [
             ["attributeName", 1, 1],
@@ -223,7 +223,7 @@
         { 
             "id": [false],
             "system": [false],
-            "scope": [false]
+            "scope": [false, "document", "system"]
         },
         [
             ["geographicCoverage", "temporalCoverage", "taxonomicCoverage", 1, null]
@@ -271,7 +271,7 @@
         { 
             "id": [false],
             "system": [false],
-            "scope": [false]
+            "scope": [false, "document", "system"]
         },
         [
             ["alternateIdentifier", 0, null],
@@ -338,7 +338,7 @@
         { 
             "id": [false],
             "system": [false],
-            "scope": [false]
+            "scope": [false, "document", "system"]
         },
         [
             ["online", "offline", "inline", 1, 1],
@@ -415,7 +415,7 @@
         { 
             "id": [false],
             "system": [false],
-            "scope": [false]
+            "scope": [false, "document", "system"]
         },
         [
             ["geographicDescription", 1, 1],
@@ -620,7 +620,7 @@
         { 
             "id": [false],
             "system": [false],
-            "scope": [false]
+            "scope": [false, "document", "system"]
         },
         [
             ["alternateIdentifier", 0, null],
@@ -632,6 +632,15 @@
             ["additionalInfo", 0, null],
             ["attributeList", 0, 1],
             ["entityType", 1, 1]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "paraRule" : [
+        {
+        },
+        [
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -661,7 +670,7 @@
         { 
             "id": [false],
             "system": [false],
-            "scope": [false]
+            "scope": [false, "document", "system"]
         },
         [
             ["objectName", 1, 1],
@@ -689,11 +698,13 @@
         { 
             "id": [false],
             "system": [false],
-            "scope": [false]
+            "scope": [false, "document", "system"]
         },
         [
-            ["title", "personnel", 1, null],
-            ["abstract", "funding", 0, 1]
+            ["title", 1, null],
+            ["personnel", 1, null],
+            ["abstract", 0, 1],
+            ["funding", 0, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -736,7 +747,7 @@
         { 
             "id": [false],
             "system": [false],
-            "scope": [false]
+            "scope": [false, "document", "system"]
         },
         [
             ["individualName", "organizationName", "positionName", 1, null],
@@ -754,7 +765,7 @@
         { 
             "id": [false],
             "system": [false],
-            "scope": [false]
+            "scope": [false, "document", "system"]
         },
         [
             ["individualName", "organizationName", "positionName", 1, null],
@@ -773,8 +784,22 @@
         { 
         },
         [
-            ["studyExtent", "organizationName", "positionName", 1, null],
-            ["samplingDescription", 1, 1]
+            ["studyExtent", 1, 1],
+            ["samplingDescription", 1, 1],
+            ["spatialSamplingUnits", 0, 1],
+            ["citation", 0, null]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "sectionRule" : [
+        {
+            "lang": [false]
+        },
+        [
+            ["title", 0, 1],
+            ["para", "section", 0, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -827,8 +852,7 @@
         { 
         },
         [
-            ["coverage", "organizationName", "positionName", 1, 1],
-            ["description", 1, 1]
+            ["coverage", "description", 1, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -838,7 +862,7 @@
         { 
             "id": [false],
             "system": [false],
-            "scope": [false]
+            "scope": [false, "document", "system"]
         },
         [
             ["taxonRankName", 0, 1],
@@ -854,7 +878,7 @@
         { 
             "id": [false],
             "system": [false],
-            "scope": [false]
+            "scope": [false, "document", "system"]
         },
         [
             ["generalTaxonomicCoverage", 0, 1],
@@ -868,7 +892,7 @@
         { 
             "id": [false],
             "system": [false],
-            "scope": [false]
+            "scope": [false, "document", "system"]
         },
         [
             ["singleDateTime", "rangeOfDates", 1, 1]
@@ -936,11 +960,11 @@
         { 
             "lang": [false]
         },
-       [
+        [
             ["section", "para", 0, null]
         ],
         {
-            "content_rules" : ["emptyContent"]
+            "content_rules" : ["strContent"]
         }
     ],
     "unitRule" : [
