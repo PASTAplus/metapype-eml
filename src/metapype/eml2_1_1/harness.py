@@ -22,7 +22,7 @@ from metapype.eml2_1_1 import evaluate
 from metapype.eml2_1_1 import names
 from metapype.eml2_1_1 import rule
 from metapype.eml2_1_1 import validate
-from metapype.model import io
+from metapype.model import mp_io
 from metapype.model.node import Node
 
 
@@ -1258,7 +1258,7 @@ identified as moss or lichen."
 
     print(evaluate.node(title))
 
-    io.graph(eml, 0)
+    mp_io.graph(eml, 0)
 
     attr = access_rule.attributes
     print(attr)
@@ -1267,13 +1267,13 @@ identified as moss or lichen."
 
     print(access.list_attributes())
 
-    json_str = io.to_json(eml)
+    json_str = mp_io.to_json(eml)
     print(json_str)
     with open('test_eml.json', 'w') as f:
         f.write(json_str)
 
     m = json.loads(json_str)
-    node = io.from_json(m)
+    node = mp_io.from_json(m)
 
     try:
         validate.tree(node)
