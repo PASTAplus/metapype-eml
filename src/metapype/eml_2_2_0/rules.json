@@ -75,6 +75,20 @@
             "content_rules" : ["strContent", "nonEmptyContent"]
         }
     ],
+    "annotationRule" : [
+        {
+            "id": [false],
+            "system": [false],
+            "scope": [false, "document", "system"]
+        },
+        [
+            ["propertyURI"],
+            ["valueURI"]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
     "anyNameRule" : [
         { 
             "lang": [false]
@@ -84,6 +98,15 @@
         ],
         {
             "content_rules" : ["strContent", "nonEmptyContent"]
+        }
+    ],
+    "anyIntRule" : [
+        {
+        },
+        [
+        ],
+        {
+            "content_rules" : ["intContent", "nonEmptyContent"]
         }
     ],
     "anyStringRule" : [
@@ -130,7 +153,8 @@
             ["missingValueCode", 0, null],
             ["accuracy", 0, 1],
             ["coverage", 0, 1],
-            ["methods", 0, 1]
+            ["methods", 0, 1],
+            ["annotation", 0, null]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -145,6 +169,17 @@
         {
             "content_rules" : ["strContent", "nonEmptyContent"]
         }
+    ],
+    "awardRule" : [
+        {
+        },
+        [
+            ["funderName", 1, 1],
+            ["funderIdentifier", 0, null],
+            ["awardNumber", 0, 1],
+            ["title", 1, 1],
+            ["awardUrl", 0, 1]
+        ]
     ],
     "binaryRasterFormatRule" : [
         { 
@@ -163,13 +198,22 @@
             "content_rules" : ["emptyContent"]
         }
     ],
-    "boundingCoordinateRule" : [
-        { 
+    "boundingCoordinateRule_EW" : [
+        {
         },
         [
         ],
         {
-            "content_rules" : ["floatContent", "nonEmptyContent"]
+            "content_rules" : ["floatRangeContent_EW", "nonEmptyContent"]
+        }
+    ],
+    "boundingCoordinateRule_NS" : [
+        {
+        },
+        [
+        ],
+        {
+            "content_rules" : ["floatRangeContent_NS", "nonEmptyContent"]
         }
     ],
     "boundingCoordinatesRule" : [
@@ -246,15 +290,25 @@
         { 
         },
         [
+            ["alternateIdentifier", 0, null],
+            ["shortName", 0, 1],
             ["title", 1, null],
             ["creator", 1, null],
             ["metadataProvider", 0, null],
             ["associatedParty", 0, null],
             ["pubDate", 0, 1],
+            ["language", 0, 1],
+            ["series", 0, 1],
             ["abstract", 0, 1],
             ["keywordSet", 0, null],
+            ["additionalInfo", 0, null],
             ["intellectualRights", 0, 1],
+            ["licensed", 0, null],
             ["coverage", 0, 1],
+            ["purpose", 0, 1],
+            ["introduction", 0, 1],
+            ["gettingStarted", 0, 1],
+            ["acknowledgements", 0, 1],
             ["contact", 1, null],
             ["publisher", 0, 1],
             ["pubPlace", 0, 1],
@@ -334,6 +388,18 @@
             "content_rules" : ["emptyContent"]
         }
     ],
+    "descriptorRule" : [
+        {
+            "name": [true],
+            "citableClassificationSystem": [true, "true", "false"]
+        },
+        [
+            ["descriptorValue", 1, null]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
     "distributionRule" : [
         { 
             "id": [false],
@@ -382,7 +448,7 @@
             "enforced": [false]
         },
         [
-            ["codeDefinition", "externalCodeSet", "entityCodeSet", 1, null]
+            ["codeDefinition", "externalCodeSet", "entityCodeList", 1, null]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -479,6 +545,17 @@
             "content_rules" : ["strContent", "nonEmptyContent"]
         }
     ],
+    "licensedRule" : [
+        {
+        },
+        [
+            ["licenseName", 1, 1],
+            ["url", 0, 1],
+            ["identifier", 0, 1],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
     "measurementScaleRule" : [
         { 
         },
@@ -557,7 +634,6 @@
     ],
     "nominalOrdinalRule" : [
         { 
-            "id": [false]
         },
         [
             ["nonNumericDomain", 1, 1]
@@ -639,15 +715,16 @@
     ],
     "paraRule" : [
         {
+            "lang": [false]
         },
         [
         ],
         {
-            "content_rules" : ["emptyContent"]
+            "content_rules" : ["strContent", "nonEmptyContent"]
         }
     ],
     "permissionRule" : [
-        { 
+        { ""
         },
         [
         ],
@@ -704,7 +781,9 @@
             ["title", 1, null],
             ["personnel", 1, null],
             ["abstract", 0, 1],
-            ["funding", 0, 1]
+            ["funding", 0, 1],
+            ["award", 0, null],
+            ["studyAreaDescription", 0, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -780,6 +859,17 @@
             "content_rules" : ["emptyContent"]
         }
     ],
+   "rowColumnRule" : [
+        {
+        },
+        [
+        ],
+        {
+            "content_rules" : ["strContent"],
+            "content_enum" : ["column", "row"]
+        }
+    ],
+
     "samplingRule" : [
         { 
         },
@@ -799,7 +889,7 @@
         },
         [
             ["title", 0, 1],
-            ["para", "section", 0, 1]
+            ["para", "section", 0, null]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -822,7 +912,8 @@
         { 
         },
         [
-            ["calendarDate", 1, 1]
+            ["calendarDate", 1, 1],
+            ["time", 0, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -846,6 +937,16 @@
         ],
         {
             "content_rules" : ["strContent"]
+        }
+    ],
+    "studyAreaDescriptionRule" : [
+        {
+        },
+        [
+            ["descriptor", "coverage", 1, null]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
         }
     ],
     "studyExtentRule" : [
@@ -961,7 +1062,7 @@
             "lang": [false]
         },
         [
-            ["section", "para", 0, null]
+            ["section", "para", "markdown", 0, null]
         ],
         {
             "content_rules" : ["strContent"]
