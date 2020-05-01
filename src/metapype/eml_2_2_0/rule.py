@@ -4,7 +4,7 @@
 """:Mod: rule
 
 :Synopsis:
-    EML 2.1.1 node rules processing
+    EML node rules processing
 
 :Author:
     servilla
@@ -20,8 +20,8 @@ import datetime
 import json
 
 from metapype.config import Config
-from metapype.eml2_1_1.exceptions import MetapypeRuleError
-from metapype.eml2_1_1 import names
+from metapype.eml_2_2_0.exceptions import MetapypeRuleError
+from metapype.eml_2_2_0 import names
 from metapype.model.node import Node
 
 logger = daiquiri.getLogger('validate: ' + __name__)
@@ -42,10 +42,10 @@ def load_rules():
     '''
     Load rules from the JSON file into the rules dict
     '''
-    if 'EML2_1_1_RULES' in os.environ:
-        json_path = os.environ['EML2_1_1_RULES']
+    if 'EML_RULES' in os.environ:
+        json_path = os.environ['EML_RULES']
     else:
-        json_path = Config.EML2_1_1_RULES
+        json_path = Config.EML_RULES
 
     with open(json_path) as fh:
         rules_dict = json.load(fh)

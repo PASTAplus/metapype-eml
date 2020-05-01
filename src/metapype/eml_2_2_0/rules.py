@@ -14,8 +14,8 @@
 """
 import daiquiri
 
-from metapype.eml2_1_1.exceptions import MetapypeRuleError
-from metapype.eml2_1_1 import names
+from metapype.eml_2_2_0.exceptions import MetapypeRuleError
+from metapype.eml_2_2_0 import names
 from metapype.model.node import Node
 
 logger = daiquiri.getLogger('validate: ' + __name__)
