@@ -13,8 +13,8 @@
 """
 import daiquiri
 
-from metapype.eml_2_2_0.exceptions import MetapypeRuleError
-from metapype.eml_2_2_0 import names
+from metapype.eml.exceptions import MetapypeRuleError
+from metapype.eml import names
 from metapype.model.node import Node
 
 logger = daiquiri.getLogger('evaluate: ' + __name__)

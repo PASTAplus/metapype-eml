@@ -14,8 +14,8 @@
 """
 import daiquiri
 
-from metapype.eml_2_2_0.exceptions import MetapypeRuleError
-from metapype.eml_2_2_0 import rule
+from metapype.eml.exceptions import MetapypeRuleError
+from metapype.eml import rule
 from metapype.model.node import Node
 
 
