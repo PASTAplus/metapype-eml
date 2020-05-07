@@ -17,7 +17,7 @@ import unittest
 
 import daiquiri
 
-from metapype.eml2_1_1 import names
+from metapype.eml import names
 from metapype.model import mp_io
 from metapype.model.node import Node
 

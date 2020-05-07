@@ -19,8 +19,8 @@ from metapype.eml import rule
 from metapype.model.node import Node
 
 
-
 logger = daiquiri.getLogger('validate: ' + __name__)
+
 
 def node(node: Node) -> None:
     '''

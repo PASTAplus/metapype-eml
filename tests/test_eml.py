@@ -17,18 +17,18 @@ import unittest
 
 import daiquiri
 
-from metapype.eml2_1_1.exceptions import MetapypeRuleError
-import metapype.eml2_1_1.names as names
-import metapype.eml2_1_1.rule as rule
-import metapype.eml2_1_1.validate as validate
+from metapype.eml.exceptions import MetapypeRuleError
+import metapype.eml.names as names
+import metapype.eml.rule as rule
+import metapype.eml.validate as validate
 from metapype.model.node import Node
 
 
 sys.path.insert(0, os.path.abspath('../src'))
-logger = daiquiri.getLogger('test_eml_2_1_1: ' + __name__)
+logger = daiquiri.getLogger('test_eml: ' + __name__)
 
 
-class TestEml_2_1_1(unittest.TestCase):
+class TestEml(unittest.TestCase):
 
     def setUp(self):
         self.eml = Node(names.EML)
