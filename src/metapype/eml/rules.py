@@ -4,10 +4,12 @@
 """:Mod: rules
 
 :Synopsis:
-    EML 2.1.1 node rule declarations.
+    EML node rule declarations.
 
 :Author:
     servilla
+    costa
+    ide
 
 :Created:
     6/5/18
@@ -18,7 +20,9 @@ from metapype.eml.exceptions import MetapypeRuleError
 from metapype.eml import names
 from metapype.model.node import Node
 
+
 logger = daiquiri.getLogger('validate: ' + __name__)
+
 
 REQUIRED = True
 OPTIONAL = False

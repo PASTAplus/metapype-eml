@@ -7,22 +7,17 @@
 
 :Author:
     servilla
+    costa
+    ide
 
 :Created:
     7/12/18
 """
 import daiquiri
 
+
 logger = daiquiri.getLogger('config.py: ' + __name__)
 
+
 class Config(object):
-
     EML_RULES = 'absolute path of EML rules JSON file'
-
-
-def main():
-    return 0
-
-
-if __name__ == "__main__":
-    main()

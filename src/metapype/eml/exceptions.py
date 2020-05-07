@@ -7,11 +7,14 @@
 
 :Author:
     servilla
+    costa
+    ide
 
 :Created:
     6/5/18
 """
 import daiquiri
+
 
 logger = daiquiri.getLogger('exceptions: ' + __name__)
 

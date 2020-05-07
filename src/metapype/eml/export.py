@@ -7,6 +7,8 @@
 
 :Author:
     servilla
+    costa
+    ide
 
 :Created:
     6/12/18
@@ -15,9 +17,10 @@ import daiquiri
 
 from metapype.model.node import Node
 
-logger = daiquiri.getLogger('export: ' + __name__)
 
+logger = daiquiri.getLogger('export: ' + __name__)
 space = '    '
+
 
 def to_xml(node: Node, level: int=0) -> str:
     xml=''

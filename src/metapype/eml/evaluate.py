@@ -7,18 +7,19 @@
 
 :Author:
     servilla
+    costa
+    ide
 
 :Created:
     6/21/18
 """
 import daiquiri
 
-from metapype.eml.exceptions import MetapypeRuleError
 from metapype.eml import names
 from metapype.model.node import Node
 
-logger = daiquiri.getLogger('evaluate: ' + __name__)
 
+logger = daiquiri.getLogger('evaluate: ' + __name__)
 PASS = 'PASS'
 
 

@@ -7,6 +7,8 @@
 
 :Author:
     servilla
+    costa
+    ide
 
 :Created:
     6/18/18
@@ -24,7 +26,6 @@ import metapype.eml.validate as validate
 from metapype.model.node import Node
 
 
-sys.path.insert(0, os.path.abspath('../src'))
 logger = daiquiri.getLogger('test_eml: ' + __name__)
 
 

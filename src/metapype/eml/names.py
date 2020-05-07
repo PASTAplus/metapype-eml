@@ -7,6 +7,8 @@
 
 :Author:
     servilla
+    costa
+    ide
 
 :Created:
     6/18/18
@@ -15,6 +17,7 @@ import daiquiri
 
 
 logger = daiquiri.getLogger('names: ' + __name__)
+
 
 # Named constants for EML metadata element names
 ABSTRACT = 'abstract'

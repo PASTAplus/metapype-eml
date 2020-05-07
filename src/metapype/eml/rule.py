@@ -9,8 +9,9 @@
 :Author:
     servilla
     costa
+    ide
 
-:Created:a
+:Created:
     7/10/18
 """
 import os
@@ -24,7 +25,9 @@ from metapype.eml.exceptions import MetapypeRuleError
 from metapype.eml import names
 from metapype.model.node import Node
 
+
 logger = daiquiri.getLogger('validate: ' + __name__)
+
 
 REQUIRED = True
 OPTIONAL = False
@@ -483,7 +486,7 @@ RULE_RANGEOFDATES = 'rangeOfDatesRule'
 RULE_RATIO = 'ratioRule'
 RULE_RESPONSIBLEPARTY = 'responsiblePartyRule'
 RULE_RESPONSIBLEPARTY_WITH_ROLE = 'responsiblePartyWithRoleRule'
-RULE_ROWCOLUMNRULE = 'rowColumnRule'
+RULE_ROWCOLUMN = 'rowColumnRule'
 RULE_SAMPLING = 'samplingRule'
 RULE_SINGLEDATETIME = 'singleDateTimeRule'
 RULE_SIMPLEDELIMITED = 'simpleDelimitedRule'
@@ -680,7 +683,7 @@ node_mappings = {
     names.RATIO: RULE_INTERVALRATIO,
     names.RECORDDELIMITER: RULE_ANYSTRING,
     names.ROLE: RULE_ANYSTRING,
-    names.ROWCOLUMNORIENTATION: RULE_ROWCOLUMNRULE,
+    names.ROWCOLUMNORIENTATION: RULE_ROWCOLUMN,
     names.SALUTATION: RULE_ANYNAME,
     names.SAMPLING: RULE_SAMPLING,
     names.SAMPLINGDESCRIPTION: RULE_TEXT,

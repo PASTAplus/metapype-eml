@@ -7,12 +7,12 @@
 
 :Author:
     servilla
+    costa
+    ide
   
 :Created:
     6/18/18
 """
-import os
-import sys
 import unittest
 
 import daiquiri
@@ -23,7 +23,6 @@ from metapype.model.node import Node
 from metapype.model.node import Shift
 
 
-sys.path.insert(0, os.path.abspath('../src'))
 logger = daiquiri.getLogger('test_node: ' + __name__)
 
 
