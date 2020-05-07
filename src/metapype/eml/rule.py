@@ -4,11 +4,12 @@
 """:Mod: rule
 
 :Synopsis:
-    EML 2.1.1 node rules processing
+    EML node rules processing
 
 :Author:
     servilla
     costa
+    ide
 
 :Created:
     7/10/18
@@ -20,11 +21,13 @@ import datetime
 import json
 
 from metapype.config import Config
-from metapype.eml2_1_1.exceptions import MetapypeRuleError
-from metapype.eml2_1_1 import names
+from metapype.eml.exceptions import MetapypeRuleError
+from metapype.eml import names
 from metapype.model.node import Node
 
+
 logger = daiquiri.getLogger('validate: ' + __name__)
+
 
 REQUIRED = True
 OPTIONAL = False
@@ -42,10 +45,10 @@ def load_rules():
     '''
     Load rules from the JSON file into the rules dict
     '''
-    if 'EML2_1_1_RULES' in os.environ:
-        json_path = os.environ['EML2_1_1_RULES']
+    if 'EML_RULES' in os.environ:
+        json_path = os.environ['EML_RULES']
     else:
-        json_path = Config.EML2_1_1_RULES
+        json_path = Config.EML_RULES
 
     with open(json_path) as fh:
         rules_dict = json.load(fh)
@@ -103,6 +106,22 @@ class Rule(object):
 
 
     @staticmethod
+    def is_int(val:str=None):
+        '''
+        Boolean to determine whether node content is
+        (or can be converted to) a valid int value.
+        '''
+        is_valid = False
+        if val:
+            try:
+                __ = int(val)
+                is_valid = True
+            except ValueError:
+                pass
+        return is_valid
+
+
+    @staticmethod
     def is_yeardate(val:str=None):
         '''
         Boolean to determine whether node content is a valid yearDate value.
@@ -113,6 +132,24 @@ class Rule(object):
                 try:
                     datetime.datetime.strptime(val, yeardate_format)
                     is_valid = True
+                    break
+                except ValueError:
+                    pass
+        return is_valid
+
+
+    @staticmethod
+    def is_time(val:str=None):
+        '''
+        Boolean to determine whether node content is a valid time value.
+        '''
+        is_valid = False
+        if val and type(val) is str:
+            for time_format in ['%H:%M:%S', '%H:%M:%S.%f']:
+                try:
+                    datetime.datetime.strptime(val, time_format)
+                    is_valid = True
+                    break
                 except ValueError:
                     pass
         return is_valid
@@ -206,10 +243,20 @@ class Rule(object):
         for content_rule in self._content['content_rules']:
             if content_rule == 'emptyContent':
                 self._validate_empty_content(node)
+            elif content_rule == 'floatContent':
+                self._validate_float_content(node)
+            elif content_rule == 'floatRangeContent_EW':
+                self._validate_float_range_ew_content(node)
+            elif content_rule == 'floatRangeContent_NS':
+                self._validate_float_range_ns_content(node)
+            elif content_rule == 'intContent':
+                self._validate_int_content(node)
             elif content_rule == 'nonEmptyContent':
                 self._validate_non_empty_content(node)
             elif content_rule == 'strContent':
                 self._validate_str_content(node)
+            elif content_rule == 'timeContent':
+                self._validate_time_content(node)
             elif content_rule == 'yearDateContent':
                 self._validate_yeardate_content(node)
 
@@ -230,8 +277,21 @@ class Rule(object):
     def _validate_float_content(self, node: Node):
         val = node.content
         if val is not None and not Rule.is_float(val):
-            msg = f'Node "{node.name}" content should by type "{TYPE_FLOAT}", not "{type(node.content)}"'
+            msg = f'Node "{node.name}" content should be type "{TYPE_FLOAT}", not "{type(node.content)}"'
             raise MetapypeRuleError(msg)
+
+    def _validate_float_range_content(self, node: Node, minmax):
+        self._validate_float_content(node)
+        float_val = float(node.content)
+        if float_val < minmax[0] or float_val > minmax[1]:
+            msg = f'Node "{node.name}" content should be in range {minmax}'
+            raise MetapypeRuleError(msg)
+
+    def _validate_float_range_ew_content(self, node: Node):
+        self._validate_float_range_content(node, (-180.0, 180.0))
+
+    def _validate_float_range_ns_content(self, node: Node):
+        self._validate_float_range_content(node, (-90.0, 90.0))
 
     def _validate_non_empty_content(self, node: Node):
         if len(node.children) == 0 and node.content is None:
@@ -241,6 +301,12 @@ class Rule(object):
     def _validate_str_content(self, node: Node):
         if node.content is not None and type(node.content) is not str:
             msg = f'Node "{node.name}" content should be type "{TYPE_STR}", not "{type(node.content)}"'
+            raise MetapypeRuleError(msg)
+
+    def _validate_time_content(self, node: Node):
+        val = node.content
+        if val is not None and not Rule.is_time(val):
+            msg = f'Node "{node.name}" format should be time ("HH:MM:SS" or "HH:MM:SS.f")'
             raise MetapypeRuleError(msg)
 
     def _validate_yeardate_content(self, node: Node):
@@ -357,14 +423,18 @@ RULE_ADDITIONALMETADATA = 'additionalMetadataRule'
 RULE_ADDRESS = 'addressRule'
 RULE_ALLOW = 'allowRule'
 RULE_ALTERNATEIDENTIFIER = 'alternateIdentifierRule'
+RULE_ANNOTATION = 'annotationRule'
+RULE_ANYINT = 'anyIntRule'
 RULE_ANYNAME = 'anyNameRule'
 RULE_ANYSTRING = 'anyStringRule'
 RULE_ANYURI = 'anyURIRule'
 RULE_ATTRIBUTE = 'attributeRule'
 RULE_ATTRIBUTELIST = 'attributeListRule'
 RULE_AUTHENTICATION = 'authenticationRule'
+RULE_AWARD = 'awardRule'
 RULE_BINARYRASTER_FORMAT = 'binaryRasterFormatRule'
-RULE_BOUNDINGCOORDINATE = 'boundingCoordinateRule'
+RULE_BOUNDINGCOORDINATE_EW = 'boundingCoordinateRule_EW'
+RULE_BOUNDINGCOORDINATE_NS = 'boundingCoordinateRule_NS'
 RULE_BOUNDINGCOORDINATES = 'boundingCoordinatesRule'
 RULE_BOUNDS = 'boundsRule'
 RULE_CODEDEFINITION = 'codeDefinitionRule'
@@ -376,6 +446,7 @@ RULE_DATATABLE = 'dataTableRule'
 RULE_DATETIME = 'dateTimeRule'
 RULE_DATETIMEDOMAIN = 'dateTimeDomainRule'
 RULE_DENY = 'denyRule'
+RULE_DESCRIPTOR = 'descriptorRule'
 RULE_DISTRIBUTION = 'distributionRule'
 RULE_EML = 'emlRule'
 RULE_ENTITYCODELIST = 'entityCodeListRule'
@@ -389,6 +460,7 @@ RULE_INTERVALRATIO = 'intervalRatioRule'
 RULE_KEYWORD = 'keywordRule'
 RULE_KEYWORDSET = 'keywordSetRule'
 RULE_KEYWORDTHESAURUS = 'keywordThesaurusRule'
+RULE_LICENSED = 'licensedRule'
 RULE_MEASUREMENTSCALE = 'measurementScaleRule'
 RULE_METADATA = 'metadataRule'
 RULE_METHODS = 'methodsRule'
@@ -414,11 +486,13 @@ RULE_RANGEOFDATES = 'rangeOfDatesRule'
 RULE_RATIO = 'ratioRule'
 RULE_RESPONSIBLEPARTY = 'responsiblePartyRule'
 RULE_RESPONSIBLEPARTY_WITH_ROLE = 'responsiblePartyWithRoleRule'
+RULE_ROWCOLUMN = 'rowColumnRule'
 RULE_SAMPLING = 'samplingRule'
 RULE_SINGLEDATETIME = 'singleDateTimeRule'
 RULE_SIMPLEDELIMITED = 'simpleDelimitedRule'
 RULE_SIZE = 'sizeRule'
 RULE_STORAGETYPE = 'storageTypeRule'
+RULE_STUDYAREADESCRIPTION = 'studyAreaDescriptionRule'
 RULE_STUDYEXTENT = 'studyExtentRule'
 RULE_TAXONOMICCLASSIFICATION = 'taxonomicClassificationRule'
 RULE_TAXONOMICCOVERAGE = 'taxonomicCoverageRule'
@@ -428,6 +502,7 @@ RULE_TEXTDELIMITED = 'textDelimitedRule'
 RULE_TEXTDOMAIN = 'textDomainRule'
 RULE_TEXTFIXED = 'textFixedRule'
 RULE_TEXTFORMAT = 'textFormatRule'
+RULE_TIME = "timeRule"
 RULE_UNIT = 'unitRule'
 RULE_URL = 'urlRule'
 RULE_USERID = 'userIdRule'
@@ -440,12 +515,14 @@ node_mappings = {
     names.ABSTRACT: RULE_TEXT,
     names.ACCESS: RULE_ACCESS,
     names.ACCURACY: RULE_ACCURACY,
+    names.ACKNOWLEDGEMENTS: RULE_TEXT,
     names.ADDITIONALINFO: RULE_TEXT,
     names.ADDITIONALMETADATA: RULE_ADDITIONALMETADATA,
     names.ADDRESS: RULE_ADDRESS,
     names.ADMINISTRATIVEAREA: RULE_ANYNAME,
     names.ALLOW: RULE_ALLOW,
     names.ALTERNATEIDENTIFIER: RULE_ALTERNATEIDENTIFIER,
+    names.ANNOTATION: RULE_ANNOTATION,
     names.ASSOCIATEDPARTY: RULE_RESPONSIBLEPARTY_WITH_ROLE,
     names.ATTRIBUTE: RULE_ATTRIBUTE,
     names.ATTRIBUTEACCURACYEXPLANATION: RULE_ANYSTRING,
@@ -457,6 +534,9 @@ node_mappings = {
     names.ATTRIBUTENAME: RULE_ANYSTRING,
     names.ATTRIBUTEORIENTATION: RULE_ANYSTRING,
     names.AUTHENTICATION: RULE_AUTHENTICATION,
+    names.AWARD: RULE_AWARD,
+    names.AWARDNUMBER: RULE_ANYNAME,
+    names.AWARDURL: RULE_ANYNAME,
     names.BANDGAPBYTES: RULE_ANYSTRING,
     names.BANDROWBYTES: RULE_ANYSTRING,
     names.BEGINDATE: RULE_SINGLEDATETIME,
@@ -495,9 +575,11 @@ node_mappings = {
     names.DELIVERYPOINT: RULE_ANYNAME,
     names.DENY: RULE_DENY,
     names.DESCRIBES: RULE_ANYSTRING,
+    names.DESCRIPTOR: RULE_DESCRIPTOR,
+    names.DESCRIPTORVALUE: RULE_ANYSTRING,
     names.DESCRIPTION: RULE_TEXT,
     names.DISTRIBUTION: RULE_DISTRIBUTION,
-    names.EASTBOUNDINGCOORDINATE: RULE_BOUNDINGCOORDINATE,
+    names.EASTBOUNDINGCOORDINATE: RULE_BOUNDINGCOORDINATE_EW,
     names.ELECTRONICMAILADDRESS: RULE_ANYNAME,
     names.EML: RULE_EML,
     names.ENCODINGMETHOD: RULE_ANYSTRING,
@@ -516,24 +598,33 @@ node_mappings = {
     names.FORMATNAME: RULE_ANYSTRING,
     names.FORMATSTRING: RULE_ANYSTRING,
     names.FORMATVERSION: RULE_ANYSTRING,
+    names.FUNDERIDENTIFIER: RULE_ANYNAME,
+    names.FUNDERNAME: RULE_ANYNAME,
     names.FUNDING: RULE_TEXT,
     names.GENERALTAXONOMICCOVERAGE: RULE_ANYSTRING,
     names.GIVENNAME: RULE_ANYNAME,
     names.GEOGRAPHICCOVERAGE: RULE_GEOGRAPHICCOVERAGE,
     names.GEOGRAPHICDESCRIPTION: RULE_ANYSTRING,
+    names.GETTINGSTARTED: RULE_TEXT,
+    names.IDENTIFIER: RULE_ANYSTRING,
     names.INDIVIDUALNAME: RULE_INDIVIDUALNAME,
     names.INLINE: RULE_ANYSTRING,
     names.INSTRUMENTATION: RULE_ANYSTRING,
     names.INTELLECTUALRIGHTS: RULE_TEXT,
     names.INTERVAL: RULE_INTERVALRATIO,
+    names.INTRODUCTION: RULE_TEXT,
     names.KEYWORD: RULE_KEYWORD,
     names.KEYWORDSET: RULE_KEYWORDSET,
     names.KEYWORDTHESAURUS: RULE_KEYWORDTHESAURUS,
+    names.LANGUAGE: RULE_ANYNAME,
     names.LAYOUT: RULE_ANYSTRING,
-    names.LINENUMBER: RULE_ANYSTRING,
+    names.LICENSED: RULE_LICENSED,
+    names.LICENSENAME: RULE_ANYSTRING,
+    names.LINENUMBER: RULE_ANYINT,
     names.LITERALCHARACTER: RULE_ANYSTRING,
+    names.MARKDOWN: RULE_ANYSTRING,
     names.MAXIMUM: RULE_MINMAX,
-    names.MAXRECORDLENGTH: RULE_ANYSTRING,
+    names.MAXRECORDLENGTH: RULE_ANYINT,
     names.MEASUREMENTSCALE: RULE_MEASUREMENTSCALE,
     names.MEDIUMNAME: RULE_ANYSTRING,
     names.MEDIUMDENSITY: RULE_ANYSTRING,
@@ -548,17 +639,17 @@ node_mappings = {
     names.MINIMUM: RULE_MINMAX,
     names.MISSINGVALUECODE: RULE_MISSINGVALUECODE,
     names.MULTIBAND: RULE_MULTIBAND,
-    names.NBANDS: RULE_ANYSTRING,
-    names.NBITS: RULE_ANYSTRING,
+    names.NBANDS: RULE_ANYINT,
+    names.NBITS: RULE_ANYINT,
     names.NOMINAL: RULE_NOMINAL,
     names.NONNUMERICDOMAIN: RULE_NONNUMERICDOMAIN,
-    names.NORTHBOUNDINGCOORDINATE: RULE_BOUNDINGCOORDINATE,
+    names.NORTHBOUNDINGCOORDINATE: RULE_BOUNDINGCOORDINATE_NS,
     names.NUMBEROFRECORDS: RULE_ANYSTRING,
     names.NUMBERTYPE: RULE_ANYSTRING,
     names.NUMERICDOMAIN: RULE_NUMERICDOMAIN,
-    names.NUMFOOTERLINES: RULE_ANYSTRING,
-    names.NUMHEADERLINES: RULE_ANYSTRING,
-    names.NUMPHYSICALLINESPERRECORD: RULE_ANYSTRING,
+    names.NUMFOOTERLINES: RULE_ANYINT,
+    names.NUMHEADERLINES: RULE_ANYINT,
+    names.NUMPHYSICALLINESPERRECORD: RULE_ANYINT,
     names.OBJECTNAME: RULE_ANYSTRING,
     names.OFFLINE: RULE_OFFLINE,
     names.ONLINE: RULE_ONLINE,
@@ -580,9 +671,11 @@ node_mappings = {
     names.PRECISION: RULE_ANYSTRING,
     names.PRINCIPAL: RULE_PRINCIPAL,
     names.PROJECT: RULE_PROJECT,
+    names.PROPERTYURI: RULE_ANYURI,
     names.PUBDATE: RULE_YEARDATE,
     names.PUBLISHER: RULE_RESPONSIBLEPARTY,
     names.PUBPLACE: RULE_ANYSTRING,
+    names.PURPOSE: RULE_TEXT,
     names.QUALITYCONTROL: RULE_QUALITYCONTROL,
     names.QUANTITATIVEATTRIBUTEACCURACYASSESSMENT: RULE_QUANTITATIVEATTRIBUTEACCURACYASSESSMENT,
     names.QUOTECHARACTER: RULE_ANYSTRING,
@@ -590,19 +683,22 @@ node_mappings = {
     names.RATIO: RULE_INTERVALRATIO,
     names.RECORDDELIMITER: RULE_ANYSTRING,
     names.ROLE: RULE_ANYSTRING,
-    names.ROWCOLUMNORIENTATION: RULE_ANYSTRING,
+    names.ROWCOLUMNORIENTATION: RULE_ROWCOLUMN,
     names.SALUTATION: RULE_ANYNAME,
     names.SAMPLING: RULE_SAMPLING,
     names.SAMPLINGDESCRIPTION: RULE_TEXT,
     names.SECTION: RULE_ANYSTRING,
+    names.SERIES: RULE_ANYSTRING,
+    names.SHORTNAME: RULE_ANYSTRING,
     names.SIMPLEDELIMITED: RULE_SIMPLEDELIMITED,
     names.SINGLEDATETIME: RULE_SINGLEDATETIME,
     names.SIZE: RULE_SIZE,
     names.SKIPBYTES: RULE_ANYSTRING,
     names.SOURCE: RULE_ANYSTRING,
-    names.SOUTHBOUNDINGCOORDINATE: RULE_BOUNDINGCOORDINATE,
+    names.SOUTHBOUNDINGCOORDINATE: RULE_BOUNDINGCOORDINATE_NS,
     names.STANDARDUNIT: RULE_ANYSTRING,
     names.STORAGETYPE: RULE_STORAGETYPE,
+    names.STUDYAREADESCRIPTION: RULE_STUDYAREADESCRIPTION,
     names.STUDYEXTENT: RULE_STUDYEXTENT,
     names.SURNAME: RULE_ANYNAME,
     names.TAXONOMICCLASSIFICATION: RULE_TAXONOMICCLASSIFICATION,
@@ -614,6 +710,7 @@ node_mappings = {
     names.TEXTDOMAIN: RULE_TEXTDOMAIN,
     names.TEXTFIXED: RULE_TEXTFIXED,
     names.TEXTFORMAT: RULE_TEXTFORMAT,
+    names.TIME: RULE_TIME,
     names.TITLE: RULE_ANYNAME,
     names.TOTALROWBYTES: RULE_ANYSTRING,
     names.UNIT: RULE_UNIT,
@@ -621,7 +718,8 @@ node_mappings = {
     names.USERID: RULE_USERID,
     names.VALUE: RULE_VALUE,
     names.VALUEATTRIBUTEREFERENCE: RULE_ANYSTRING,
-    names.WESTBOUNDINGCOORDINATE: RULE_BOUNDINGCOORDINATE
+    names.VALUEURI: RULE_ANYURI,
+    names.WESTBOUNDINGCOORDINATE: RULE_BOUNDINGCOORDINATE_EW
 }
 
 

@@ -7,6 +7,8 @@
 
 :Author:
     servilla
+    costa
+    ide
 
 :Created:
     5/15/18
@@ -16,6 +18,7 @@ from enum import Enum
 import uuid
 
 import daiquiri
+
 
 logger = daiquiri.getLogger('node.py: ' + __name__)
 

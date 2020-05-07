@@ -7,16 +7,14 @@
 
 :Author:
     servilla
+    costa
+    ide
 
 :Created:
     5/15/18
 """
-import logging
+import os
+import sys
 
 
-def main():
-    return 0
-
-
-if __name__ == "__main__":
-    main()
+sys.path.insert(0, os.path.abspath('../src/metapype'))

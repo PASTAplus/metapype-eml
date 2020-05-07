@@ -7,23 +7,22 @@
 
 :Author:
     servilla
+    costa
+    ide
   
 :Created:
     6/18/18
 """
-import os
-import sys
 import unittest
 
 import daiquiri
 
-from metapype.eml2_1_1 import names
-from metapype.eml2_1_1 import validate
+from metapype.eml import names
+from metapype.eml import validate
 from metapype.model.node import Node
 from metapype.model.node import Shift
 
 
-sys.path.insert(0, os.path.abspath('../src'))
 logger = daiquiri.getLogger('test_node: ' + __name__)
 
 

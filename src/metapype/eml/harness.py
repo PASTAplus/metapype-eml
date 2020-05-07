@@ -8,6 +8,7 @@
 :Author:
     servilla
     costa
+    ide
 
 :Created:
     6/5/18
@@ -16,12 +17,12 @@ import json
 
 import daiquiri
 
-from metapype.eml2_1_1.exceptions import MetapypeRuleError
-from metapype.eml2_1_1 import export
-from metapype.eml2_1_1 import evaluate
-from metapype.eml2_1_1 import names
-from metapype.eml2_1_1 import rule
-from metapype.eml2_1_1 import validate
+from metapype.eml.exceptions import MetapypeRuleError
+from metapype.eml import export
+from metapype.eml import evaluate
+from metapype.eml import names
+from metapype.eml import rule
+from metapype.eml import validate
 from metapype.model import mp_io
 from metapype.model.node import Node
 

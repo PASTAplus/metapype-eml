@@ -1,23 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-""":Mod: exceptions
+"""
+:Mod: __init__
 
 :Synopsis:
 
 :Author:
     servilla
+    costa
+    ide
 
 :Created:
-    6/5/18
+    5/7/20
 """
-import daiquiri
-
-logger = daiquiri.getLogger('exceptions: ' + __name__)
-
-
-class MetapypeRuleError(Exception):
-    pass
 
 
 def main():

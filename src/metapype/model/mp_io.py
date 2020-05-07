@@ -8,24 +8,23 @@
 
 :Author:
     servilla
+    costa
+    ide
 
 :Created:
     6/15/18
 """
 import json
-# from collections import OrderedDict
 
 import daiquiri
 import xml.etree.ElementTree as ET
 
 from metapype.model.node import Node
 
+
 logger = daiquiri.getLogger('model_io: ' + __name__)
 
 space = '    '
-
-
-# xml_element_lookup_by_node_id = OrderedDict()
 
 
 def from_json(json_node: dict, parent: Node = None) -> Node:

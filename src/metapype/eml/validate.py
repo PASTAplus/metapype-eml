@@ -8,19 +8,20 @@
 :Author:
     servilla
     costa
+    ide
 
 :Created:
     7/10/18
 """
 import daiquiri
 
-from metapype.eml2_1_1.exceptions import MetapypeRuleError
-from metapype.eml2_1_1 import rule
+from metapype.eml.exceptions import MetapypeRuleError
+from metapype.eml import rule
 from metapype.model.node import Node
 
 
-
 logger = daiquiri.getLogger('validate: ' + __name__)
+
 
 def node(node: Node) -> None:
     '''
