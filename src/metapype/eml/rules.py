@@ -21,7 +21,7 @@ from metapype.eml import names
 from metapype.model.node import Node
 
 
-logger = daiquiri.getLogger('validate: ' + __name__)
+logger = daiquiri.getLogger("validate: " + __name__)
 
 
 REQUIRED = True
@@ -29,15 +29,15 @@ OPTIONAL = False
 INFINITY = None
 
 TYPE_NONE = None
-TYPE_STR = 'str'
-TYPE_INT = 'int'
-TYPE_FLOAT = 'float'
-TYPE_DATETIME = 'datetime'
+TYPE_STR = "str"
+TYPE_INT = "int"
+TYPE_FLOAT = "float"
+TYPE_DATETIME = "datetime"
 
-PERMISSIONS = ('read', 'write', 'changePermission', 'all')
+PERMISSIONS = ("read", "write", "changePermission", "all")
 
 
-class rule(object):
+class Rule(object):
     def __init__(self):
         self._attributes = {}
         self._children = []
@@ -66,19 +66,18 @@ class rule(object):
 
 # ==================== Begin of rules section ====================
 
-class accessRule(rule):
+
+class Accessrule(Rule):
     def __init__(self):
         super().__init__()
         self._attributes = {
-            'id': [OPTIONAL],
-            'system': [OPTIONAL],
-            'scope': [OPTIONAL],
-            'order': [OPTIONAL, 'allowFirst', 'denyFirst'],
-            'authSystem': [REQUIRED]
+            "id": [OPTIONAL],
+            "system": [OPTIONAL],
+            "scope": [OPTIONAL],
+            "order": [OPTIONAL, "allowFirst", "denyFirst"],
+            "authSystem": [REQUIRED],
         }
-        self._children = [
-            ['allow', 'deny', 1, INFINITY]
-        ]
+        self._children = [["allow", "deny", 1, INFINITY]]
         self._content = TYPE_NONE
 
     def _validate_content(self, content, node: Node):
@@ -87,16 +86,11 @@ class accessRule(rule):
             raise MetapypeRuleError(msg)
 
 
-class additionalMetadataRule(rule):
+class Additionalmetadatarule(Rule):
     def __init__(self):
         super().__init__()
-        self._attributes = {
-            'id': [OPTIONAL]
-        }
-        self._children = [
-            ['describes', 0, INFINITY],
-            ['metadata', 1, 1]
-        ]
+        self._attributes = {"id": [OPTIONAL]}
+        self._children = [["describes", 0, INFINITY], ["metadata", 1, 1]]
         self._content = TYPE_NONE
 
     def _validate_content(self, content, node: Node):
@@ -105,13 +99,13 @@ class additionalMetadataRule(rule):
             raise MetapypeRuleError(msg)
 
 
-class allowRule(rule):
+class Allowrule(Rule):
     def __init__(self):
         super().__init__()
         self._attributes = {}
         self._children = [
-            ['principal', 1, INFINITY],
-            ['permission', 1, INFINITY]
+            ["principal", 1, INFINITY],
+            ["permission", 1, INFINITY],
         ]
         self._content = TYPE_NONE
 
@@ -121,8 +115,8 @@ class allowRule(rule):
             raise MetapypeRuleError(msg)
 
 
-class anyNameRule(rule):
-    '''
+class Anynamerule(Rule):
+    """
     Generic rule for names.
 
     This is a generic rule for evaluating name-based metadata like
@@ -131,15 +125,12 @@ class anyNameRule(rule):
     Raises:
         MetapypeRuleError: If content is not string or if without child and
         content is empty
-    '''
+    """
+
     def __init__(self):
         super().__init__()
-        self._attributes = {
-            'lang': [OPTIONAL]
-        }
-        self._children = [
-            ['value', 0, INFINITY]
-        ]
+        self._attributes = {"lang": [OPTIONAL]}
+        self._children = [["value", 0, INFINITY]]
         self._content = TYPE_STR
 
     def _validate_content(self, content, node: Node):
@@ -151,7 +142,7 @@ class anyNameRule(rule):
             raise MetapypeRuleError(msg)
 
 
-class datasetRule(rule):
+class DatasetRule(Rule):
     # TODO: complete rule
     def __init__(self):
         super().__init__()
@@ -168,13 +159,14 @@ class datasetRule(rule):
     def validate_rule(self, node: Node):
         pass
 
-class denyRule(rule):
+
+class DenyRule(Rule):
     def __init__(self):
         super().__init__()
         self._attributes = {}
         self._children = [
-            ['principal', 1, INFINITY],
-            ['permission', 1, INFINITY]
+            ["principal", 1, INFINITY],
+            ["permission", 1, INFINITY],
         ]
         self._content = TYPE_NONE
 
@@ -184,19 +176,19 @@ class denyRule(rule):
             raise MetapypeRuleError(msg)
 
 
-class emlRule(rule):
+class EmlRule(Rule):
     def __init__(self):
         super().__init__()
         self._attributes = {
-            'packageId': [REQUIRED],
-            'system': [REQUIRED],
-            'scope': [OPTIONAL],
-            'lang': [OPTIONAL]
+            "packageId": [REQUIRED],
+            "system": [REQUIRED],
+            "scope": [OPTIONAL],
+            "lang": [OPTIONAL],
         }
         self._children = [
-            ['access', 0, 1],
-            ['dataset', 'citation', 'software', 'protocol', 1, 1],
-            ['additionalMetadata', 0, INFINITY]
+            ["access", 0, 1],
+            ["dataset", "citation", "software", "protocol", 1, 1],
+            ["additionalMetadata", 0, INFINITY],
         ]
         self._content = TYPE_NONE
 
@@ -206,14 +198,14 @@ class emlRule(rule):
             raise MetapypeRuleError(msg)
 
 
-class individualNameRule(rule):
+class IndividualNameRule(Rule):
     def __init__(self):
         super().__init__()
         self._attributes = {}
         self._children = [
-            ['salutation', 0, INFINITY],
-            ['givenName', 0, INFINITY],
-            ['surName', 1, 1]
+            ["salutation", 0, INFINITY],
+            ["givenName", 0, INFINITY],
+            ["surName", 1, 1],
         ]
         self._content = TYPE_NONE
 
@@ -223,7 +215,7 @@ class individualNameRule(rule):
             raise MetapypeRuleError(msg)
 
 
-class metadataRule(rule):
+class MetadataRule(Rule):
     def __init__(self):
         super().__init__()
         self._attributes = {}
@@ -236,7 +228,7 @@ class metadataRule(rule):
             raise MetapypeRuleError(msg)
 
 
-class permissionRule(rule):
+class PermissionRule(Rule):
     def __init__(self):
         super().__init__()
         self._attributes = {}
@@ -252,7 +244,7 @@ class permissionRule(rule):
             raise MetapypeRuleError(msg)
 
 
-class principalRule(rule):
+class PrincipalRule(Rule):
     def __init__(self):
         super().__init__()
         self._attributes = {}
@@ -265,25 +257,32 @@ class principalRule(rule):
             raise MetapypeRuleError(msg)
 
 
-class responsiblePartyRule(rule):
-    '''
+class ResponsiblePartyRule(Rule):
+    """
     Generic rule for any responsibleParty type of metadata like creator or
     contact.
-    '''
+    """
+
     def __init__(self):
         super().__init__()
         self._attributes = {
-            'id': [OPTIONAL],
-            'system': [OPTIONAL],
-            'scope': [OPTIONAL]
+            "id": [OPTIONAL],
+            "system": [OPTIONAL],
+            "scope": [OPTIONAL],
         }
         self._children = [
-            ['individualName', 'organizationName', 'positionName', 1, INFINITY],
-            ['address', 0, INFINITY],
-            ['phone', 0, INFINITY],
-            ['electronicMailAddress', 0, INFINITY],
-            ['onlineUrl', 0, INFINITY],
-            ['userId', 0, INFINITY]
+            [
+                "individualName",
+                "organizationName",
+                "positionName",
+                1,
+                INFINITY,
+            ],
+            ["address", 0, INFINITY],
+            ["phone", 0, INFINITY],
+            ["electronicMailAddress", 0, INFINITY],
+            ["onlineUrl", 0, INFINITY],
+            ["userId", 0, INFINITY],
         ]
         self._content = TYPE_NONE
 
@@ -293,12 +292,10 @@ class responsiblePartyRule(rule):
             raise MetapypeRuleError(msg)
 
 
-class valueRule(rule):
+class ValueRule(Rule):
     def __init__(self):
         super().__init__()
-        self._attributes = {
-            'xml:lang': [REQUIRED]
-        }
+        self._attributes = {"xml:lang": [REQUIRED]}
         self._children = []
         self._content = TYPE_STR
 
@@ -310,8 +307,9 @@ class valueRule(rule):
 
 # ===================== End of rules section =====================
 
+
 def validate_attributes(attributes: dict, node: Node) -> None:
-    '''
+    """
     Validates node attributes for rule compliance.
 
     Iterates through the dict of attribute rules and validates whether
@@ -326,12 +324,14 @@ def validate_attributes(attributes: dict, node: Node) -> None:
 
     Raises:
         MetapypeRuleError: Illegal attribute or missing required attribute
-    '''
+    """
     for attribute in attributes:
         required = attributes[attribute][0]
         # Test for required attributes
         if required and attribute not in node.attributes:
-            msg = f'"{attribute}" is a required attribute of node "{node.name}"'
+            msg = (
+                f'"{attribute}" is a required attribute of node "{node.name}"'
+            )
             raise MetapypeRuleError(msg)
     for attribute in node.attributes:
         # Test for non-allowed attribute
@@ -340,14 +340,16 @@ def validate_attributes(attributes: dict, node: Node) -> None:
             raise MetapypeRuleError(msg)
         else:
             # Test for enumerated list of allowed values
-            if len(attributes[attribute]) > 1 and node.attributes[
-                attribute] not in attributes[attribute][1:]:
+            if (
+                len(attributes[attribute]) > 1
+                and node.attributes[attribute] not in attributes[attribute][1:]
+            ):
                 msg = f'Node "{node.name}" attribute "{attribute}" must be one of the following: "{attributes[attribute][1:]}"'
                 raise MetapypeRuleError(msg)
 
 
 def validate_children(children: list, node: Node) -> None:
-    '''
+    """
     Validates node children for rule compliance.
 
     Iterates through the list children rules and validates whether
@@ -363,7 +365,7 @@ def validate_children(children: list, node: Node) -> None:
     Raises:
         MetapypeRuleError: Illegal child, bad sequence or choice, missing
         child, or wrong child cardinality
-    '''
+    """
     i = 0
     max_i = len(node.children)
     for child in children:
@@ -391,23 +393,23 @@ def validate_children(children: list, node: Node) -> None:
 
 
 dispatcher = {
-    names.ACCESS: accessRule(),
-    names.ADDITIONALMETADATA: additionalMetadataRule(),
-    names.ALLOW: allowRule(),
-    names.CONTACT: responsiblePartyRule(),
-    names.CREATOR: responsiblePartyRule(),
-    names.DATASET: datasetRule(),
-    names.DENY: denyRule(),
-    names.EML: emlRule(),
-    names.GIVENNAME: anyNameRule(),
-    names.INDIVIDUALNAME: individualNameRule(),
-    names.METADATA: metadataRule(),
-    names.ORGANIZATIONNAME: anyNameRule(),
-    names.PERMISSION: permissionRule(),
-    names.POSITIONNAME: anyNameRule(),
-    names.PRINCIPAL: principalRule(),
-    names.SALUTATION: anyNameRule(),
-    names.SURNAME: anyNameRule(),
-    names.TITLE: anyNameRule(),
-    names.VALUE: valueRule(),
+    names.ACCESS: Accessrule(),
+    names.ADDITIONALMETADATA: Additionalmetadatarule(),
+    names.ALLOW: Allowrule(),
+    names.CONTACT: ResponsiblePartyRule(),
+    names.CREATOR: ResponsiblePartyRule(),
+    names.DATASET: DatasetRule(),
+    names.DENY: DenyRule(),
+    names.EML: EmlRule(),
+    names.GIVENNAME: Anynamerule(),
+    names.INDIVIDUALNAME: IndividualNameRule(),
+    names.METADATA: MetadataRule(),
+    names.ORGANIZATIONNAME: Anynamerule(),
+    names.PERMISSION: PermissionRule(),
+    names.POSITIONNAME: Anynamerule(),
+    names.PRINCIPAL: PrincipalRule(),
+    names.SALUTATION: Anynamerule(),
+    names.SURNAME: Anynamerule(),
+    names.TITLE: Anynamerule(),
+    names.VALUE: ValueRule(),
 }

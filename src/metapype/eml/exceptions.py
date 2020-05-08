@@ -16,16 +16,8 @@
 import daiquiri
 
 
-logger = daiquiri.getLogger('exceptions: ' + __name__)
+logger = daiquiri.getLogger("exceptions: " + __name__)
 
 
 class MetapypeRuleError(Exception):
     pass
-
-
-def main():
-    return 0
-
-
-if __name__ == "__main__":
-    main()

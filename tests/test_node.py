@@ -22,7 +22,7 @@ from metapype.model.node import Node
 from metapype.model.node import Shift
 
 
-logger = daiquiri.getLogger('test_node: ' + __name__)
+logger = daiquiri.getLogger("test_node: " + __name__)
 
 
 @pytest.fixture()
@@ -31,13 +31,13 @@ def node():
 
 
 def test_add_attribute(node):
-    node.add_attribute('packageId', 'test.1.1')
-    node.add_attribute('system', 'metapype')
+    node.add_attribute("packageId", "test.1.1")
+    node.add_attribute("system", "metapype")
     attributes = node.attributes
     for attribute in attributes:
-        assert attribute in ['packageId', 'system']
+        assert attribute in ["packageId", "system"]
         value = attributes[attribute]
-        assert value in ['test.1.1', 'metapype']
+        assert value in ["test.1.1", "metapype"]
 
 
 def test_add_child(node):
@@ -52,7 +52,7 @@ def test_add_child(node):
 
 def test_copy():
     node = Node(names.GIVENNAME)
-    node.content = 'Chase'
+    node.content = "Chase"
     validate.node(node)
     node_copy = node.copy()
     validate.node(node_copy)
@@ -78,7 +78,7 @@ def test_find_child(node):
     great_grandchild = node.find_child(names.PERMISSION)
     assert great_grandchild is permission
 
-    child = node.find_child('nonesuch')
+    child = node.find_child("nonesuch")
     assert child is None
 
 
@@ -94,10 +94,10 @@ def test_remove_child(node):
 def test_replace_child():
     individual_name = Node(names.INDIVIDUALNAME)
     sur_name_1 = Node(names.SURNAME, parent=individual_name)
-    sur_name_1.content = 'Gaucho'
+    sur_name_1.content = "Gaucho"
     individual_name.add_child(sur_name_1)
     sur_name_2 = Node(names.SURNAME, parent=individual_name)
-    sur_name_2.content = 'Carroll'
+    sur_name_2.content = "Carroll"
     assert sur_name_1 in individual_name.children
     assert sur_name_2 not in individual_name.children
     individual_name.replace_child(old_child=sur_name_1, new_child=sur_name_2)
@@ -109,7 +109,7 @@ def test_replace_child():
 
     # Test for child node type mismatch
     given_name = Node(names.GIVENNAME)
-    given_name.content = 'Chase'
+    given_name.content = "Chase"
     with pytest.raises(ValueError):
         individual_name.replace_child(old_child=sur_name_2, new_child=given_name)
 
@@ -219,19 +219,19 @@ def test_get_node():
 
 def test_delete_node():
     eml = Node(names.EML)
-    eml.add_attribute('packageId', 'edi.23.1')
-    eml.add_attribute('system', 'metapype')
+    eml.add_attribute("packageId", "edi.23.1")
+    eml.add_attribute("system", "metapype")
     access = Node(names.ACCESS, parent=eml)
-    access.add_attribute('authSystem', 'pasta')
-    access.add_attribute('order', 'allowFirst')
+    access.add_attribute("authSystem", "pasta")
+    access.add_attribute("order", "allowFirst")
     eml.add_child(access)
     allow = Node(names.ALLOW, parent=access)
     access.add_child(allow)
     principal = Node(names.PRINCIPAL, parent=allow)
-    principal.content = 'uid=gaucho,o=EDI,dc=edirepository,dc=org'
+    principal.content = "uid=gaucho,o=EDI,dc=edirepository,dc=org"
     allow.add_child(principal)
     permission = Node(names.PERMISSION, parent=allow)
-    permission.content = 'all'
+    permission.content = "all"
     allow.add_child(permission)
     node = Node.get_node_instance(principal.id)
     assert principal is node
@@ -241,19 +241,19 @@ def test_delete_node():
 
 def test_delete_node_no_children():
     eml = Node(names.EML)
-    eml.add_attribute('packageId', 'edi.23.1')
-    eml.add_attribute('system', 'metapype')
+    eml.add_attribute("packageId", "edi.23.1")
+    eml.add_attribute("system", "metapype")
     access = Node(names.ACCESS, parent=eml)
-    access.add_attribute('authSystem', 'pasta')
-    access.add_attribute('order', 'allowFirst')
+    access.add_attribute("authSystem", "pasta")
+    access.add_attribute("order", "allowFirst")
     eml.add_child(access)
     allow = Node(names.ALLOW, parent=access)
     access.add_child(allow)
     principal = Node(names.PRINCIPAL, parent=allow)
-    principal.content = 'uid=gaucho,o=EDI,dc=edirepository,dc=org'
+    principal.content = "uid=gaucho,o=EDI,dc=edirepository,dc=org"
     allow.add_child(principal)
     permission = Node(names.PERMISSION, parent=allow)
-    permission.content = 'all'
+    permission.content = "all"
     allow.add_child(permission)
     node = Node.get_node_instance(principal.id)
     assert principal is node

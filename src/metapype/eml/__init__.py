@@ -13,14 +13,3 @@
 :Created:
     6/6/18
 """
-import daiquiri
-
-logger = daiquiri.getLogger('__init__.py: ' + __name__)
-
-
-def main():
-    return 0
-
-
-if __name__ == "__main__":
-    main()

@@ -20,7 +20,7 @@ import uuid
 import daiquiri
 
 
-logger = daiquiri.getLogger('node.py: ' + __name__)
+logger = daiquiri.getLogger("node.py: " + __name__)
 
 
 class Shift(Enum):
@@ -39,8 +39,9 @@ class Node(object):
         content: Optional string content
     """
 
-    def __init__(self, name: str, id: str = None, parent=None,
-                 content: str = None):
+    def __init__(
+        self, name: str, id: str = None, parent=None, content: str = None
+    ):
         if id is None:
             self._id = str(uuid.uuid1())
         else:
@@ -55,7 +56,7 @@ class Node(object):
     store = {}
 
     @classmethod
-    def delete_node_instance(cls, id: str, children: bool=True):
+    def delete_node_instance(cls, id: str, children: bool = True):
         """
         Removes the node instance from the store; if children set to True, then
         remove all children recursively.
@@ -292,21 +293,25 @@ class Node(object):
         index = self._children.index(child)
         name = self._children[index].name
         if direction == Shift.RIGHT:
-            for sib_index in range(index+1, len(self._children)):
+            for sib_index in range(index + 1, len(self._children)):
                 if self._children[sib_index].name == name:
-                    self.children[index], self.children[sib_index] = \
-                    self.children[sib_index], self.children[index]
+                    self.children[index], self.children[sib_index] = (
+                        self.children[sib_index],
+                        self.children[index],
+                    )
                     index = sib_index
                     break
         elif direction == Shift.LEFT:
-            for sib_index in range(index-1, -1, -1):
+            for sib_index in range(index - 1, -1, -1):
                 if self._children[sib_index].name == name:
-                    self.children[index], self.children[sib_index] = \
-                        self.children[sib_index], self.children[index]
+                    self.children[index], self.children[sib_index] = (
+                        self.children[sib_index],
+                        self.children[index],
+                    )
                     index = sib_index
                     break
         else:
-            msg = 'Expected direction to be either Shift.RIGHT or Shift.LEFT'
+            msg = "Expected direction to be either Shift.RIGHT or Shift.LEFT"
             raise ValueError(msg)
 
         return index

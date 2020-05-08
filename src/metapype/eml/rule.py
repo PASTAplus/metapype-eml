@@ -26,7 +26,7 @@ from metapype.eml import names
 from metapype.model.node import Node
 
 
-logger = daiquiri.getLogger('validate: ' + __name__)
+logger = daiquiri.getLogger("validate: " + __name__)
 
 
 REQUIRED = True
@@ -34,67 +34,64 @@ OPTIONAL = False
 INFINITY = None
 
 TYPE_NONE = None
-TYPE_STR = 'str'
-TYPE_INT = 'int'
-TYPE_FLOAT = 'float'
-TYPE_DATETIME = 'datetime'
-TYPE_YEARDATE = 'yearDate'
+TYPE_STR = "str"
+TYPE_INT = "int"
+TYPE_FLOAT = "float"
+TYPE_DATETIME = "datetime"
+TYPE_YEARDATE = "yearDate"
 
 
 def load_rules():
-    '''
+    """
     Load rules from the JSON file into the rules dict
-    '''
-    if 'EML_RULES' in os.environ:
-        json_path = os.environ['EML_RULES']
+    """
+    if "EML_RULES" in os.environ:
+        json_path = os.environ["EML_RULES"]
     else:
         json_path = Config.EML_RULES
 
     with open(json_path) as fh:
         rules_dict = json.load(fh)
 
-    return (rules_dict)
+    return rules_dict
 
 
 rules_dict = load_rules()
 
 
 class Rule(object):
-    '''
+    """
     The Rule class holds rule content for a specific rule as well as the logic for
     processing content validation.
-    '''
+    """
 
     @staticmethod
-    def child_list_node_names(child_list:list):
+    def child_list_node_names(child_list: list):
         if list is None or len(child_list) < 3:
             raise Exception("Child list must contain at least 3 elements")
         node_names = child_list[:-2]
         return node_names
 
-
     @staticmethod
-    def child_list_min_occurrences(child_list:list):
+    def child_list_min_occurrences(child_list: list):
         if list is None or len(child_list) < 3:
             raise Exception("Child list must contain at least 3 elements")
         min_occurrences = child_list[-2]
         return min_occurrences
 
-
     @staticmethod
-    def child_list_max_occurrences(child_list:list):
+    def child_list_max_occurrences(child_list: list):
         if list is None or len(child_list) < 3:
             raise Exception("Child list must contain at least 3 elements")
         max_occurrences = child_list[-1]
         return max_occurrences
 
-
     @staticmethod
-    def is_float(val:str=None):
-        '''
+    def is_float(val: str = None):
+        """
         Boolean to determine whether node content is
         (or can be converted to) a valid float value.
-        '''
+        """
         is_valid = False
         if val:
             try:
@@ -104,13 +101,12 @@ class Rule(object):
                 pass
         return is_valid
 
-
     @staticmethod
-    def is_int(val:str=None):
-        '''
+    def is_int(val: str = None):
+        """
         Boolean to determine whether node content is
         (or can be converted to) a valid int value.
-        '''
+        """
         is_valid = False
         if val:
             try:
@@ -120,15 +116,14 @@ class Rule(object):
                 pass
         return is_valid
 
-
     @staticmethod
-    def is_yeardate(val:str=None):
-        '''
+    def is_yeardate(val: str = None):
+        """
         Boolean to determine whether node content is a valid yearDate value.
-        '''
+        """
         is_valid = False
         if val and type(val) is str:
-            for yeardate_format in ['%Y', '%Y-%m-%d']:
+            for yeardate_format in ["%Y", "%Y-%m-%d"]:
                 try:
                     datetime.datetime.strptime(val, yeardate_format)
                     is_valid = True
@@ -137,15 +132,14 @@ class Rule(object):
                     pass
         return is_valid
 
-
     @staticmethod
-    def is_time(val:str=None):
-        '''
+    def is_time(val: str = None):
+        """
         Boolean to determine whether node content is a valid time value.
-        '''
+        """
         is_valid = False
         if val and type(val) is str:
-            for time_format in ['%H:%M:%S', '%H:%M:%S.%f']:
+            for time_format in ["%H:%M:%S", "%H:%M:%S.%f"]:
                 try:
                     datetime.datetime.strptime(val, time_format)
                     is_valid = True
@@ -153,7 +147,6 @@ class Rule(object):
                 except ValueError:
                     pass
         return is_valid
-
 
     def __init__(self, rule_name=None):
         self._name = rule_name
@@ -167,7 +160,7 @@ class Rule(object):
     def child_insert_index(self, parent: Node, new_child: Node):
         new_child_name = new_child.name
         new_child_position = self._get_child_position(new_child_name)
-        for index in range(len(parent.children)-1, -1, -1):
+        for index in range(len(parent.children) - 1, -1, -1):
             child_name = parent.children[index].name
             child_position = self._get_child_position(child_name)
             if new_child_position >= child_position:
@@ -190,17 +183,17 @@ class Rule(object):
     def allowed_attribute_values(self, attribute: str):
         values = []
         if attribute in self._attributes:
-            if (len(self._attributes[attribute]) > 1):
+            if len(self._attributes[attribute]) > 1:
                 values = self._attributes[attribute][1:]
         else:
             raise Exception(f"Unknown attribute {attribute}")
         return values
 
     def has_enum_content(self):
-        return 'content_enum' in self._content
+        return "content_enum" in self._content
 
     def validate_rule(self, node: Node):
-        '''
+        """
         Validates a node for rule compliance by validating the node's
         content, attributes, and children.
 
@@ -212,20 +205,20 @@ class Rule(object):
 
         Raises:
             MetapypeRuleError: Illegal attribute or missing required attribute
-        '''
+        """
         self._validate_content(node)
         self._validate_attributes(node)
         self._validate_children(node)
 
     def _get_child_position(self, node_name: str):
-        for position in range(0,len(self.children)):
+        for position in range(0, len(self.children)):
             if node_name in self.children[position][:-2]:
                 return position
         msg = f'Child "{node_name}" not allowed'
         raise MetapypeRuleError(msg)
 
     def _validate_content(self, node: Node):
-        '''
+        """
         Validates node content for rule compliance.
         For each of the content rules configured for this rule,
         validates the node to see if its content complies 
@@ -239,42 +232,47 @@ class Rule(object):
 
         Raises:
             MetapypeRuleError: Illegal attribute or missing required attribute
-        '''
-        for content_rule in self._content['content_rules']:
-            if content_rule == 'emptyContent':
+        """
+        for content_rule in self._content["content_rules"]:
+            if content_rule == "emptyContent":
                 self._validate_empty_content(node)
-            elif content_rule == 'floatContent':
+            elif content_rule == "floatContent":
                 self._validate_float_content(node)
-            elif content_rule == 'floatRangeContent_EW':
+            elif content_rule == "floatRangeContent_EW":
                 self._validate_float_range_ew_content(node)
-            elif content_rule == 'floatRangeContent_NS':
+            elif content_rule == "floatRangeContent_NS":
                 self._validate_float_range_ns_content(node)
-            elif content_rule == 'intContent':
-                self._validate_int_content(node)
-            elif content_rule == 'nonEmptyContent':
+            elif content_rule == "intContent":
+                # TODO: need validate_int_content fucntion
+                # self._validate_int_content(node)
+                pass
+            elif content_rule == "nonEmptyContent":
                 self._validate_non_empty_content(node)
-            elif content_rule == 'strContent':
+            elif content_rule == "strContent":
                 self._validate_str_content(node)
-            elif content_rule == 'timeContent':
+            elif content_rule == "timeContent":
                 self._validate_time_content(node)
-            elif content_rule == 'yearDateContent':
+            elif content_rule == "yearDateContent":
                 self._validate_yeardate_content(node)
 
         if self.has_enum_content():
-            enum_values = self._content['content_enum']
+            enum_values = self._content["content_enum"]
             self._validate_enum_content(node, enum_values)
 
-    def _validate_empty_content(self, node: Node):
+    @staticmethod
+    def _validate_empty_content(node: Node):
         if node.content is not None:
             msg = f'Node "{node.name}" content should be empty'
             raise MetapypeRuleError(msg)
 
-    def _validate_enum_content(self, node: Node, enum_values: list):
+    @staticmethod
+    def _validate_enum_content(node: Node, enum_values: list):
         if node.content not in enum_values:
             msg = f'Node "{node.name}" content should be one of "{enum_values}", not "{node.content}"'
             raise MetapypeRuleError(msg)
 
-    def _validate_float_content(self, node: Node):
+    @staticmethod
+    def _validate_float_content(node: Node):
         val = node.content
         if val is not None and not Rule.is_float(val):
             msg = f'Node "{node.name}" content should be type "{TYPE_FLOAT}", not "{type(node.content)}"'
@@ -293,30 +291,34 @@ class Rule(object):
     def _validate_float_range_ns_content(self, node: Node):
         self._validate_float_range_content(node, (-90.0, 90.0))
 
-    def _validate_non_empty_content(self, node: Node):
+    @staticmethod
+    def _validate_non_empty_content(node: Node):
         if len(node.children) == 0 and node.content is None:
             msg = f'Node "{node.name}" content should not be empty'
             raise MetapypeRuleError(msg)
 
-    def _validate_str_content(self, node: Node):
+    @staticmethod
+    def _validate_str_content(node: Node):
         if node.content is not None and type(node.content) is not str:
             msg = f'Node "{node.name}" content should be type "{TYPE_STR}", not "{type(node.content)}"'
             raise MetapypeRuleError(msg)
 
-    def _validate_time_content(self, node: Node):
+    @staticmethod
+    def _validate_time_content(node: Node):
         val = node.content
         if val is not None and not Rule.is_time(val):
             msg = f'Node "{node.name}" format should be time ("HH:MM:SS" or "HH:MM:SS.f")'
             raise MetapypeRuleError(msg)
 
-    def _validate_yeardate_content(self, node: Node):
+    @staticmethod
+    def _validate_yeardate_content(node: Node):
         val = node.content
         if val is not None and not Rule.is_yeardate(val):
             msg = f'Node "{node.name}" format should be year ("YYYY") or date ("YYYY-MM-DD")'
             raise MetapypeRuleError(msg)
 
     def _validate_attributes(self, node: Node) -> None:
-        '''
+        """
         Validates node attributes for rule compliance.
 
         Iterates through the dict of attribute rules and validates whether
@@ -330,7 +332,7 @@ class Rule(object):
 
         Raises:
             MetapypeRuleError: Illegal attribute or missing required attribute
-        '''
+        """
         for attribute in self._attributes:
             required = self._attributes[attribute][0]
             # Test for required attributes
@@ -344,14 +346,16 @@ class Rule(object):
                 raise MetapypeRuleError(msg)
             else:
                 # Test for enumerated list of allowed values
-                if len(self._attributes[attribute]) > 1 and node.attributes[
-                    attribute] not in self._attributes[attribute][1:]:
+                if (
+                    len(self._attributes[attribute]) > 1
+                    and node.attributes[attribute]
+                    not in self._attributes[attribute][1:]
+                ):
                     msg = f'Node "{node.name}" attribute "{attribute}" must be one of the following: "{self._attributes[attribute][1:]}"'
                     raise MetapypeRuleError(msg)
 
-
     def _validate_children(self, node: Node) -> None:
-        '''
+        """
         Validates node children for rule compliance.
 
         Iterates through the list children rules and validates whether
@@ -366,7 +370,7 @@ class Rule(object):
         Raises:
             MetapypeRuleError: Illegal child, bad sequence or choice, missing
             child, or wrong child cardinality
-        '''
+        """
         i = 0
         max_i = len(node.children)
         for child in self._children:
@@ -385,7 +389,9 @@ class Rule(object):
                 else:
                     break
             if cnt < min:
-                msg = f'Minimum occurrence of "{name}" not met for "{node.name}"'
+                msg = (
+                    f'Minimum occurrence of "{name}" not met for "{node.name}"'
+                )
                 raise MetapypeRuleError(msg)
         if i < max_i:
             child_name = node.children[i].name
@@ -406,108 +412,110 @@ class Rule(object):
 
     @property
     def content_rules(self):
-        return self._content['content_rules']
+        return self._content["content_rules"]
 
     @property
     def content_enum(self):
         if self.has_enum_content():
-            return self._content['content_enum']
+            return self._content["content_enum"]
         else:
             return []
 
 
-# Named constants for EML 2.1.1 metadata rules
-RULE_ACCESS = 'accessRule'
-RULE_ACCURACY = 'accuracyRule'
-RULE_ADDITIONALMETADATA = 'additionalMetadataRule'
-RULE_ADDRESS = 'addressRule'
-RULE_ALLOW = 'allowRule'
-RULE_ALTERNATEIDENTIFIER = 'alternateIdentifierRule'
-RULE_ANNOTATION = 'annotationRule'
-RULE_ANYINT = 'anyIntRule'
-RULE_ANYNAME = 'anyNameRule'
-RULE_ANYSTRING = 'anyStringRule'
-RULE_ANYURI = 'anyURIRule'
-RULE_ATTRIBUTE = 'attributeRule'
-RULE_ATTRIBUTELIST = 'attributeListRule'
-RULE_AUTHENTICATION = 'authenticationRule'
-RULE_AWARD = 'awardRule'
-RULE_BINARYRASTER_FORMAT = 'binaryRasterFormatRule'
-RULE_BOUNDINGCOORDINATE_EW = 'boundingCoordinateRule_EW'
-RULE_BOUNDINGCOORDINATE_NS = 'boundingCoordinateRule_NS'
-RULE_BOUNDINGCOORDINATES = 'boundingCoordinatesRule'
-RULE_BOUNDS = 'boundsRule'
-RULE_CODEDEFINITION = 'codeDefinitionRule'
-RULE_COMPLEX = 'complexRule'
-RULE_COVERAGE = 'coverageRule'
-RULE_DATAFORMAT = 'dataFormatRule'
-RULE_DATASET = 'datasetRule'
-RULE_DATATABLE = 'dataTableRule'
-RULE_DATETIME = 'dateTimeRule'
-RULE_DATETIMEDOMAIN = 'dateTimeDomainRule'
-RULE_DENY = 'denyRule'
-RULE_DESCRIPTOR = 'descriptorRule'
-RULE_DISTRIBUTION = 'distributionRule'
-RULE_EML = 'emlRule'
-RULE_ENTITYCODELIST = 'entityCodeListRule'
-RULE_ENUMERATEDDOMAIN = 'enumeratedDomainRule'
-RULE_EXTERNALCODESET = 'externalCodeSetRule'
-RULE_EXTERNALLYDEFINIEDFORMAT = 'externallyDefinedFormatRule'
-RULE_FUNDING = 'fundingRule'
-RULE_GEOGRAPHICCOVERAGE = 'geographicCoverageRule'
-RULE_INDIVIDUALNAME = 'individualNameRule'
-RULE_INTERVALRATIO = 'intervalRatioRule'
-RULE_KEYWORD = 'keywordRule'
-RULE_KEYWORDSET = 'keywordSetRule'
-RULE_KEYWORDTHESAURUS = 'keywordThesaurusRule'
-RULE_LICENSED = 'licensedRule'
-RULE_MEASUREMENTSCALE = 'measurementScaleRule'
-RULE_METADATA = 'metadataRule'
-RULE_METHODS = 'methodsRule'
-RULE_METHODSTEP = 'methodStepRule'
-RULE_MINMAX = 'minMaxRule'
-RULE_MISSINGVALUECODE = 'missingValueCodeRule'
-RULE_MULTIBAND = 'multiBandRule'
-RULE_NOMINAL = 'nominalOrdinalRule'
-RULE_NONNUMERICDOMAIN = 'nonNumericDomainRule'
-RULE_NUMERICDOMAIN = 'numericDomainRule'
-RULE_OFFLINE = 'offlineRule'
-RULE_ONLINE = 'onlineRule'
-RULE_ORDINAL = 'nominalOrdinalRule'
-RULE_OTHERENTITY = 'otherEntityRule'
-RULE_PERMISSION = 'permissionRule'
-RULE_PHONE = 'phoneRule'
-RULE_PHYSICAL = 'physicalRule'
-RULE_PRINCIPAL = 'principalRule'
-RULE_PROJECT = 'projectRule'
-RULE_QUALITYCONTROL = 'qualityControlRule'
-RULE_QUANTITATIVEATTRIBUTEACCURACYASSESSMENT = 'quantitativeAttributeAccuracyAssessmentRule'
-RULE_RANGEOFDATES = 'rangeOfDatesRule'
-RULE_RATIO = 'ratioRule'
-RULE_RESPONSIBLEPARTY = 'responsiblePartyRule'
-RULE_RESPONSIBLEPARTY_WITH_ROLE = 'responsiblePartyWithRoleRule'
-RULE_ROWCOLUMN = 'rowColumnRule'
-RULE_SAMPLING = 'samplingRule'
-RULE_SINGLEDATETIME = 'singleDateTimeRule'
-RULE_SIMPLEDELIMITED = 'simpleDelimitedRule'
-RULE_SIZE = 'sizeRule'
-RULE_STORAGETYPE = 'storageTypeRule'
-RULE_STUDYAREADESCRIPTION = 'studyAreaDescriptionRule'
-RULE_STUDYEXTENT = 'studyExtentRule'
-RULE_TAXONOMICCLASSIFICATION = 'taxonomicClassificationRule'
-RULE_TAXONOMICCOVERAGE = 'taxonomicCoverageRule'
-RULE_TEMPORALCOVERAGE = 'temporalCoverageRule'
-RULE_TEXT = 'textRule'
-RULE_TEXTDELIMITED = 'textDelimitedRule'
-RULE_TEXTDOMAIN = 'textDomainRule'
-RULE_TEXTFIXED = 'textFixedRule'
-RULE_TEXTFORMAT = 'textFormatRule'
+# Named constants for EML metadata rules
+RULE_ACCESS = "accessRule"
+RULE_ACCURACY = "accuracyRule"
+RULE_ADDITIONALMETADATA = "additionalMetadataRule"
+RULE_ADDRESS = "addressRule"
+RULE_ALLOW = "allowRule"
+RULE_ALTERNATEIDENTIFIER = "alternateIdentifierRule"
+RULE_ANNOTATION = "annotationRule"
+RULE_ANYINT = "anyIntRule"
+RULE_ANYNAME = "anyNameRule"
+RULE_ANYSTRING = "anyStringRule"
+RULE_ANYURI = "anyURIRule"
+RULE_ATTRIBUTE = "attributeRule"
+RULE_ATTRIBUTELIST = "attributeListRule"
+RULE_AUTHENTICATION = "authenticationRule"
+RULE_AWARD = "awardRule"
+RULE_BINARYRASTER_FORMAT = "binaryRasterFormatRule"
+RULE_BOUNDINGCOORDINATE_EW = "boundingCoordinateRule_EW"
+RULE_BOUNDINGCOORDINATE_NS = "boundingCoordinateRule_NS"
+RULE_BOUNDINGCOORDINATES = "boundingCoordinatesRule"
+RULE_BOUNDS = "boundsRule"
+RULE_CODEDEFINITION = "codeDefinitionRule"
+RULE_COMPLEX = "complexRule"
+RULE_COVERAGE = "coverageRule"
+RULE_DATAFORMAT = "dataFormatRule"
+RULE_DATASET = "datasetRule"
+RULE_DATATABLE = "dataTableRule"
+RULE_DATETIME = "dateTimeRule"
+RULE_DATETIMEDOMAIN = "dateTimeDomainRule"
+RULE_DENY = "denyRule"
+RULE_DESCRIPTOR = "descriptorRule"
+RULE_DISTRIBUTION = "distributionRule"
+RULE_EML = "emlRule"
+RULE_ENTITYCODELIST = "entityCodeListRule"
+RULE_ENUMERATEDDOMAIN = "enumeratedDomainRule"
+RULE_EXTERNALCODESET = "externalCodeSetRule"
+RULE_EXTERNALLYDEFINIEDFORMAT = "externallyDefinedFormatRule"
+RULE_FUNDING = "fundingRule"
+RULE_GEOGRAPHICCOVERAGE = "geographicCoverageRule"
+RULE_INDIVIDUALNAME = "individualNameRule"
+RULE_INTERVALRATIO = "intervalRatioRule"
+RULE_KEYWORD = "keywordRule"
+RULE_KEYWORDSET = "keywordSetRule"
+RULE_KEYWORDTHESAURUS = "keywordThesaurusRule"
+RULE_LICENSED = "licensedRule"
+RULE_MEASUREMENTSCALE = "measurementScaleRule"
+RULE_METADATA = "metadataRule"
+RULE_METHODS = "methodsRule"
+RULE_METHODSTEP = "methodStepRule"
+RULE_MINMAX = "minMaxRule"
+RULE_MISSINGVALUECODE = "missingValueCodeRule"
+RULE_MULTIBAND = "multiBandRule"
+RULE_NOMINAL = "nominalOrdinalRule"
+RULE_NONNUMERICDOMAIN = "nonNumericDomainRule"
+RULE_NUMERICDOMAIN = "numericDomainRule"
+RULE_OFFLINE = "offlineRule"
+RULE_ONLINE = "onlineRule"
+RULE_ORDINAL = "nominalOrdinalRule"
+RULE_OTHERENTITY = "otherEntityRule"
+RULE_PERMISSION = "permissionRule"
+RULE_PHONE = "phoneRule"
+RULE_PHYSICAL = "physicalRule"
+RULE_PRINCIPAL = "principalRule"
+RULE_PROJECT = "projectRule"
+RULE_QUALITYCONTROL = "qualityControlRule"
+RULE_QUANTITATIVEATTRIBUTEACCURACYASSESSMENT = (
+    "quantitativeAttributeAccuracyAssessmentRule"
+)
+RULE_RANGEOFDATES = "rangeOfDatesRule"
+RULE_RATIO = "ratioRule"
+RULE_RESPONSIBLEPARTY = "responsiblePartyRule"
+RULE_RESPONSIBLEPARTY_WITH_ROLE = "responsiblePartyWithRoleRule"
+RULE_ROWCOLUMN = "rowColumnRule"
+RULE_SAMPLING = "samplingRule"
+RULE_SINGLEDATETIME = "singleDateTimeRule"
+RULE_SIMPLEDELIMITED = "simpleDelimitedRule"
+RULE_SIZE = "sizeRule"
+RULE_STORAGETYPE = "storageTypeRule"
+RULE_STUDYAREADESCRIPTION = "studyAreaDescriptionRule"
+RULE_STUDYEXTENT = "studyExtentRule"
+RULE_TAXONOMICCLASSIFICATION = "taxonomicClassificationRule"
+RULE_TAXONOMICCOVERAGE = "taxonomicCoverageRule"
+RULE_TEMPORALCOVERAGE = "temporalCoverageRule"
+RULE_TEXT = "textRule"
+RULE_TEXTDELIMITED = "textDelimitedRule"
+RULE_TEXTDOMAIN = "textDomainRule"
+RULE_TEXTFIXED = "textFixedRule"
+RULE_TEXTFORMAT = "textFormatRule"
 RULE_TIME = "timeRule"
-RULE_UNIT = 'unitRule'
-RULE_URL = 'urlRule'
-RULE_USERID = 'userIdRule'
-RULE_VALUE = 'valueRule'
-RULE_YEARDATE = 'yearDateRule'
+RULE_UNIT = "unitRule"
+RULE_URL = "urlRule"
+RULE_USERID = "userIdRule"
+RULE_VALUE = "valueRule"
+RULE_YEARDATE = "yearDateRule"
 
 
 # Maps node names to their corresponding metadata rule names
@@ -677,7 +685,8 @@ node_mappings = {
     names.PUBPLACE: RULE_ANYSTRING,
     names.PURPOSE: RULE_TEXT,
     names.QUALITYCONTROL: RULE_QUALITYCONTROL,
-    names.QUANTITATIVEATTRIBUTEACCURACYASSESSMENT: RULE_QUANTITATIVEATTRIBUTEACCURACYASSESSMENT,
+    names.QUANTITATIVEATTRIBUTEACCURACYASSESSMENT:
+        RULE_QUANTITATIVEATTRIBUTEACCURACYASSESSMENT,
     names.QUOTECHARACTER: RULE_ANYSTRING,
     names.RANGEOFDATES: RULE_RANGEOFDATES,
     names.RATIO: RULE_INTERVALRATIO,
@@ -719,37 +728,37 @@ node_mappings = {
     names.VALUE: RULE_VALUE,
     names.VALUEATTRIBUTEREFERENCE: RULE_ANYSTRING,
     names.VALUEURI: RULE_ANYURI,
-    names.WESTBOUNDINGCOORDINATE: RULE_BOUNDINGCOORDINATE_EW
+    names.WESTBOUNDINGCOORDINATE: RULE_BOUNDINGCOORDINATE_EW,
 }
 
 
 def node_names():
-    '''
+    """
     Helper function.
     Returns a list of all known node names.
-    '''
+    """
     return list(node_mappings.keys())
 
 
 def get_rule_name(node_name: str):
-    '''
+    """
     Helper function.
     For a given node name, return its corresponding rule name
-    '''
+    """
     return node_mappings.get(node_name)
 
 
 def get_rule(node_name: str):
-    '''
+    """
     Helper function.
     For a given node name, instantiate its corresponding rule object and return it
-    '''
+    """
     rule_name = get_rule_name(node_name)
     return Rule(rule_name)
 
 
 def main():
-    eml_rule = Rule('emlRule')
+    eml_rule = Rule("emlRule")
     print(eml_rule)
 
 

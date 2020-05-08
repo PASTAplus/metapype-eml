@@ -16,8 +16,8 @@
 import daiquiri
 
 
-logger = daiquiri.getLogger('config.py: ' + __name__)
+logger = daiquiri.getLogger("config.py: " + __name__)
 
 
 class Config(object):
-    EML_RULES = 'absolute path of EML rules JSON file'
+    EML_RULES = "absolute path of EML rules JSON file"
