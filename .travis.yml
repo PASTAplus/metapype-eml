@@ -1,9 +1,9 @@
 language:
   python
 dist:
-  xenial
+  focal
 python:
-  - 3.7
+  - 3.8
 addons:
   apt:
     packages:
@@ -12,7 +12,7 @@ addons:
       - python3-dev
 env:
   global:
-    - EML2_1_1_RULES=$TRAVIS_BUILD_DIR/src/metapype/eml2_1_1/rules.json
+    - EML_RULES=$TRAVIS_BUILD_DIR/src/metapype/eml/rules.json
 before_install:
   - sudo apt-get -q update
 install:
@@ -22,7 +22,7 @@ script:
   # the scripts.
   - ls -lR
   - pip install -r ./requirements.txt
-  - pip install -e ./src
+  - pip install -e .
   - python --version
   - pip freeze
   - pip check || true
