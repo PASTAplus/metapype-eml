@@ -179,7 +179,10 @@
             ["awardNumber", 0, 1],
             ["title", 1, 1],
             ["awardUrl", 0, 1]
-        ]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
     ],
     "binaryRasterFormatRule" : [
         { 

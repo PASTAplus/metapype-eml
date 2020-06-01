@@ -85,7 +85,7 @@ class Node(object):
         Returns:
             Node
         """
-        return cls.store[id]
+        return cls.store.get(id, None)
 
     @classmethod
     def set_node_instance(cls, node):
