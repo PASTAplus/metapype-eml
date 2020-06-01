@@ -8,7 +8,6 @@ addons:
   apt:
     packages:
       - python-dev
-      - python-pip
       - python3-dev
 env:
   global:
