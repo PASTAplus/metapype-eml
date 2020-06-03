@@ -312,6 +312,7 @@
             ["introduction", 0, 1],
             ["gettingStarted", 0, 1],
             ["acknowledgements", 0, 1],
+            ["maintenance", 0, 1],
             ["contact", 1, null],
             ["publisher", 0, 1],
             ["pubPlace", 0, 1],
@@ -555,6 +556,17 @@
             ["licenseName", 1, 1],
             ["url", 0, 1],
             ["identifier", 0, 1]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "maintenanceRule" : [
+        {
+        },
+        [
+            ["description", 1, 1],
+            ["maintenanceUpdateFrequency", 0, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
