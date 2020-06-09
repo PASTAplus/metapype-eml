@@ -39,6 +39,8 @@ class Node(object):
         content: Optional string content
     """
 
+    next_id = 0
+
     def __init__(
         self, name: str, id: str = None, parent=None, content: str = None
     ):
@@ -194,6 +196,20 @@ class Node(object):
                 children.append(child_node)
         return children
 
+    def find_all_descendants(self, child_name, descendants):
+        """
+        Generates a list of all descendants that match the child_name, or
+        an empty list if there are no matches.
+
+        Args:
+            child_name: Child name to be matched
+            descendants: List object to be filled with descendant nodes
+        """
+        for child_node in self._children:
+            if child_node.name == child_name:
+                descendants.append(child_node)
+            child_node.find_all_descendants(child_name, descendants)
+
     @property
     def id(self):
         """
@@ -228,6 +244,23 @@ class Node(object):
                 break
         return child
 
+    def find_immediate_child(self, child_name):
+        """
+        Searches for the first child that matches the
+        child_name and returns it, or returns None if there is no
+        match. Does not search beyond the first generation of descendants.
+
+        Args:
+            child_name: Child name to be matched
+
+        Returns
+            Node or None
+        """
+        for child_node in self._children:
+            if child_node.name == child_name:
+                return child_node
+        return None
+
     @property
     def name(self):
         return self._name
@@ -258,6 +291,9 @@ class Node(object):
             None
         """
         self._children.remove(child)
+
+    def remove_children(self):
+        self._children = []
 
     def replace_child(self, old_child, new_child):
         """
