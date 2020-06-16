@@ -71,15 +71,89 @@ def test_find_child(node):
     allow = Node(names.ALLOW)
     access.add_child(allow)
     grandchild = node.find_child(names.ALLOW)
-    assert grandchild is allow
+    assert grandchild is None
 
     permission = Node(names.PERMISSION)
     allow.add_child(permission)
     great_grandchild = node.find_child(names.PERMISSION)
-    assert great_grandchild is permission
+    assert great_grandchild is None
 
     child = node.find_child("nonesuch")
     assert child is None
+
+
+def test_find_descendant(node):
+    access = Node(names.ACCESS)
+    node.add_child(access)
+    child = node.find_descendant(names.ACCESS)
+    assert access is child
+
+    allow = Node(names.ALLOW)
+    access.add_child(allow)
+    grandchild = node.find_descendant(names.ALLOW)
+    assert grandchild is allow
+
+    permission = Node(names.PERMISSION)
+    allow.add_child(permission)
+    great_grandchild = node.find_descendant(names.PERMISSION)
+    assert great_grandchild is permission
+
+    child = node.find_descendant("nonesuch")
+    assert child is None
+
+
+def test_find_single_node_by_path(node):
+    access = Node(names.ACCESS)
+    node.add_child(access)
+    child = node.find_single_node_by_path([names.ACCESS])
+    assert access is child
+
+    allow = Node(names.ALLOW)
+    access.add_child(allow)
+    grandchild = node.find_single_node_by_path([names.ACCESS, names.ALLOW])
+    assert grandchild is allow
+
+    permission = Node(names.PERMISSION)
+    allow.add_child(permission)
+    great_grandchild = node.find_single_node_by_path([names.ACCESS, names.ALLOW, names.PERMISSION])
+    assert great_grandchild is permission
+
+    child = node.find_single_node_by_path([names.ACCESS, names.ALLOW, "nonesuch"])
+    assert child is None
+
+    child = node.find_single_node_by_path([])
+    assert child is None
+
+    child = node.find_single_node_by_path(None)
+    assert child is None
+
+
+def test_find_all_nodes_by_path(node):
+    access = Node(names.ACCESS)
+    node.add_child(access)
+    children = node.find_all_nodes_by_path([names.ACCESS])
+    assert children == [access]
+
+    allow = Node(names.ALLOW)
+    access.add_child(allow)
+    grandchildren = node.find_all_nodes_by_path([names.ACCESS, names.ALLOW])
+    assert grandchildren == [allow]
+
+    principal_1 = Node(names.PRINCIPAL)
+    allow.add_child(principal_1)
+    principal_2 = Node(names.PRINCIPAL)
+    allow.add_child(principal_2)
+    great_grandchildren = node.find_all_nodes_by_path([names.ACCESS, names.ALLOW, names.PRINCIPAL])
+    assert great_grandchildren == [principal_1, principal_2]
+
+    child = node.find_all_nodes_by_path([names.ACCESS, names.ALLOW, "nonesuch"])
+    assert child == []
+
+    child = node.find_all_nodes_by_path([])
+    assert child == []
+
+    child = node.find_all_nodes_by_path(None)
+    assert child == []
 
 
 def test_remove_child(node):

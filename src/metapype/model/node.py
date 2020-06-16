@@ -217,29 +217,29 @@ class Node(object):
     def list_attributes(self):
         return list(self._attributes.keys())
 
-    def find_child(self, child_name):
+    def find_descendant(self, descendant_name):
         """
-        Recursively searches for the first child that matches the 
-        child_name and returns it, or returns None if there is no 
+        Recursively searches for the first descendant that matches the
+        descendant_name and returns it, or returns None if there is no
         match.
 
         Args:
-            child_name: Child name to be matched
+            descendant_name: Descendant node name to be matched
 
         Returns
             Node or None
         """
-        child = None
-        for child_node in self._children:
-            if child_node.name == child_name:
-                child = child_node
+        descendant = None
+        for descendant_node in self._children:
+            if descendant_node.name == descendant_name:
+                descendant = descendant_node
             else:
-                child = child_node.find_child(child_name=child_name)
-            if child:
+                descendant = descendant_node.find_descendant(descendant_name=descendant_name)
+            if descendant:
                 break
-        return child
+        return descendant
 
-    def find_immediate_child(self, child_name):
+    def find_child(self, child_name):
         """
         Searches for the first child that matches the
         child_name and returns it, or returns None if there is no
@@ -277,11 +277,13 @@ class Node(object):
         Returns
             Node or None
         """
+        if not path or len(path) == 0:
+            return None
         current_node = self
         for name in path:
             if not current_node:
                 return None
-            current_node = current_node.find_immediate_child(name)
+            current_node = current_node.find_child(name)
         return current_node
 
     def find_all_nodes_by_path(self, path: list):
@@ -302,12 +304,14 @@ class Node(object):
             path: List of node names defining the descendant lineages to be found.
 
         Returns
-            List of Nodes or None
+            List of Nodes, which may be empty
         """
+        if not path or len(path) == 0:
+            return []
         current_list = [self]
         for name in path:
             if not current_list:
-                return None
+                return []
             next_generation = []
             for node in current_list:
                 next_generation.extend(node.find_all_children(name))

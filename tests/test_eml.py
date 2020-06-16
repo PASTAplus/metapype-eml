@@ -262,7 +262,7 @@ def test_empty_content(node):
 
 
 def test_non_empty_content(node):
-    principal_allow = node.find_child(names.PRINCIPAL)
+    principal_allow = node.find_descendant(names.PRINCIPAL)
     principal_allow.content = None
     r = rule.get_rule(names.PRINCIPAL)
     with pytest.raises(MetapypeRuleError):
@@ -270,7 +270,7 @@ def test_non_empty_content(node):
 
 
 def test_permissions_content(node):
-    permission_allow = node.find_child(names.PERMISSION)
+    permission_allow = node.find_descendant(names.PERMISSION)
     permission_allow.content = "some permission"
     r = rule.get_rule(names.PERMISSION)
     with pytest.raises(MetapypeRuleError):
@@ -278,7 +278,7 @@ def test_permissions_content(node):
 
 
 def test_str_content(node):
-    permission_allow = node.find_child(names.PERMISSION)
+    permission_allow = node.find_descendant(names.PERMISSION)
     permission_allow.content = 1
     r = rule.get_rule(names.PERMISSION)
     with pytest.raises(MetapypeRuleError):
