@@ -39,15 +39,10 @@ class Node(object):
         content: Optional string content
     """
 
-    next_id = 0
-
     def __init__(
         self, name: str, id: str = None, parent=None, content: str = None
     ):
-        if id is None:
-            self._id = str(uuid.uuid1())
-        else:
-            self._id = id
+        self._id = str(uuid.uuid1()) if id is None else id
         self._name = name
         self._parent = parent
         self._content = content
@@ -190,11 +185,11 @@ class Node(object):
         Returns:
             List
         """
-        children = []
-        for child_node in self._children:
-            if child_node.name == child_name:
-                children.append(child_node)
-        return children
+        return [
+            child_node
+            for child_node in self._children
+            if child_node.name == child_name
+        ]
 
     def find_all_descendants(self, child_name, descendants):
         """
@@ -260,6 +255,64 @@ class Node(object):
             if child_node.name == child_name:
                 return child_node
         return None
+
+    def find_single_node_by_path(self, path: list):
+        """
+        Search down a descendant lineage, using the names in the path provided. Return
+        the first node found that satisfies the path.
+
+        To give an example based on EML 2.2, if self is the EML node, then the path
+        [names.DATASET, names.CREATOR, names.USERID] will find the userID node of the
+        first creator of the dataset, if any. Note that there may be many userID nodes in the
+        tree (for creators, metadataProviders, associatedParties, project personnel, etc.,
+        so just doing a recursive search for a userID node isn't likely to return the
+        desired result.
+
+        Note that this method only returns a single node (or None, if none is found). To
+        get all nodes satisfying the path, use find_all_nodes_by_path.
+
+        Args:
+            path: List of node names defining the descendant lineage to be found.
+
+        Returns
+            Node or None
+        """
+        current_node = self
+        for name in path:
+            if not current_node:
+                return None
+            current_node = current_node.find_immediate_child(name)
+        return current_node
+
+    def find_all_nodes_by_path(self, path: list):
+        """
+        Search down a descendant lineage, using the names in the path provided. Return
+        a list of nodes that satisfy the path.
+
+        To give an example based on EML 2.2, if self is the EML node, then the path
+        [names.DATASET, names.CREATOR, names.USERID] will return a list consisting of
+        the userIDs for all of the creators of the dataset, if any.
+
+        Note that this method returns a list of nodes (or None, if none is found). To
+        get a single node satisfying the path, use find_single_node_by_path. In cases
+        where it is known that at most one node can satisfy the path, getting a single
+        node is more convenient than getting a list.
+
+        Args:
+            path: List of node names defining the descendant lineages to be found.
+
+        Returns
+            List of Nodes or None
+        """
+        current_list = [self]
+        for name in path:
+            if not current_list:
+                return None
+            next_generation = []
+            for node in current_list:
+                next_generation.extend(node.find_all_children(name))
+            current_list = next_generation
+        return current_list
 
     @property
     def name(self):
