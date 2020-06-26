@@ -318,6 +318,16 @@ class Node(object):
             current_list = next_generation
         return current_list
 
+    def get_ancestry(self):
+        ancestry = []
+        node = self
+        while True:
+            ancestry.insert(0, node)
+            node = node.parent
+            if not node:
+                break
+        return ancestry
+
     @property
     def name(self):
         return self._name

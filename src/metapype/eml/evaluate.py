@@ -17,41 +17,215 @@ import daiquiri
 
 from metapype.eml import names
 from metapype.model.node import Node
+from metapype.eml.evaluation_warnings import EvaluationWarning
 
 
 logger = daiquiri.getLogger("evaluate: " + __name__)
-PASS = "PASS"
 
 
 # ==================== Begin of rules section ====================
 
+def _associated_responsible_party_rule(node: Node) -> list:
+    return _responsible_party_rule(node)
 
-def _individual_name_rule(node: Node) -> str:
-    givename = False
-    surname = False
+
+def _contact_rule(node: Node) -> list:
+    return _responsible_party_rule(node)
+
+
+def _creator_rule(node: Node) -> list:
+    return _responsible_party_rule(node)
+
+
+def _dataset_rule(node: Node) -> list:
+    evaluation = []
+    abstract_node = None
+    coverage_node = None
+    datatable_node = None
+    intellectual_rights_node = None
+    keywordset_node = None
+    methods_node = None
+    project_node = None
     for child in node.children:
-        if child.name == names.GIVENNAME:
-            givename = True
-        if child.name == names.SURNAME:
-            surname = True
-    if givename and surname:
-        evaluation = PASS
+        if child.name == names.ABSTRACT:
+            abstract_node = child
+        elif child.name == names.COVERAGE:
+            coverage_node = child
+        elif child.name == names.DATATABLE:
+            datatable_node = child
+        elif child.name == names.INTELLECTUALRIGHTS:
+            intellectual_rights_node = child
+        elif child.name == names.KEYWORDSET:
+            keywordset_node = child
+        elif child.name == names.METHODS:
+            methods_node = child
+        elif child.name == names.PROJECT:
+            project_node = child
+
+    if abstract_node:
+        content = abstract_node.content if abstract_node.content else ''
+        if content:
+            words = content.split()
+            if len(words) < 20:
+                evaluation.append((
+                    EvaluationWarning.DATASET_ABSTRACT_TOO_SHORT,
+                    f'Consider increasing the length of the dataset''s abstract.',
+                    node
+                ))
+        else:
+            evaluation.append((
+                EvaluationWarning.DATASET_ABSTRACT_MISSING,
+                f'A dataset abstract should be provided.',
+                node
+            ))
     else:
-        evaluation = (
-            f'Should have both a "{names.GIVENNAME}" and "{names.SURNAME}"'
-        )
+        evaluation.append((
+            EvaluationWarning.DATASET_ABSTRACT_MISSING,
+            f'A dataset abstract should be provided.',
+            node
+        ))
+    if not (coverage_node and coverage_node.children):
+        evaluation.append((
+            EvaluationWarning.DATASET_COVERAGE_MISSING,
+            f'At least one coverage element should be present in a dataset. I.e., at least one of Geographic Coverage,'
+            f' Temporal Coverage, or Taxonomic Coverage should be specified.',
+            node
+        ))
+    if not datatable_node:
+        evaluation.append((
+            EvaluationWarning.DATATABLE_MISSING,
+            f'A dataset should contain at least one Data Table.',
+            node
+        ))
+    if not (intellectual_rights_node and intellectual_rights_node.content):
+        evaluation.append((
+            EvaluationWarning.INTELLECTUAL_RIGHTS_MISSING,
+            f'An Intellectual Rights policy should be specified.',
+            node
+        ))
+    if not (keywordset_node and keywordset_node.children):
+        evaluation.append((
+            EvaluationWarning.KEYWORDS_MISSING,
+            f'Keywords should be provided to make the dataset more discoverable.',
+            node
+        ))
+    elif len(keywordset_node.children) < 5:
+        evaluation.append((
+            EvaluationWarning.KEYWORDS_INSUFFICIENT,
+            f'Consider adding more keywords to make the dataset more discoverable.',
+            node
+        ))
+    if not methods_node:
+        evaluation.append((
+            EvaluationWarning.DATASET_METHOD_STEPS_MISSING,
+            f'A dataset should contain at least one Method Step.',
+            node
+        ))
+    if not project_node:
+        evaluation.append((
+            EvaluationWarning.DATASET_PROJECT_MISSING,
+            f'A dataset should contain a Project.',
+            node
+        ))
+
     return evaluation
 
 
-def _title_rule(node: Node) -> str:
-    evaluation = PASS
+def _datatable_rule(node: Node) -> list:
+    evaluation = []
+    description = any(
+        child.name == names.ENTITYDESCRIPTION and child.content
+        for child in node.children
+    )
+    if not description:
+        evaluation.append((
+            EvaluationWarning.DATATABLE_DESCRIPTION_MISSING,
+            f'A data table Description is highly recommended.',
+            node
+        ))
+    return evaluation
+
+
+def _individual_name_rule(node: Node) -> list:
+    evaluation = []
+    givename = False
+    surname = False
+    for child in node.children:
+        if child.name == names.GIVENNAME and child.content:
+            givename = True
+        if child.name == names.SURNAME and child.content:
+            surname = True
+    if givename and surname:
+        evaluation = None
+    else:
+        evaluation.append((
+            EvaluationWarning.INDIVIDUAL_NAME_INCOMPLETE,
+            f'An individual\'s name should have both a "{names.GIVENNAME}" and a "{names.SURNAME}"',
+            node
+        ))
+    return evaluation
+
+
+def _responsible_party_rule(node: Node) -> list:
+    evaluation = []
+    userid = False
+    orcid = False
+    for child in node.children:
+        if child.name == names.USERID and child.content:
+            userid = True
+            if child.attributes.get('directory') == 'https://orcid.org':
+                orcid = True
+    if not orcid:
+        evaluation.append((
+            EvaluationWarning.ORCID_ID_MISSING,
+            f'An ORCID ID is recommended."',
+            node
+        ))
+    if not userid:
+        evaluation.append((
+            EvaluationWarning.USER_ID_MISSING,
+            f'A User ID should be provided. An ORCID ID is recommended."',
+            node
+        ))
+    return evaluation
+
+
+def _metadata_provider_rule(node: Node) -> list:
+    return _responsible_party_rule(node)
+
+
+def _other_entity_rule(node: Node) -> list:
+    evaluation = []
+    description = any(
+        child.name == names.ENTITYDESCRIPTION and child.content
+        for child in node.children
+    )
+
+    if not description:
+        evaluation.append((
+            EvaluationWarning.OTHER_ENTITY_DESCRIPTION_MISSING,
+            f'Entity Description is highly recommended."',
+            node
+        ))
+    return evaluation
+
+
+def _personnel_rule(node: Node) -> list:
+    return _responsible_party_rule(node)
+
+
+def _title_rule(node: Node) -> list:
+    evaluation = []
     title = node.content
     if title is not None:
         length = len(title.split(" "))
-        if length < 20:
-            evaluation = (
-                f'"{title}" is too short, should have at least 10 words'
-            )
+        if length < 5:
+            evaluation.append((
+                EvaluationWarning.TITLE_TOO_SHORT,
+                f'The title "{title}" is too short. A title should have at least 5 words;'
+                f' between 7 and 20 words is recommended.',
+                node
+            ))
     return evaluation
 
 
@@ -70,30 +244,39 @@ def node(node: Node):
     """
     evaluation = None
     if node.name in rules:
-        evaluation = f"({node.name}) {rules[node.name](node)}"
+        evaluation = rules[node.name](node)
     return evaluation
 
 
-def tree(root: Node, e: dict):
+def tree(root: Node, warnings: list):
     """
     Recursively walks from the root node and evaluates
     each child node for rule compliance.
 
     Args:
         root: Node instance of root for evaluation
+        warnings: List of warnings collected during the evaluation
 
     Returns:
         None
     """
     evaluation = node(root)
     if evaluation is not None:
-        e[root.id] = evaluation
+        warnings.extend(evaluation)
     for child in root.children:
-        tree(child, e)
+        tree(child, warnings)
 
 
 # Rule function pointers
 rules = {
+    names.ASSOCIATEDPARTY: _associated_responsible_party_rule,
+    names.CONTACT: _contact_rule,
+    names.CREATOR: _creator_rule,
+    names.DATASET: _dataset_rule,
+    names.DATATABLE: _datatable_rule,
     names.INDIVIDUALNAME: _individual_name_rule,
+    names.METADATAPROVIDER: _metadata_provider_rule,
+    names.OTHERENTITY: _other_entity_rule,
+    names.PERSONNEL: _personnel_rule,
     names.TITLE: _title_rule,
 }

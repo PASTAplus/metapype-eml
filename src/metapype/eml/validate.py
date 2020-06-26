@@ -15,15 +15,16 @@
 """
 import daiquiri
 
-from metapype.eml.exceptions import MetapypeRuleError
 from metapype.eml import rule
+from metapype.eml.exceptions import MetapypeRuleError
+from metapype.eml.validation_errors import ValidationError
 from metapype.model.node import Node
 
 
 logger = daiquiri.getLogger("validate: " + __name__)
 
 
-def node(node: Node) -> None:
+def node(node: Node, errs: list=None) -> None:
     """
     Validates a given node for rule compliance.
 
@@ -38,13 +39,16 @@ def node(node: Node) -> None:
     """
     if node.name not in rule.node_mappings:
         msg = "Unknown node: {}".format(node.name)
-        raise MetapypeRuleError(msg)
+        if errs is None:
+            raise MetapypeRuleError(msg)
+        else:
+            errs.append((ValidationError.UNKNOWN_NODE, msg, node))
     else:
         node_rule = rule.get_rule(node.name)
-        node_rule.validate_rule(node)
+        node_rule.validate_rule(node, errs)
 
 
-def tree(root: Node) -> None:
+def tree(root: Node, errs: list=None) -> None:
     """
     Recursively walks from the root node and validates
     each child node for rule compliance.
@@ -55,6 +59,7 @@ def tree(root: Node) -> None:
     Returns:
         None
     """
-    node(root)
+    # print(root.name)
+    node(root, errs)
     for child in root.children:
-        tree(child)
+        tree(child, errs)
