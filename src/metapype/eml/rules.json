@@ -599,8 +599,6 @@
             ["sampling", 0, 1],
             ["qualityControl", 0, null]
         ],
-        [
-        ],
         {
             "content_rules" : ["emptyContent"]
         }
