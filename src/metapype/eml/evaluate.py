@@ -146,6 +146,38 @@ def _datatable_rule(node: Node) -> list:
     return evaluation
 
 
+def _description_rule(node: Node) -> list:
+    # Various description nodes are required but since they have TextType, the rules allow them to be empty.
+    # Require them to have nonempty content.
+    evaluation = []
+    warning = None
+    if not node.content:
+        parent = node.parent.name
+        if parent == 'connectionDefinition':
+            warning = EvaluationWarning.CONNECTION_DEFINITION_DESCRIPTION_MISSING
+        elif parent == 'designDescription':
+            warning = EvaluationWarning.DESIGN_DESCRIPTION_DESCRIPTION_MISSING
+        elif parent == 'maintenance':
+            warning = EvaluationWarning.MAINTENANCE_DESCRIPTION_MISSING
+        elif parent == 'methodStep':
+            warning = EvaluationWarning.METHOD_STEP_DESCRIPTION_MISSING
+        elif parent == 'procedureStep':
+            warning = EvaluationWarning.PROCEDURE_STEP_DESCRIPTION_MISSING
+        elif parent == 'qualityControl':
+            warning = EvaluationWarning.QUALITY_CONTROL_DESCRIPTION_MISSING
+        elif parent == 'samplingDescription':
+            warning = EvaluationWarning.SAMPLING_DESCRIPTION_DESCRIPTION_MISSING
+        elif parent == 'studyExtent':
+            warning = EvaluationWarning.STUDY_EXTENT_DESCRIPTION_MISSING
+    if warning:
+        evaluation.append((
+            warning,
+            f'A Description is required.',
+            node
+        ))
+    return evaluation
+
+
 def _individual_name_rule(node: Node) -> list:
     evaluation = []
     givename = False
@@ -274,6 +306,7 @@ rules = {
     names.CREATOR: _creator_rule,
     names.DATASET: _dataset_rule,
     names.DATATABLE: _datatable_rule,
+    names.DESCRIPTION: _description_rule,
     names.INDIVIDUALNAME: _individual_name_rule,
     names.METADATAPROVIDER: _metadata_provider_rule,
     names.OTHERENTITY: _other_entity_rule,
