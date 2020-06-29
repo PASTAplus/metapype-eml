@@ -148,10 +148,10 @@ def _datatable_rule(node: Node) -> list:
 
 def _description_rule(node: Node) -> list:
     # Various description nodes are required but since they have TextType, the rules allow them to be empty.
-    # Require them to have nonempty content.
+    # Require them to have nonempty content if they don't have children (para or section or markdown).
     evaluation = []
     warning = None
-    if not node.content:
+    if not node.content and not node.children:
         parent = node.parent.name
         if parent == 'connectionDefinition':
             warning = EvaluationWarning.CONNECTION_DEFINITION_DESCRIPTION_MISSING
