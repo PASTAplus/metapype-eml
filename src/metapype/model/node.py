@@ -166,13 +166,18 @@ class Node(object):
 
     def copy(self):
         """
-        Returns a deep copy (including all children) of the node.
+        Returns a deep copy (including all children) of the node. All nodes are given new node IDs.
 
         Returns:
             Node
 
         """
-        return copy.deepcopy(self)
+        _copy = copy.copy(self)
+        _copy._id = str(uuid.uuid1())
+        Node.set_node_instance(_copy)
+        for child in self.children:
+            child.copy()
+        return _copy
 
     def find_all_children(self, child_name):
         """
