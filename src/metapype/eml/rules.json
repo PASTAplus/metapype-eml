@@ -983,6 +983,7 @@
             ["taxonRankName", 0, 1],
             ["taxonRankValue", 0, 1],
             ["commonName", 0, null],
+            ["taxonId", 0, null],
             ["taxonomicClassification", 0, null]
         ],
         {
