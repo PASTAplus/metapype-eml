@@ -23,6 +23,7 @@ import json
 from metapype.config import Config
 from metapype.eml.exceptions import MetapypeRuleError
 from metapype.eml import names
+from metapype.eml.validation_errors import ValidationError
 from metapype.model.node import Node
 
 
@@ -158,11 +159,9 @@ class Rule(object):
         self._content = rule_data[2]
 
     def child_insert_index(self, parent: Node, new_child: Node):
-        new_child_name = new_child.name
-        new_child_position = self._get_child_position(new_child_name)
+        new_child_position = self._get_child_position(new_child)
         for index in range(len(parent.children) - 1, -1, -1):
-            child_name = parent.children[index].name
-            child_position = self._get_child_position(child_name)
+            child_position = self._get_child_position(parent.children[index])
             if new_child_position >= child_position:
                 return index + 1
         return 0
@@ -174,11 +173,7 @@ class Rule(object):
             raise Exception(f"Unknown attribute {attribute}")
 
     def is_allowed_child(self, child_name: str):
-        allowed = False
-        for child_list in self._children:
-            if child_name in child_list[:-2]:
-                allowed = True
-        return allowed
+        return any(child_name in child_list[:-2] for child_list in self._children)
 
     def allowed_attribute_values(self, attribute: str):
         values = []
@@ -192,7 +187,7 @@ class Rule(object):
     def has_enum_content(self):
         return "content_enum" in self._content
 
-    def validate_rule(self, node: Node):
+    def validate_rule(self, node: Node, errs: list=None):
         """
         Validates a node for rule compliance by validating the node's
         content, attributes, and children.
@@ -206,18 +201,22 @@ class Rule(object):
         Raises:
             MetapypeRuleError: Illegal attribute or missing required attribute
         """
-        self._validate_content(node)
-        self._validate_attributes(node)
-        self._validate_children(node)
+        self._validate_content(node, errs)
+        self._validate_attributes(node, errs)
+        self._validate_children(node, errs)
 
-    def _get_child_position(self, node_name: str):
-        for position in range(0, len(self.children)):
-            if node_name in self.children[position][:-2]:
+    def _get_child_position(self, node: Node, errs: list=None):
+        for position in range(len(self.children)):
+            if node.name in self.children[position][:-2]:
                 return position
-        msg = f'Child "{node_name}" not allowed'
-        raise MetapypeRuleError(msg)
+        msg = f'Child "{node.name}" not allowed'
+        if errs is None:
+            raise MetapypeRuleError(msg)
+        else:
+            errs.append((ValidationError.CHILD_NOT_ALLOWED, msg, node, self._rule_name))
 
-    def _validate_content(self, node: Node):
+
+    def _validate_content(self, node: Node, errs: list=None):
         """
         Validates node content for rule compliance.
         For each of the content rules configured for this rule,
@@ -235,89 +234,122 @@ class Rule(object):
         """
         for content_rule in self._content["content_rules"]:
             if content_rule == "emptyContent":
-                self._validate_empty_content(node)
+                self._validate_empty_content(node, errs)
             elif content_rule == "floatContent":
-                self._validate_float_content(node)
+                self._validate_float_content(node, errs)
             elif content_rule == "floatRangeContent_EW":
-                self._validate_float_range_ew_content(node)
+                self._validate_float_range_ew_content(node, errs)
             elif content_rule == "floatRangeContent_NS":
-                self._validate_float_range_ns_content(node)
+                self._validate_float_range_ns_content(node, errs)
             elif content_rule == "intContent":
-                # TODO: need validate_int_content fucntion
-                # self._validate_int_content(node)
-                pass
+                self._validate_int_content(node, errs)
             elif content_rule == "nonEmptyContent":
-                self._validate_non_empty_content(node)
+                self._validate_non_empty_content(node, errs)
             elif content_rule == "strContent":
-                self._validate_str_content(node)
+                self._validate_str_content(node, errs)
             elif content_rule == "timeContent":
-                self._validate_time_content(node)
+                self._validate_time_content(node, errs)
             elif content_rule == "yearDateContent":
-                self._validate_yeardate_content(node)
+                self._validate_yeardate_content(node, errs)
 
         if self.has_enum_content():
             enum_values = self._content["content_enum"]
-            self._validate_enum_content(node, enum_values)
+            self._validate_enum_content(node, enum_values, errs)
 
     @staticmethod
-    def _validate_empty_content(node: Node):
+    def _validate_empty_content(node: Node, errs: list=None):
         if node.content is not None:
             msg = f'Node "{node.name}" content should be empty'
-            raise MetapypeRuleError(msg)
+            if errs is None:
+                raise MetapypeRuleError(msg)
+            else:
+                errs.append((ValidationError.CONTENT_EXPECTED_EMPTY, msg, node, node.content))
 
     @staticmethod
-    def _validate_enum_content(node: Node, enum_values: list):
+    def _validate_enum_content(node: Node, enum_values: list, errs: list=None):
         if node.content not in enum_values:
             msg = f'Node "{node.name}" content should be one of "{enum_values}", not "{node.content}"'
-            raise MetapypeRuleError(msg)
+            if errs is None:
+                raise MetapypeRuleError(msg)
+            else:
+                errs.append((ValidationError.CONTENT_EXPECTED_ENUM, msg, node, enum_values, node.content))
 
     @staticmethod
-    def _validate_float_content(node: Node):
+    def _validate_int_content(node: Node, errs: list=None):
+        val = node.content
+        if val is not None and not Rule.is_int(val):
+            msg = f'Node "{node.name}" content should be type "{TYPE_INT}", not "{type(node.content)}"'
+            if errs is None:
+                raise MetapypeRuleError(msg)
+            else:
+                errs.append((ValidationError.CONTENT_EXPECTED_INT, msg, node, type(node.content)))
+
+    @staticmethod
+    def _validate_float_content(node: Node, errs: list=None):
         val = node.content
         if val is not None and not Rule.is_float(val):
             msg = f'Node "{node.name}" content should be type "{TYPE_FLOAT}", not "{type(node.content)}"'
-            raise MetapypeRuleError(msg)
+            if errs is None:
+                raise MetapypeRuleError(msg)
+            else:
+                errs.append((ValidationError.CONTENT_EXPECTED_FLOAT, msg, node, type(node.content)))
 
-    def _validate_float_range_content(self, node: Node, minmax):
-        self._validate_float_content(node)
+    def _validate_float_range_content(self, node: Node, minmax, errs: list=None):
+        self._validate_float_content(node, errs)
         float_val = float(node.content)
         if float_val < minmax[0] or float_val > minmax[1]:
             msg = f'Node "{node.name}" content should be in range {minmax}'
-            raise MetapypeRuleError(msg)
+            if errs is None:
+                raise MetapypeRuleError(msg)
+            else:
+                errs.append((ValidationError.CONTENT_EXPECTED_RANGE, msg, node, minmax[0], minmax[1], float_val))
 
-    def _validate_float_range_ew_content(self, node: Node):
-        self._validate_float_range_content(node, (-180.0, 180.0))
+    def _validate_float_range_ew_content(self, node: Node, errs: list=None):
+        self._validate_float_range_content(node, (-180.0, 180.0), errs)
 
-    def _validate_float_range_ns_content(self, node: Node):
-        self._validate_float_range_content(node, (-90.0, 90.0))
+    def _validate_float_range_ns_content(self, node: Node, errs: list=None):
+        self._validate_float_range_content(node, (-90.0, 90.0), errs)
 
     @staticmethod
-    def _validate_non_empty_content(node: Node):
-        if len(node.children) == 0 and node.content is None:
+    def _validate_non_empty_content(node: Node, errs: list=None):
+        # if len(node.children) == 0 and node.content is None:
+        if node.content is None or len(str(node.content)) == 0:
             msg = f'Node "{node.name}" content should not be empty'
-            raise MetapypeRuleError(msg)
+            if errs is None:
+                raise MetapypeRuleError(msg)
+            else:
+                errs.append((ValidationError.CONTENT_EXPECTED_NONEMPTY, msg, node))
 
     @staticmethod
-    def _validate_str_content(node: Node):
+    def _validate_str_content(node: Node, errs: list=None):
         if node.content is not None and type(node.content) is not str:
             msg = f'Node "{node.name}" content should be type "{TYPE_STR}", not "{type(node.content)}"'
-            raise MetapypeRuleError(msg)
+            if errs is None:
+                raise MetapypeRuleError(msg)
+            else:
+                errs.append((ValidationError.CONTENT_EXPECTED_STRING, msg, node, type(node.content)))
 
     @staticmethod
-    def _validate_time_content(node: Node):
+    def _validate_time_content(node: Node, errs: list=None):
         val = node.content
         if val is not None and not Rule.is_time(val):
             msg = f'Node "{node.name}" format should be time ("HH:MM:SS" or "HH:MM:SS.f")'
-            raise MetapypeRuleError(msg)
+            if errs is None:
+                raise MetapypeRuleError(msg)
+            else:
+                errs.append((ValidationError.CONTENT_EXPECTED_TIME_FORMAT, msg, node, node.content))
 
     @staticmethod
-    def _validate_yeardate_content(node: Node):
+    def _validate_yeardate_content(node: Node, errs: list=None):
         val = node.content
         if val is not None and not Rule.is_yeardate(val):
             msg = f'Node "{node.name}" format should be year ("YYYY") or date ("YYYY-MM-DD")'
-            raise MetapypeRuleError(msg)
+            if errs is None:
+                raise MetapypeRuleError(msg)
+            else:
+                errs.append((ValidationError.CONTENT_EXPECTED_YEAR_FORMAT, msg, node, node.content))
 
-    def _validate_attributes(self, node: Node) -> None:
+    def _validate_attributes(self, node: Node, errs: list=None) -> None:
         """
         Validates node attributes for rule compliance.
 
@@ -325,7 +357,7 @@ class Rule(object):
         the node instance complies with the rule.
 
         Args:
-            node: Node instance to be validates
+            node: Node instance to be validated
 
         Returns:
             None
@@ -338,12 +370,18 @@ class Rule(object):
             # Test for required attributes
             if required and attribute not in node.attributes:
                 msg = f'"{attribute}" is a required attribute of node "{node.name}"'
-                raise MetapypeRuleError(msg)
+                if errs is None:
+                    raise MetapypeRuleError(msg)
+                else:
+                    errs.append((ValidationError.ATTRIBUTE_REQUIRED, msg, node, attribute))
         for attribute in node.attributes:
             # Test for non-allowed attribute
             if attribute not in self._attributes:
                 msg = f'"{attribute}" is not a recognized attributes of node "{node.name}"'
-                raise MetapypeRuleError(msg)
+                if errs is None:
+                    raise MetapypeRuleError(msg)
+                else:
+                    errs.append((ValidationError.ATTRIBUTE_UNRECOGNIZED, msg, node, attribute))
             else:
                 # Test for enumerated list of allowed values
                 if (
@@ -352,9 +390,12 @@ class Rule(object):
                     not in self._attributes[attribute][1:]
                 ):
                     msg = f'Node "{node.name}" attribute "{attribute}" must be one of the following: "{self._attributes[attribute][1:]}"'
-                    raise MetapypeRuleError(msg)
+                    if errs is None:
+                        raise MetapypeRuleError(msg)
+                    else:
+                        errs.append((ValidationError.ATTRIBUTE_EXPECTED_ENUM, msg, node, attribute, self._attributes[attribute][1:]))
 
-    def _validate_children(self, node: Node) -> None:
+    def _validate_children(self, node: Node, errs: list=None) -> None:
         """
         Validates node children for rule compliance.
 
@@ -384,7 +425,10 @@ class Rule(object):
                     cnt += 1
                     if max is not INFINITY and cnt > max:
                         msg = f'Maximum occurrence of "{name}" exceeded for "{node.name}"'
-                        raise MetapypeRuleError(msg)
+                        if errs is None:
+                            raise MetapypeRuleError(msg)
+                        else:
+                            errs.append((ValidationError.MAX_OCCURRENCE_EXCEEDED, msg, node, child_name, max))
                     i += 1
                 else:
                     break
@@ -392,11 +436,17 @@ class Rule(object):
                 msg = (
                     f'Minimum occurrence of "{name}" not met for "{node.name}"'
                 )
-                raise MetapypeRuleError(msg)
+                if errs is None:
+                    raise MetapypeRuleError(msg)
+                else:
+                    errs.append((ValidationError.MIN_OCCURRENCE_UNMET, msg, node, name, min))
         if i < max_i:
             child_name = node.children[i].name
             msg = f'Child "{child_name}" not allowed  for "{node.name}"'
-            raise MetapypeRuleError(msg)
+            if errs is None:
+                raise MetapypeRuleError(msg)
+            else:
+                errs.append((ValidationError.CHILD_NOT_ALLOWED, msg, node, child_name))
 
     @property
     def name(self):
@@ -713,6 +763,7 @@ node_mappings = {
     names.STUDYAREADESCRIPTION: RULE_STUDYAREADESCRIPTION,
     names.STUDYEXTENT: RULE_STUDYEXTENT,
     names.SURNAME: RULE_ANYNAME,
+    names.TAXONID: RULE_ANYSTRING,
     names.TAXONOMICCLASSIFICATION: RULE_TAXONOMICCLASSIFICATION,
     names.TAXONOMICCOVERAGE: RULE_TAXONOMICCOVERAGE,
     names.TAXONRANKNAME: RULE_ANYSTRING,

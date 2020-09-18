@@ -166,13 +166,18 @@ class Node(object):
 
     def copy(self):
         """
-        Returns a deep copy (including all children) of the node.
+        Returns a deep copy (including all children) of the node. All nodes are given new node IDs.
 
         Returns:
             Node
 
         """
-        return copy.deepcopy(self)
+        _copy = copy.copy(self)
+        _copy._id = str(uuid.uuid1())
+        Node.set_node_instance(_copy)
+        for child in self.children:
+            child.copy()
+        return _copy
 
     def find_all_children(self, child_name):
         """
@@ -317,6 +322,16 @@ class Node(object):
                 next_generation.extend(node.find_all_children(name))
             current_list = next_generation
         return current_list
+
+    def get_ancestry(self):
+        ancestry = []
+        node = self
+        while True:
+            ancestry.insert(0, node)
+            node = node.parent
+            if not node:
+                break
+        return ancestry
 
     @property
     def name(self):
