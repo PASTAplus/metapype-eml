@@ -43,7 +43,7 @@ def _dataset_rule(node: Node) -> list:
     coverage_node = None
     datatable_node = None
     intellectual_rights_node = None
-    keywordset_node = None
+    keywordset_nodes = []
     methods_node = None
     project_node = None
     for child in node.children:
@@ -56,7 +56,7 @@ def _dataset_rule(node: Node) -> list:
         elif child.name == names.INTELLECTUALRIGHTS:
             intellectual_rights_node = child
         elif child.name == names.KEYWORDSET:
-            keywordset_node = child
+            keywordset_nodes.append(child)
         elif child.name == names.METHODS:
             methods_node = child
         elif child.name == names.PROJECT:
@@ -103,18 +103,23 @@ def _dataset_rule(node: Node) -> list:
             f'An Intellectual Rights policy should be specified.',
             node
         ))
-    if not (keywordset_node and keywordset_node.children):
+    if not keywordset_nodes:
         evaluation.append((
             EvaluationWarning.KEYWORDS_MISSING,
             f'Keywords should be provided to make the dataset more discoverable.',
             node
         ))
-    elif len(keywordset_node.children) < 5:
-        evaluation.append((
-            EvaluationWarning.KEYWORDS_INSUFFICIENT,
-            f'Consider adding more keywords to make the dataset more discoverable.',
-            node
-        ))
+    else:
+        num_keywords = 0
+        for keywordset_node in keywordset_nodes:
+            keyword_nodes = keywordset_node.find_all_children(names.KEYWORD)
+            num_keywords += len(keyword_nodes)
+        if num_keywords < 5:
+            evaluation.append((
+                EvaluationWarning.KEYWORDS_INSUFFICIENT,
+                f'Consider adding more keywords to make the dataset more discoverable.',
+                node
+            ))
     if not methods_node:
         evaluation.append((
             EvaluationWarning.DATASET_METHOD_STEPS_MISSING,
