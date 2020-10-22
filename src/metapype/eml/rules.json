@@ -797,7 +797,8 @@
             ["abstract", 0, 1],
             ["funding", 0, 1],
             ["award", 0, null],
-            ["studyAreaDescription", 0, 1]
+            ["studyAreaDescription", 0, 1],
+            ["relatedProject", 0, null]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -831,6 +832,24 @@
         [
             ["beginDate", 1, 1],
             ["endDate", 1, 1]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "relatedProjectRule" : [
+        {
+            "id": [false],
+            "system": [false],
+            "scope": [false, "document", "system"]
+        },
+        [
+            ["title", 1, null],
+            ["personnel", 1, null],
+            ["abstract", 0, 1],
+            ["funding", 0, 1],
+            ["award", 0, null],
+            ["studyAreaDescription", 0, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
