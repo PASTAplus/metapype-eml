@@ -1472,10 +1472,10 @@ identified as moss or lichen."
     with open("test_eml.xml", "w") as f:
         f.write(xml)
 
-    evaluation = {}
-    evaluate.tree(eml, evaluation)
-    for e in evaluation:
-        print(f"{e}: {evaluation[e]}")
+    warnings = []
+    evaluate.tree(eml, warnings)
+    for w in warnings:
+        print(f"{w}")
 
     other_entity_rule = rule.get_rule(names.OTHERENTITY)
     try:
