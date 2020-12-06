@@ -52,9 +52,9 @@ def load_rules():
         json_path = Config.EML_RULES
 
     with open(json_path) as fh:
-        rules_dict = json.load(fh)
+        _rules_dict = json.load(fh)
 
-    return rules_dict
+    return _rules_dict
 
 
 rules_dict = load_rules()
@@ -187,14 +187,14 @@ class Rule(object):
     def has_enum_content(self):
         return "content_enum" in self._content
 
-    def validate_rule(self, node: Node, errs: list=None):
+    def validate_rule(self, node: Node, errs: list = None):
         """
         Validates a node for rule compliance by validating the node's
         content, attributes, and children.
 
         Args:
             node: Node instance to be validates
-
+            errs: List of validation errors
         Returns:
             None
 
@@ -205,7 +205,7 @@ class Rule(object):
         self._validate_attributes(node, errs)
         self._validate_children(node, errs)
 
-    def _get_child_position(self, node: Node, errs: list=None):
+    def _get_child_position(self, node: Node, errs: list = None):
         for position in range(len(self.children)):
             if node.name in self.children[position][:-2]:
                 return position
@@ -213,10 +213,9 @@ class Rule(object):
         if errs is None:
             raise MetapypeRuleError(msg)
         else:
-            errs.append((ValidationError.CHILD_NOT_ALLOWED, msg, node, self._rule_name))
+            errs.append((ValidationError.CHILD_NOT_ALLOWED, msg, node, self._name))
 
-
-    def _validate_content(self, node: Node, errs: list=None):
+    def _validate_content(self, node: Node, errs: list = None):
         """
         Validates node content for rule compliance.
         For each of the content rules configured for this rule,
@@ -257,7 +256,7 @@ class Rule(object):
             self._validate_enum_content(node, enum_values, errs)
 
     @staticmethod
-    def _validate_empty_content(node: Node, errs: list=None):
+    def _validate_empty_content(node: Node, errs: list = None):
         if node.content is not None:
             msg = f'Node "{node.name}" content should be empty'
             if errs is None:
@@ -266,7 +265,7 @@ class Rule(object):
                 errs.append((ValidationError.CONTENT_EXPECTED_EMPTY, msg, node, node.content))
 
     @staticmethod
-    def _validate_enum_content(node: Node, enum_values: list, errs: list=None):
+    def _validate_enum_content(node: Node, enum_values: list, errs: list = None):
         if node.content not in enum_values:
             msg = f'Node "{node.name}" content should be one of "{enum_values}", not "{node.content}"'
             if errs is None:
@@ -275,7 +274,7 @@ class Rule(object):
                 errs.append((ValidationError.CONTENT_EXPECTED_ENUM, msg, node, enum_values, node.content))
 
     @staticmethod
-    def _validate_int_content(node: Node, errs: list=None):
+    def _validate_int_content(node: Node, errs: list = None):
         val = node.content
         if val is not None and not Rule.is_int(val):
             msg = f'Node "{node.name}" content should be type "{TYPE_INT}", not "{type(node.content)}"'
@@ -285,7 +284,7 @@ class Rule(object):
                 errs.append((ValidationError.CONTENT_EXPECTED_INT, msg, node, type(node.content)))
 
     @staticmethod
-    def _validate_float_content(node: Node, errs: list=None):
+    def _validate_float_content(node: Node, errs: list = None):
         val = node.content
         if val is not None and not Rule.is_float(val):
             msg = f'Node "{node.name}" content should be type "{TYPE_FLOAT}", not "{type(node.content)}"'
@@ -294,7 +293,7 @@ class Rule(object):
             else:
                 errs.append((ValidationError.CONTENT_EXPECTED_FLOAT, msg, node, type(node.content)))
 
-    def _validate_float_range_content(self, node: Node, minmax, errs: list=None):
+    def _validate_float_range_content(self, node: Node, minmax, errs: list = None):
         self._validate_float_content(node, errs)
         float_val = float(node.content)
         if float_val < minmax[0] or float_val > minmax[1]:
@@ -304,14 +303,14 @@ class Rule(object):
             else:
                 errs.append((ValidationError.CONTENT_EXPECTED_RANGE, msg, node, minmax[0], minmax[1], float_val))
 
-    def _validate_float_range_ew_content(self, node: Node, errs: list=None):
+    def _validate_float_range_ew_content(self, node: Node, errs: list = None):
         self._validate_float_range_content(node, (-180.0, 180.0), errs)
 
-    def _validate_float_range_ns_content(self, node: Node, errs: list=None):
+    def _validate_float_range_ns_content(self, node: Node, errs: list = None):
         self._validate_float_range_content(node, (-90.0, 90.0), errs)
 
     @staticmethod
-    def _validate_non_empty_content(node: Node, errs: list=None):
+    def _validate_non_empty_content(node: Node, errs: list = None):
         # if len(node.children) == 0 and node.content is None:
         if node.content is None or len(str(node.content)) == 0:
             msg = f'Node "{node.name}" content should not be empty'
@@ -321,7 +320,7 @@ class Rule(object):
                 errs.append((ValidationError.CONTENT_EXPECTED_NONEMPTY, msg, node))
 
     @staticmethod
-    def _validate_str_content(node: Node, errs: list=None):
+    def _validate_str_content(node: Node, errs: list = None):
         if node.content is not None and type(node.content) is not str:
             msg = f'Node "{node.name}" content should be type "{TYPE_STR}", not "{type(node.content)}"'
             if errs is None:
@@ -330,7 +329,7 @@ class Rule(object):
                 errs.append((ValidationError.CONTENT_EXPECTED_STRING, msg, node, type(node.content)))
 
     @staticmethod
-    def _validate_time_content(node: Node, errs: list=None):
+    def _validate_time_content(node: Node, errs: list = None):
         val = node.content
         if val is not None and not Rule.is_time(val):
             msg = f'Node "{node.name}" format should be time ("HH:MM:SS" or "HH:MM:SS.f")'
@@ -340,7 +339,7 @@ class Rule(object):
                 errs.append((ValidationError.CONTENT_EXPECTED_TIME_FORMAT, msg, node, node.content))
 
     @staticmethod
-    def _validate_yeardate_content(node: Node, errs: list=None):
+    def _validate_yeardate_content(node: Node, errs: list = None):
         val = node.content
         if val is not None and not Rule.is_yeardate(val):
             msg = f'Node "{node.name}" format should be year ("YYYY") or date ("YYYY-MM-DD")'
@@ -349,7 +348,7 @@ class Rule(object):
             else:
                 errs.append((ValidationError.CONTENT_EXPECTED_YEAR_FORMAT, msg, node, node.content))
 
-    def _validate_attributes(self, node: Node, errs: list=None) -> None:
+    def _validate_attributes(self, node: Node, errs: list = None) -> None:
         """
         Validates node attributes for rule compliance.
 
@@ -395,7 +394,7 @@ class Rule(object):
                     else:
                         errs.append((ValidationError.ATTRIBUTE_EXPECTED_ENUM, msg, node, attribute, self._attributes[attribute][1:]))
 
-    def _validate_children(self, node: Node, errs: list=None) -> None:
+    def _validate_children(self, node: Node, errs: list = None) -> None:
         """
         Validates node children for rule compliance.
 
