@@ -16,6 +16,7 @@
 import daiquiri
 
 from metapype.model.node import Node
+from xml.sax.saxutils import escape, unescape
 
 
 logger = daiquiri.getLogger("export: " + __name__)
@@ -49,6 +50,14 @@ def to_xml(node: Node, level: int = 0) -> str:
     close_tag = "</" + name + ">"
     xml += indent + open_tag
     if node.content is not None:
+        if isinstance(node.content, str):
+            # if it hasn't been escaped already, escape it
+            if all (x not in node.content for x in ('&amp;', '&lt;', '&gt;')):
+                node.content = escape(node.content)
+                # Hopefully, this is a temporary hack. Need to figure out a better way...
+                # The problem is that <para> tags are treated idiosyncratically because their rules aren't fully
+                #  supported. They appear within node content, unlike other tags.
+                node.content = node.content.replace('&lt;para&gt;', '<para>').replace('&lt;/para&gt;', '</para>')
         xml += str(node.content) + close_tag + "\n"
         closed = True
     elif len(node.children) > 0:
