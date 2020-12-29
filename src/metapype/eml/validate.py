@@ -30,15 +30,16 @@ def node(node: Node, errs: list=None) -> None:
 
     Args:
         node: Node instance to be validated
+        errs: List container for validation errors (fail fast if None)
 
     Returns:
         None
 
     Raises:
-        MetapypeRuleError: An unknown type of node for EML 2.1.1
+        MetapypeRuleError: An unknown type of node for EML
     """
     if node.name not in rule.node_mappings:
-        msg = "Unknown node: {}".format(node.name)
+        msg = f"Unknown node rule type: {node.name}"
         if errs is None:
             raise MetapypeRuleError(msg)
         else:
