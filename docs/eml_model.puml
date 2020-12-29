@@ -75,7 +75,7 @@ class contact {
 class individualName_contact {
     name: 'individualName'
     attributes: {}
-    contents: None
+    content: None
     parent: creator
     children: [surName_contact]
 }
@@ -83,7 +83,7 @@ class individualName_contact {
 class surName_contact {
     name: 'surName'
     attributes: {}
-    contents: 'Gaucho'
+    content: 'Gaucho'
     parent: individualName_contact
     children: []
 }
@@ -91,7 +91,7 @@ class surName_contact {
 class individualName_creator {
     name: 'individualName'
     attributes: {}
-    contents: None
+    content: None
     parent: creator
     children: [surName_creator]
 }
@@ -99,7 +99,7 @@ class individualName_creator {
 class surName_creator {
     name: 'surName'
     attributes: {}
-    contents: 'Gaucho'
+    content: 'Gaucho'
     parent: individualName_creator
     children: []
 }
