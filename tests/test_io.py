@@ -16,7 +16,7 @@
 import daiquiri
 
 from metapype.eml import names
-from metapype.model import mp_io
+from metapype.model import metapype_io
 from metapype.model.node import Node
 
 
@@ -39,5 +39,5 @@ def test_to_json():
     permission = Node(names.PERMISSION, parent=allow)
     permission.content = "all"
     allow.add_child(permission)
-    j = mp_io.to_json(eml)
+    j = metapype_io.to_json(eml)
     assert isinstance(j, str)

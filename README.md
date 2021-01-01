@@ -216,9 +216,11 @@ root node as defined by  the "eml" name should be passed).
 The following code example demonstrates these two steps:
 
 ```Python
-from metapype.eml2_1_1.exceptions import MetapypeRuleError
-import metapype.eml2_1_1.names as names
-import metapype.eml2_1_1.validate as validate
+import logging
+
+from metapype.eml.exceptions import MetapypeRuleError
+import metapype.eml.names as names
+import metapype.eml.validate as validate
 from metapype.model.node import Node
 
 def main():
@@ -272,10 +274,10 @@ def main():
 
     try:
         validate.tree(eml)
-    except  MetapypeRuleError as e:
-        logger.error(e)
-
-   return 0
+    except MetapypeRuleError as e:
+        logging.error(e)
+        
+    return 0
 
 if __name__ == "__main__":
     main()
@@ -296,23 +298,29 @@ using both the *XML* and *JSON* functions:
 
 ```Python
 import json
-import metapype.eml_2_1_1.export
-import metapype.model.io
+import metapype.eml.export
+import metapype.eml.names as names
+import metapype.model.metapype_io
+from metapype.model.node import Node
 
 # Write EML XML
-xml_str = metapype.eml2_1_1.export.to_xml(eml)
+eml = Node(names.EML)
+eml.add_attribute('packageId', 'edi.23.1')
+eml.add_attribute('system', 'metapype')
+
+xml_str = metapype.eml.export.to_xml(eml)
 with open('test_eml.xml', 'w') as f:
     f.write(xml_str)
 
 # Write JSON
-json_str = metapype.model.io.to_json(eml)
+json_str = metapype.model.metapype_io.to_json(eml)
 with open('test_eml.json', 'w') as f:
     f.write(json_str)
 
 # Read JSON
 with open('test_eml.json', 'r') as f:
     json_str = f.read()
-eml = metapype.model.io.from_json(json.loads(json_str))
+eml = metapype.model.metapype_io.from_json(json.loads(json_str))
 
 ```
 

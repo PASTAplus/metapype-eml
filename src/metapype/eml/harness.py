@@ -14,6 +14,8 @@
     6/5/18
 """
 import json
+import logging
+import os
 
 import daiquiri
 
@@ -24,10 +26,14 @@ from metapype.eml import names
 from metapype.eml import rule
 from metapype.eml import validate
 from metapype.model import mp_io
+from metapype.model import metapype_io
 from metapype.model.node import Node
 
-
-logger = daiquiri.getLogger("harness: " + __name__)
+cwd = os.path.dirname(os.path.realpath(__file__))
+logfile = cwd + "/harness.log"
+daiquiri.setup(level=logging.INFO,
+               outputs=(daiquiri.output.File(logfile), "stdout",))
+logger = daiquiri.getLogger(__name__)
 
 
 def main():
@@ -1454,13 +1460,12 @@ identified as moss or lichen."
 
     print(access.list_attributes())
 
-    json_str = mp_io.to_json(eml)
+    json_str = metapype_io.to_json(eml)
     print(json_str)
     with open("test_eml.json", "w") as f:
         f.write(json_str)
 
-    m = json.loads(json_str)
-    node = mp_io.from_json(m)
+    node = metapype_io.from_json(json_str)
 
     try:
         validate.tree(node)
