@@ -18,6 +18,7 @@ import os
 
 import daiquiri
 import datetime
+from datetime import time
 import json
 
 from metapype.config import Config
@@ -129,8 +130,8 @@ class Rule(object):
                     datetime.datetime.strptime(val, yeardate_format)
                     is_valid = True
                     break
-                except ValueError:
-                    pass
+                except ValueError as ex:
+                    logger.debug(ex)
         return is_valid
 
     @staticmethod
@@ -140,13 +141,11 @@ class Rule(object):
         """
         is_valid = False
         if val and type(val) is str:
-            for time_format in ["%H:%M:%S", "%H:%M:%S.%f"]:
-                try:
-                    datetime.datetime.strptime(val, time_format)
-                    is_valid = True
-                    break
-                except ValueError:
-                    pass
+            try:
+                time.fromisoformat(val)
+                is_valid = True
+            except ValueError as ex:
+                logger.debug(ex)
         return is_valid
 
     def __init__(self, rule_name=None):
@@ -547,6 +546,7 @@ RULE_RESPONSIBLEPARTY = "responsiblePartyRule"
 RULE_RESPONSIBLEPARTY_WITH_ROLE = "responsiblePartyWithRoleRule"
 RULE_ROWCOLUMN = "rowColumnRule"
 RULE_SAMPLING = "samplingRule"
+RULE_SECTION = "sectionRule"
 RULE_SINGLEDATETIME = "singleDateTimeRule"
 RULE_SIMPLEDELIMITED = "simpleDelimitedRule"
 RULE_SIZE = "sizeRule"
@@ -738,8 +738,7 @@ node_mappings = {
     names.PUBPLACE: RULE_ANYSTRING,
     names.PURPOSE: RULE_TEXT,
     names.QUALITYCONTROL: RULE_QUALITYCONTROL,
-    names.QUANTITATIVEATTRIBUTEACCURACYASSESSMENT:
-        RULE_QUANTITATIVEATTRIBUTEACCURACYASSESSMENT,
+    names.QUANTITATIVEATTRIBUTEACCURACYASSESSMENT: RULE_QUANTITATIVEATTRIBUTEACCURACYASSESSMENT,
     names.QUOTECHARACTER: RULE_ANYSTRING,
     names.RANGEOFDATES: RULE_RANGEOFDATES,
     names.RATIO: RULE_INTERVALRATIO,
@@ -750,7 +749,7 @@ node_mappings = {
     names.SALUTATION: RULE_ANYNAME,
     names.SAMPLING: RULE_SAMPLING,
     names.SAMPLINGDESCRIPTION: RULE_TEXT,
-    names.SECTION: RULE_ANYSTRING,
+    names.SECTION: RULE_SECTION,
     names.SERIES: RULE_ANYSTRING,
     names.SHORTNAME: RULE_ANYSTRING,
     names.SIMPLEDELIMITED: RULE_SIMPLEDELIMITED,
