@@ -13,8 +13,11 @@
 :Created:
     1/14/19
 """
+import os
+
 import daiquiri
 
+from metapype.config import Config
 from metapype.eml import names
 from metapype.eml import validate
 from metapype.model import metapype_io
@@ -25,7 +28,13 @@ logger = daiquiri.getLogger("test_io: " + __name__)
 
 
 def test_from_json():
-    with open("./data/eml.json", "r") as f:
+
+    if "EML_JSON" in os.environ:
+        json_path = os.environ["EML_JSON"]
+    else:
+        json_path = Config.EML_JSON
+
+    with open(json_path, "r") as f:
         eml_json = "".join([_ for _ in f.readlines()])
     eml = metapype_io.from_json(eml_json)
     validate.tree(eml)

@@ -21,3 +21,4 @@ logger = daiquiri.getLogger("config.py: " + __name__)
 
 class Config(object):
     EML_RULES = "absolute path of EML rules JSON file"
+    EML_JSON = "absolute path of EML JSON test file for unit testing"
