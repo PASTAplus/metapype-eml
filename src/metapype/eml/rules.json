@@ -243,6 +243,15 @@
             "content_rules" : ["emptyContent"]
         }
     ],
+    "calendarDateRule" : [
+        { 
+        },
+        [
+        ],
+        {
+            "content_rules" : ["yearDateContent"]
+        }
+    ],
     "codeDefinitionRule" : [
         { 
             "order": [false]
@@ -452,7 +461,7 @@
             "enforced": [false]
         },
         [
-            ["codeDefinition", "externalCodeSet", "entityCodeList", 1, null]
+            ["codeDefinition", "externalCodeSet", "entityCodeList", 1, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -986,7 +995,7 @@
         { 
         },
         [
-            ["coverage", "description", 1, 1]
+            ["coverage", "description", 1, null]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -1100,6 +1109,15 @@
         ],
         {
             "content_rules" : ["strContent"]
+        }
+    ],
+    "timeRule" : [
+        {
+        },
+        [
+        ],
+        {
+            "content_rules" : ["timeContent"]
         }
     ],
     "unitRule" : [
