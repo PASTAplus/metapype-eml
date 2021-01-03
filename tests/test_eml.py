@@ -143,9 +143,8 @@ def node():
     abstract.add_attribute("lang", "en")
     section = Node(names.SECTION, parent=abstract)
     abstract.add_child(section)
-    section.content = "abstract section"
     para = Node(names.PARA, parent=abstract)
-    abstract.add_child(para)
+    section.add_child(para)
     para.content = "para section"
     dataset.add_child(abstract)
 
@@ -313,6 +312,15 @@ def test_is_yeardate():
         assert rule.Rule.is_yeardate(good_val)
     for bad_val in bad_vals:
         assert not rule.Rule.is_yeardate(bad_val)
+
+
+def test_is_time():
+    good_vals = ["12:00", "12:00:00", "12:00:00.000", "12:00:00.000-06:00"]
+    bad_vals = ["2:00", "12:00:0", "12:00:00.00", "12:00:00.000-06"]
+    for good_val in good_vals:
+        assert rule.Rule.is_time(good_val)
+    for bad_val in bad_vals:
+        assert not rule.Rule.is_time(bad_val)
 
 
 # Test whether a value is, or can be converted to, a float

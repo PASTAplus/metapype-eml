@@ -14,6 +14,8 @@
     6/5/18
 """
 import json
+import logging
+import os
 
 import daiquiri
 
@@ -24,10 +26,15 @@ from metapype.eml import names
 from metapype.eml import rule
 from metapype.eml import validate
 from metapype.model import mp_io
+from metapype.model import metapype_io
 from metapype.model.node import Node
 
-
-logger = daiquiri.getLogger("harness: " + __name__)
+cwd = os.path.dirname(os.path.realpath(__file__))
+logfile = cwd + "/harness.log"
+daiquiri.setup(
+    level=logging.INFO, outputs=(daiquiri.output.File(logfile), "stdout",)
+)
+logger = daiquiri.getLogger(__name__)
 
 
 def main():
@@ -78,18 +85,16 @@ def main():
 
     section_1 = Node(names.SECTION, parent=abstract)
     abstract.add_child(section_1)
-    section_1.content = "This is abstract Section 1"
 
     section_2 = Node(names.SECTION, parent=abstract)
     abstract.add_child(section_2)
-    section_2.content = "This is abstract Section 2"
 
-    para_1 = Node(names.PARA, parent=abstract)
-    abstract.add_child(para_1)
+    para_1 = Node(names.PARA, parent=section_1)
+    section_1.add_child(para_1)
     para_1.content = "This is abstract Para 1"
 
-    para_2 = Node(names.PARA, parent=abstract)
-    abstract.add_child(para_2)
+    para_2 = Node(names.PARA, parent=section_2)
+    section_2.add_child(para_2)
     para_2.content = "This is abstract Para 2"
 
     intellectualRights = Node(names.INTELLECTUALRIGHTS, parent=dataset)
@@ -97,18 +102,16 @@ def main():
 
     section_3 = Node(names.SECTION, parent=intellectualRights)
     intellectualRights.add_child(section_3)
-    section_3.content = "This is intellectualRights Section 3"
 
     section_4 = Node(names.SECTION, parent=intellectualRights)
     intellectualRights.add_child(section_4)
-    section_4.content = "This is intellectualRights Section 4"
 
-    para_3 = Node(names.PARA, parent=intellectualRights)
-    intellectualRights.add_child(para_3)
+    para_3 = Node(names.PARA, parent=section_3)
+    section_3.add_child(para_3)
     para_3.content = "This is intellectualRights Para 3"
 
-    para_4 = Node(names.PARA, parent=intellectualRights)
-    intellectualRights.add_child(para_4)
+    para_4 = Node(names.PARA, parent=section_4)
+    section_4.add_child(para_4)
     para_4.content = "This is intellectualRights Para 4"
 
     coverage = Node(names.COVERAGE, parent=dataset)
@@ -140,9 +143,9 @@ def main():
     temporal_coverage = Node(names.TEMPORALCOVERAGE, parent=coverage)
     coverage.add_child(temporal_coverage)
 
-    single_date_time = Node(names.SINGLEDATETIME, parent=temporal_coverage)
-    temporal_coverage.add_child(single_date_time)
-    single_date_time.content = "2018"
+    # single_date_time = Node(names.SINGLEDATETIME, parent=temporal_coverage)
+    # temporal_coverage.add_child(single_date_time)
+    # single_date_time.content = "2018"
 
     range_of_dates = Node(names.RANGEOFDATES, parent=temporal_coverage)
     temporal_coverage.add_child(range_of_dates)
@@ -259,18 +262,16 @@ identified as moss or lichen."
 
     section_1 = Node(names.SECTION, parent=description)
     description.add_child(section_1)
-    section_1.content = "This is description Section 1"
 
     section_2 = Node(names.SECTION, parent=description)
     description.add_child(section_2)
-    section_2.content = "This is description Section 2"
 
-    para_1 = Node(names.PARA, parent=description)
-    description.add_child(para_1)
+    para_1 = Node(names.PARA, parent=section_1)
+    section_1.add_child(para_1)
     para_1.content = "This is description Para 1"
 
-    para_2 = Node(names.PARA, parent=description)
-    description.add_child(para_2)
+    para_2 = Node(names.PARA, parent=section_2)
+    section_2.add_child(para_2)
     para_2.content = "This is description Para 2"
 
     instrumentation_1 = Node(names.INSTRUMENTATION, parent=method_step)
@@ -342,12 +343,18 @@ identified as moss or lichen."
         names.SINGLEDATETIME, parent=study_extent_temporal_coverage
     )
     study_extent_temporal_coverage.add_child(study_extent_single_date_time)
-    study_extent_single_date_time.content = "2018"
+
+    study_extent_calendar_date = Node(names.CALENDARDATE)
+    study_extent_calendar_date.content = "2018"
+    study_extent_single_date_time.add_child(study_extent_calendar_date)
+    study_extent_time = Node(names.TIME)
+    study_extent_time.content = "14:34:32.001-06:00"
+    study_extent_single_date_time.add_child(study_extent_time)
 
     study_extent_range_of_dates = Node(
         names.RANGEOFDATES, parent=study_extent_temporal_coverage
     )
-    study_extent_temporal_coverage.add_child(study_extent_range_of_dates)
+    # study_extent_temporal_coverage.add_child(study_extent_range_of_dates)
 
     study_extent_begin_date = Node(
         names.BEGINDATE, parent=study_extent_range_of_dates
@@ -451,24 +458,18 @@ identified as moss or lichen."
         names.SECTION, parent=study_extent_description
     )
     study_extent_description.add_child(study_extent_section_1)
-    study_extent_section_1.content = (
-        "This is study_extent_description Section 1"
-    )
 
     study_extent_section_2 = Node(
         names.SECTION, parent=study_extent_description
     )
     study_extent_description.add_child(study_extent_section_2)
-    study_extent_section_2.content = (
-        "This is study_extent_description Section 2"
-    )
 
-    study_extent_para_1 = Node(names.PARA, parent=study_extent_description)
-    study_extent_description.add_child(study_extent_para_1)
+    study_extent_para_1 = Node(names.PARA, parent=study_extent_section_1)
+    study_extent_section_1.add_child(study_extent_para_1)
     study_extent_para_1.content = "This is study_extent_description Para 1"
 
-    study_extent_para_2 = Node(names.PARA, parent=study_extent_description)
-    study_extent_description.add_child(study_extent_para_2)
+    study_extent_para_2 = Node(names.PARA, parent=study_extent_section_2)
+    study_extent_section_2.add_child(study_extent_para_2)
     study_extent_para_2.content = "This is study_extent_description Para 2"
 
     sampling_description = Node(names.SAMPLINGDESCRIPTION, parent=sampling)
@@ -478,24 +479,18 @@ identified as moss or lichen."
         names.SECTION, parent=sampling_description
     )
     sampling_description.add_child(sampling_description_section_1)
-    sampling_description_section_1.content = (
-        "This is sampling_description Section 1"
-    )
 
     sampling_description_section_2 = Node(
         names.SECTION, parent=sampling_description
     )
     sampling_description.add_child(sampling_description_section_2)
-    sampling_description_section_2.content = (
-        "This is sampling_description Section 2"
-    )
 
-    sampling_description_para_1 = Node(names.PARA, parent=sampling_description)
-    sampling_description.add_child(sampling_description_para_1)
+    sampling_description_para_1 = Node(names.PARA, parent=sampling_description_section_1)
+    sampling_description_section_1.add_child(sampling_description_para_1)
     sampling_description_para_1.content = "This is sampling_description Para 1"
 
-    sampling_description_para_2 = Node(names.PARA, parent=sampling_description)
-    sampling_description.add_child(sampling_description_para_2)
+    sampling_description_para_2 = Node(names.PARA, parent=sampling_description_section_2)
+    sampling_description_section_2.add_child(sampling_description_para_2)
     sampling_description_para_2.content = "This is sampling_description Para 2"
 
     quality_control = Node(names.QUALITYCONTROL, parent=methods)
@@ -512,9 +507,6 @@ identified as moss or lichen."
     quality_control_description.add_child(
         quality_control_description_section_1
     )
-    quality_control_description_section_1.content = (
-        "This is quality_control_description Section 1"
-    )
 
     quality_control_description_section_2 = Node(
         names.SECTION, parent=quality_control_description
@@ -522,22 +514,19 @@ identified as moss or lichen."
     quality_control_description.add_child(
         quality_control_description_section_2
     )
-    quality_control_description_section_2.content = (
-        "This is quality_control_description Section 2"
-    )
 
     quality_control_description_para_1 = Node(
-        names.PARA, parent=quality_control_description
+        names.PARA, parent=quality_control_description_section_1
     )
-    quality_control_description.add_child(quality_control_description_para_1)
+    quality_control_description_section_1.add_child(quality_control_description_para_1)
     quality_control_description_para_1.content = (
         "This is quality_control_description Para 1"
     )
 
     quality_control_description_para_2 = Node(
-        names.PARA, parent=quality_control_description
+        names.PARA, parent=quality_control_description_section_2
     )
-    quality_control_description.add_child(quality_control_description_para_2)
+    quality_control_description_section_2.add_child(quality_control_description_para_2)
     quality_control_description_para_2.content = (
         "This is quality_control_description Para 2"
     )
@@ -616,8 +605,8 @@ identified as moss or lichen."
 
     authentication = Node(names.AUTHENTICATION, parent=physical)
     physical.add_child(authentication)
-    authentication.add_attribute("method", "password")
-    authentication.content = "LDAP"
+    authentication.add_attribute("method", "MD5")
+    authentication.content = "7c9e8eb43ab7b52fa9b1db7de756d6a2"
 
     compression_method = Node(names.COMPRESSIONMETHOD, parent=physical)
     physical.add_child(compression_method)
@@ -695,7 +684,7 @@ identified as moss or lichen."
     )
 
     complex = Node(names.COMPLEX, parent=text_format)
-    text_format.add_child(complex)
+    # text_format.add_child(complex)
 
     text_fixed = Node(names.TEXTFIXED, parent=complex)
     complex.add_child(text_fixed)
@@ -742,7 +731,6 @@ identified as moss or lichen."
     externally_defined_format = Node(
         names.EXTERNALLYDEFINEDFORMAT, parent=data_format
     )
-    data_format.add_child(externally_defined_format)
 
     format_name = Node(names.FORMATNAME, parent=externally_defined_format)
     externally_defined_format.add_child(format_name)
@@ -755,7 +743,6 @@ identified as moss or lichen."
     format_version.content = "2000 (9.0.2720)"
 
     binary_raster_format = Node(names.BINARYRASTERFORMAT, parent=data_format)
-    data_format.add_child(binary_raster_format)
 
     row_column_orientation = Node(
         names.ROWCOLUMNORIENTATION, parent=binary_raster_format
@@ -813,14 +800,13 @@ identified as moss or lichen."
     url.add_attribute("function", "download")
     url.content = "https://data.abc.edu/somedataset/data"
 
-    connection = Node(names.CONNECTION, parent=online)
-    online.add_child(connection)
-    connection.content = (
-        "This is not a real connection element because it is only a string."
-    )
+    # connection = Node(names.CONNECTION, parent=online)
+    # online.add_child(connection)
+    # connection.content = (
+    #     "This is not a real connection element because it is only a string."
+    # )
 
     offline = Node(names.OFFLINE, parent=distribution)
-    distribution.add_child(offline)
 
     medium_name = Node(names.MEDIUMNAME, parent=offline)
     offline.add_child(medium_name)
@@ -849,7 +835,6 @@ identified as moss or lichen."
     )
 
     inline = Node(names.INLINE, parent=distribution)
-    distribution.add_child(inline)
     inline.content = "1,2,3,4,5,6,7,8,9"
 
     datatable_access = Node(names.ACCESS, parent=distribution)
@@ -879,6 +864,9 @@ identified as moss or lichen."
     att_label_1 = Node(names.ATTRIBUTELABEL, parent=attribute_1)
     attribute_1.add_child(att_label_1)
     att_label_1.content = "Attribute Label 1"
+    att_def_1 = Node(names.ATTRIBUTEDEFINITION)
+    att_def_1.content = "Attribute 1 definition"
+    attribute_1.add_child(att_def_1)
     ms_1 = Node(names.MEASUREMENTSCALE, parent=attribute_1)
     attribute_1.add_child(ms_1)
     nominal = Node(names.NOMINAL, parent=ms_1)
@@ -903,7 +891,7 @@ identified as moss or lichen."
     code_definition.add_child(source)
     source.content = "ISO country codes"
     external_code_set = Node(names.EXTERNALCODESET, parent=enumerated_domain)
-    enumerated_domain.add_child(external_code_set)
+    # enumerated_domain.add_child(external_code_set)
     codeset_name = Node(names.CODESETNAME, parent=external_code_set)
     external_code_set.add_child(codeset_name)
     codeset_name.content = "FIPS State Abbreviation Codes"
@@ -916,7 +904,7 @@ identified as moss or lichen."
         "https://codesets.abc.edu/fips_state_abbreviation_codes"
     )
     entity_code_list = Node(names.ENTITYCODELIST, parent=enumerated_domain)
-    enumerated_domain.add_child(entity_code_list)
+    # enumerated_domain.add_child(entity_code_list)
     entity_reference = Node(names.ENTITYREFERENCE, parent=entity_code_list)
     entity_code_list.add_child(entity_reference)
     entity_reference.content = "entity_id_1"
@@ -944,6 +932,9 @@ identified as moss or lichen."
     att_label_2 = Node(names.ATTRIBUTELABEL, parent=attribute_2)
     attribute_2.add_child(att_label_2)
     att_label_2.content = "Attribute Label 2"
+    att_def_2 = Node(names.ATTRIBUTEDEFINITION)
+    att_def_2.content = "Attribute 2 definition"
+    attribute_2.add_child(att_def_2)
     ms_2 = Node(names.MEASUREMENTSCALE, parent=attribute_2)
     attribute_2.add_child(ms_2)
     ordinal = Node(names.ORDINAL, parent=ms_2)
@@ -970,6 +961,9 @@ identified as moss or lichen."
     att_label_3 = Node(names.ATTRIBUTELABEL, parent=attribute_3)
     attribute_3.add_child(att_label_3)
     att_label_3.content = "Attribute Label 3"
+    att_def_3 = Node(names.ATTRIBUTEDEFINITION)
+    att_def_3.content = "Attribute 3 definition"
+    attribute_3.add_child(att_def_3)
     storage_type = Node(names.STORAGETYPE, parent=attribute_3)
     attribute_3.add_child(storage_type)
     storage_type.add_attribute(
@@ -986,7 +980,7 @@ identified as moss or lichen."
     unit.add_child(standard_unit)
     standard_unit.content = "meter"
     custom_unit = Node(names.CUSTOMUNIT, parent=unit)
-    unit.add_child(custom_unit)
+    # unit.add_child(custom_unit)
     custom_unit.content = "metersPerOneThirdGram"
     precision = Node(names.PRECISION, parent=interval)
     interval.add_child(precision)
@@ -1015,6 +1009,9 @@ identified as moss or lichen."
     att_label_4 = Node(names.ATTRIBUTELABEL, parent=attribute_4)
     attribute_4.add_child(att_label_4)
     att_label_4.content = "Attribute Label 4"
+    att_def_4 = Node(names.ATTRIBUTEDEFINITION)
+    att_def_4.content = "Attribute 4 definition"
+    attribute_4.add_child(att_def_4)
     ms_4 = Node(names.MEASUREMENTSCALE, parent=attribute_4)
     attribute_4.add_child(ms_4)
     ratio = Node(names.RATIO, parent=ms_4)
@@ -1022,7 +1019,7 @@ identified as moss or lichen."
     unit_ratio = Node(names.UNIT, parent=ratio)
     ratio.add_child(unit_ratio)
     standard_unit_ratio = Node(names.STANDARDUNIT, parent=unit_ratio)
-    unit_ratio.add_child(standard_unit_ratio)
+    # unit_ratio.add_child(standard_unit_ratio)
     standard_unit_ratio.content = "grams"
     custom_unit_ratio = Node(names.CUSTOMUNIT, parent=unit_ratio)
     unit_ratio.add_child(custom_unit_ratio)
@@ -1034,7 +1031,7 @@ identified as moss or lichen."
     ratio.add_child(numeric_domain_ratio)
     number_type_ratio = Node(names.NUMBERTYPE, parent=numeric_domain_ratio)
     numeric_domain_ratio.add_child(number_type_ratio)
-    number_type_ratio.content = "float"
+    number_type_ratio.content = "real"
     bounds_ratio = Node(names.BOUNDS, parent=numeric_domain_ratio)
     numeric_domain_ratio.add_child(bounds_ratio)
     minimum_ratio = Node(names.MINIMUM, parent=bounds_ratio)
@@ -1054,6 +1051,9 @@ identified as moss or lichen."
     att_label_5 = Node(names.ATTRIBUTELABEL, parent=attribute_5)
     attribute_5.add_child(att_label_5)
     att_label_5.content = "Attribute Label 5"
+    att_def_5 = Node(names.ATTRIBUTEDEFINITION)
+    att_def_5.content = "Attribute 5 definition"
+    attribute_5.add_child(att_def_5)
     ms_5 = Node(names.MEASUREMENTSCALE, parent=attribute_5)
     attribute_5.add_child(ms_5)
     datetime = Node(names.DATETIME, parent=ms_5)
@@ -1201,7 +1201,7 @@ identified as moss or lichen."
     attribute_orientation.content = "column"
 
     simple_delimited = Node(names.SIMPLEDELIMITED, parent=text_format)
-    text_format.add_child(simple_delimited)
+    # text_format.add_child(simple_delimited)
 
     field_delimiter = Node(names.FIELDDELIMITER, parent=simple_delimited)
     simple_delimited.add_child(field_delimiter)
@@ -1271,7 +1271,7 @@ identified as moss or lichen."
     externally_defined_format = Node(
         names.EXTERNALLYDEFINEDFORMAT, parent=data_format
     )
-    data_format.add_child(externally_defined_format)
+    # data_format.add_child(externally_defined_format)
 
     format_name = Node(names.FORMATNAME, parent=externally_defined_format)
     externally_defined_format.add_child(format_name)
@@ -1284,7 +1284,7 @@ identified as moss or lichen."
     format_version.content = "2000 (9.0.2720)"
 
     binary_raster_format = Node(names.BINARYRASTERFORMAT, parent=data_format)
-    data_format.add_child(binary_raster_format)
+    # data_format.add_child(binary_raster_format)
 
     row_column_orientation = Node(
         names.ROWCOLUMNORIENTATION, parent=binary_raster_format
@@ -1331,7 +1331,7 @@ identified as moss or lichen."
     physical.add_child(distribution)
 
     online = Node(names.ONLINE, parent=distribution)
-    distribution.add_child(online)
+    # distribution.add_child(online)
 
     online_description = Node(names.ONLINEDESCRIPTION, parent=online)
     online.add_child(online_description)
@@ -1342,11 +1342,11 @@ identified as moss or lichen."
     url.add_attribute("function", "download")
     url.content = "https://data.abc.edu/somedataset/other_entity_data"
 
-    connection = Node(names.CONNECTION, parent=online)
-    online.add_child(connection)
-    connection.content = (
-        "This is not a real connection element because it is only a string."
-    )
+    # connection = Node(names.CONNECTION, parent=online)
+    # online.add_child(connection)
+    # connection.content = (
+    #     "This is not a real connection element because it is only a string."
+    # )
 
     offline = Node(names.OFFLINE, parent=distribution)
     distribution.add_child(offline)
@@ -1378,7 +1378,7 @@ identified as moss or lichen."
     )
 
     inline = Node(names.INLINE, parent=distribution)
-    distribution.add_child(inline)
+    # distribution.add_child(inline)
     inline.content = "1,2,3,4,5,6,7,8,9"
 
     other_entity_access = Node(names.ACCESS, parent=distribution)
@@ -1429,9 +1429,9 @@ identified as moss or lichen."
         access_rule.validate_rule(access)
     except MetapypeRuleError as e:
         logger.error(e)
-    print(access_rule.attributes)
-    print(access_rule.children)
-    print(access_rule.content_rules)
+    # print(access_rule.attributes)
+    # print(access_rule.children)
+    # print(access_rule.content_rules)
 
     try:
         validate.node(access)
@@ -1439,28 +1439,31 @@ identified as moss or lichen."
         logger.error(e)
 
     try:
-        validate.tree(eml)
+        errors = []
+        validate.tree(eml, errors)
     except MetapypeRuleError as e:
         logger.error(e)
 
-    print(evaluate.node(title))
+    for error in errors:
+        print(error)
 
-    mp_io.graph(eml, 0)
+    # print(evaluate.node(title))
+    #
+    # mp_io.graph(eml, 0)
+    #
+    # attr = access_rule.attributes
+    # print(attr)
+    # children = access_rule.children
+    # print(children)
+    #
+    # print(access.list_attributes())
 
-    attr = access_rule.attributes
-    print(attr)
-    children = access_rule.children
-    print(children)
-
-    print(access.list_attributes())
-
-    json_str = mp_io.to_json(eml)
-    print(json_str)
+    json_str = metapype_io.to_json(eml)
+    # print(json_str)
     with open("test_eml.json", "w") as f:
         f.write(json_str)
 
-    m = json.loads(json_str)
-    node = mp_io.from_json(m)
+    node = metapype_io.from_json(json_str)
 
     try:
         validate.tree(node)
@@ -1468,20 +1471,20 @@ identified as moss or lichen."
         logger.error(e)
     #
     xml = export.to_xml(eml)
-    print(xml)
+    # print(xml)
     with open("test_eml.xml", "w") as f:
         f.write(xml)
 
-    warnings = []
-    evaluate.tree(eml, warnings)
-    for w in warnings:
-        print(f"{w}")
-
-    other_entity_rule = rule.get_rule(names.OTHERENTITY)
-    try:
-        other_entity_rule.validate_rule(other_entity)
-    except MetapypeRuleError as e:
-        logger.error(e)
+    # warnings = []
+    # evaluate.tree(eml, warnings)
+    # for w in warnings:
+    #     print(f"{w}")
+    #
+    # other_entity_rule = rule.get_rule(names.OTHERENTITY)
+    # try:
+    #     other_entity_rule.validate_rule(other_entity)
+    # except MetapypeRuleError as e:
+    #     logger.error(e)
 
     return 0
 
