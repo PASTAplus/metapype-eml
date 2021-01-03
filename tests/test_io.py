@@ -16,11 +16,19 @@
 import daiquiri
 
 from metapype.eml import names
+from metapype.eml import validate
 from metapype.model import metapype_io
 from metapype.model.node import Node
 
 
 logger = daiquiri.getLogger("test_io: " + __name__)
+
+
+def test_from_json():
+    with open("./data/eml.json", "r") as f:
+        eml_json = "".join([_ for _ in f.readlines()])
+    eml = metapype_io.from_json(eml_json)
+    validate.tree(eml)
 
 
 def test_to_json():
