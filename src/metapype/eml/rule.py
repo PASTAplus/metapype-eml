@@ -215,15 +215,24 @@ class Rule(object):
         self._validate_attributes(node, errs)
         self._validate_children(node, errs)
 
-    def _get_child_position(self, node: Node, errs: list = None):
+    def _get_child_position(self, node: Node):
+        """
+        Returns the permitted position of a child node for a given rule type
+
+        Args:
+            node: Child node seeking position in sequence of allowable children
+
+        Returns:
+            position: Integer value of child node position
+
+        Raises:
+            MetapypeRuleError: Child node not permitted by given rule type
+        """
         for position in range(len(self.children)):
             if node.name in self.children[position][:-2]:
                 return position
         msg = f'Child "{node.name}" not allowed'
-        if errs is None:
-            raise MetapypeRuleError(msg)
-        else:
-            errs.append((ValidationError.CHILD_NOT_ALLOWED, msg, node, self._name))
+        raise MetapypeRuleError(msg)
 
     def _validate_content(self, node: Node, errs: list = None):
         """
