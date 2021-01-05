@@ -294,6 +294,8 @@ def test_is_allowed_child():
 
 def test_child_insert_index():
     eml = Node(names.EML)
+    eml.add_attribute("packageId", "edi.23.1")
+    eml.add_attribute("system", "metapype")
     access = Node(names.ACCESS, parent=eml)
     eml.add_child(access)
     additional_metadata = Node(names.ADDITIONALMETADATA, parent=eml)
@@ -302,7 +304,7 @@ def test_child_insert_index():
     dataset = Node(names.DATASET, parent=eml)
     index = r.child_insert_index(eml, dataset)
     eml.add_child(dataset, index=index)
-    assert isinstance(index, int)
+    validate.node(eml)
 
 
 def test_is_yeardate():
