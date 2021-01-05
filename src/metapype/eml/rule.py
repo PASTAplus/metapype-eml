@@ -148,16 +148,26 @@ class Rule(object):
                 logger.debug(ex)
         return is_valid
 
-    def __init__(self, rule_name=None):
+    def __init__(self, rule_name):
         self._name = rule_name
-
-        # Initialize rule content for this instance from the rules dict
         rule_data = rules_dict[rule_name]
         self._attributes = rule_data[0]
         self._children = rule_data[1]
         self._content = rule_data[2]
 
-    def child_insert_index(self, parent: Node, new_child: Node):
+    def child_insert_index(self, parent: Node, new_child: Node) -> int:
+        """
+        Determines the index location of a new child node in a given parent node
+        based on the parent node's rule type
+
+        Args:
+            parent: Parent node of which to be adding child node
+            new_child: Child node to be added
+
+        Returns:
+            int: Index location of new child node
+
+        """
         new_child_position = self._get_child_position(new_child)
         for index in range(len(parent.children) - 1, -1, -1):
             child_position = self._get_child_position(parent.children[index])
@@ -194,6 +204,7 @@ class Rule(object):
         Args:
             node: Node instance to be validates
             errs: List of validation errors
+
         Returns:
             None
 
