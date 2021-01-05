@@ -70,21 +70,21 @@ class Rule(object):
     @staticmethod
     def child_list_node_names(child_list: list):
         if list is None or len(child_list) < 3:
-            raise Exception("Child list must contain at least 3 elements")
+            raise MetapypeRuleError("Child list must contain at least 3 elements")
         node_names = child_list[:-2]
         return node_names
 
     @staticmethod
     def child_list_min_occurrences(child_list: list):
         if list is None or len(child_list) < 3:
-            raise Exception("Child list must contain at least 3 elements")
+            raise MetapypeRuleError("Child list must contain at least 3 elements")
         min_occurrences = child_list[-2]
         return min_occurrences
 
     @staticmethod
     def child_list_max_occurrences(child_list: list):
         if list is None or len(child_list) < 3:
-            raise Exception("Child list must contain at least 3 elements")
+            raise MetapypeRuleError("Child list must contain at least 3 elements")
         max_occurrences = child_list[-1]
         return max_occurrences
 
