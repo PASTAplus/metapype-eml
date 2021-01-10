@@ -108,3 +108,30 @@ def to_json(node: Node):
     """
     j = _serialize(node)
     return json.dumps(j, indent=2)
+
+
+def graph(node: Node, level: int) -> str:
+    """
+    Return a graphic tree structure of the model instance
+
+    Args:
+        node: Root node of the model instance
+        level: Indention level
+
+    Returns:
+        str: String representation of the model instance.
+    """
+    indent = "  " * level
+    name = f"{node.name}[{node.id}]"
+    if node.content is not None:
+        name += ": {}".format(node.content)
+    if len(node.attributes) > 0:
+        name += " " + str(node.attributes)
+    if level == 0:
+        print(name)
+    else:
+        print(indent + "\u2570\u2500 " + name)
+    for child in node.children:
+        graph(child, level + 1)
+
+
