@@ -1,5 +1,7 @@
 # Metapype for EML
 
+<p align="left"><img src="https://github.com/PASTAplus/metapype-eml/blob/master/docs/metapype.png" width="300" height="200"/></p>
+
 #### A lightweight metadata generator for the Ecological Metadata Language
 
 [![Build Status](https://travis-ci.org/PASTAplus/metapype-eml.svg?branch=master)](https://travis-ci.org/PASTAplus/metapype-eml)
