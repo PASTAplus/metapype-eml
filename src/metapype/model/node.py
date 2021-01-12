@@ -15,6 +15,7 @@
 """
 import copy
 from enum import Enum
+import json
 import uuid
 
 import daiquiri
@@ -39,6 +40,8 @@ class Node(object):
         content: Optional string content
     """
 
+    store = {}
+
     def __init__(
         self, name: str, id: str = None, parent=None, content: str = None
     ):
@@ -50,7 +53,24 @@ class Node(object):
         self._children = []
         Node.set_node_instance(self)
 
-    store = {}
+    def __str__(self):
+        s = json.dumps(self.__object(), indent=2)
+        return s
+
+    def __repr__(self):
+        r = self.__object()
+        return str(r)
+
+    def __object(self):
+        o = {self._name: []}
+        o[self._name].append({"id": self._id})
+        o[self._name].append({"attributes": self._attributes})
+        o[self._name].append({"content": self._content})
+        children = []
+        for child in self._children:
+            children.append(child.name)
+        o[self._name].append({"children": children})
+        return o
 
     @classmethod
     def delete_node_instance(cls, id: str, children: bool = True):
@@ -340,6 +360,10 @@ class Node(object):
     @name.setter
     def name(self, name):
         self._name = name
+
+    @property
+    def object(self):
+        return self.__object()
 
     @property
     def parent(self):

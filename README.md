@@ -1,6 +1,8 @@
 # Metapype for EML
 
-#### A lightweight metadata generator for the Ecological Metadata Language
+<p align="left"><img src="https://github.com/PASTAplus/metapype-eml/blob/master/docs/metapype.png" width="300" height="200"/></p>
+
+#### A lightweight Pyhon 3 library for generating EML metadata
 
 [![Build Status](https://travis-ci.org/PASTAplus/metapype-eml.svg?branch=master)](https://travis-ci.org/PASTAplus/metapype-eml)
 
