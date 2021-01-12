@@ -23,6 +23,23 @@ from metapype.eml.evaluation_warnings import EvaluationWarning
 logger = daiquiri.getLogger("evaluate: " + __name__)
 
 
+def get_text_content(text_node: Node) -> str:
+    # Collect the text under a TextType node.
+    # This is intended for use in checking if text is present and that it has enough words, if there is
+    #  such a requirement. I.e., it doesn't worry about getting the text in the correct order if, for example, there
+    #  are para and markdown nodes interleaved.
+    content = text_node.content if text_node.content else ''
+    paras = []
+    text_node.find_all_descendants(names.PARA, paras)
+    for para in paras:
+        content += '\n' + para.content
+    markdowns = []
+    text_node.find_all_descendants(names.MARKDOWN, markdowns)
+    for markdown in markdowns:
+        content += '\n' + markdown.content
+    return content
+
+
 # ==================== Begin of rules section ====================
 
 def _associated_responsible_party_rule(node: Node) -> list:
@@ -63,7 +80,7 @@ def _dataset_rule(node: Node) -> list:
             project_node = child
 
     if abstract_node:
-        content = abstract_node.content if abstract_node.content else ''
+        content = get_text_content(abstract_node)
         if content:
             words = content.split()
             if len(words) < 20:
@@ -153,10 +170,11 @@ def _datatable_rule(node: Node) -> list:
 
 def _description_rule(node: Node) -> list:
     # Various description nodes are required but since they have TextType, the rules allow them to be empty.
-    # Require them to have nonempty content if they don't have children (para or section or markdown).
+    # Require them to have nonempty content (including para and markdown children).
     evaluation = []
     warning = None
-    if not node.content and not node.children:
+    content = get_text_content(node)
+    if not content:
         parent = node.parent.name
         if parent == 'connectionDefinition':
             warning = EvaluationWarning.CONNECTION_DEFINITION_DESCRIPTION_MISSING

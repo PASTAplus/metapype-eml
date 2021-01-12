@@ -28,7 +28,7 @@ with open(path.join(here, "LICENSE"), encoding="utf-8") as f:
 
 setup(
     name='metapype',
-    version='2020.12.05',
+    version='2021.01.12',
     description='Metapype for EML',
     long_description=long_description,
     long_description_content_type="text/markdown",
