@@ -391,7 +391,7 @@ class Node(object):
     def remove_children(self):
         self._children = []
 
-    def replace_child(self, old_child, new_child):
+    def replace_child(self, old_child, new_child, delete_old=True):
         """
         Replaces the old child with a new child
 
@@ -408,7 +408,8 @@ class Node(object):
 
         new_child.parent = self
         self._children[self._children.index(old_child)] = new_child
-        Node.delete_node_instance(id=old_child.id)
+        if delete_old:
+            Node.delete_node_instance(id=old_child.id)
 
     def shift(self, child, direction: Shift):
         """
