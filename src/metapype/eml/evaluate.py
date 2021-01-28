@@ -225,11 +225,14 @@ def _responsible_party_rule(node: Node) -> list:
     evaluation = []
     userid = False
     orcid = False
+    email = False
     for child in node.children:
         if child.name == names.USERID and child.content:
             userid = True
             if child.attributes.get('directory') == 'https://orcid.org':
                 orcid = True
+        if child.name == names.ELECTRONICMAILADDRESS and child.content:
+            email = True
     if not orcid:
         evaluation.append((
             EvaluationWarning.ORCID_ID_MISSING,
@@ -240,6 +243,12 @@ def _responsible_party_rule(node: Node) -> list:
         evaluation.append((
             EvaluationWarning.USER_ID_MISSING,
             f'A User ID should be provided. An ORCID ID is recommended."',
+            node
+        ))
+    if not email:
+        evaluation.append((
+            EvaluationWarning.EMAIL_MISSING,
+            f'An email address should be provided."',
             node
         ))
     return evaluation
