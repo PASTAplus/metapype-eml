@@ -1,44 +1,61 @@
 name: metapype
 channels:
+  - conda-forge
   - defaults
 dependencies:
   - _libgcc_mutex=0.1
-  - appdirs=1.4.3
-  - attrs=19.3.0
-  - black=19.10b0
-  - ca-certificates=2020.1.1
-  - certifi=2020.4.5.1
+  - _openmp_mutex=4.5
+  - appdirs=1.4.4
+  - attrs=20.3.0
+  - backports=1.0
+  - backports.functools_lru_cache=1.6.1
+  - black=20.8b1
+  - ca-certificates=2020.12.5
+  - certifi=2020.12.5
   - click=7.1.2
-  - libedit=3.1.20181209
+  - daiquiri=3.0.0
+  - dataclasses=0.7
+  - icu=68.1
+  - iniconfig=1.1.1
+  - jedi=0.18.0
+  - ld_impl_linux-64=2.35.1
   - libffi=3.3
-  - libgcc-ng=9.1.0
-  - libstdcxx-ng=9.1.0
-  - more-itertools=8.2.0
+  - libgcc-ng=9.3.0
+  - libgomp=9.3.0
+  - libiconv=1.16
+  - libstdcxx-ng=9.3.0
+  - libxml2=2.9.10
+  - libxslt=1.1.33
+  - lxml=4.6.2
+  - more-itertools=8.6.0
   - mypy_extensions=0.4.3
   - ncurses=6.2
-  - openssl=1.1.1g
-  - packaging=20.3
-  - pathspec=0.7.0
-  - pip=20.0.2
+  - openssl=1.1.1i
+  - packaging=20.8
+  - parso=0.8.1
+  - pathspec=0.8.1
+  - pip=21.0
   - pluggy=0.13.1
-  - py=1.8.1
+  - prompt-toolkit=3.0.14
+  - py=1.10.0
+  - pygments=2.7.4
   - pyparsing=2.4.7
-  - pytest=5.4.1
-  - python=3.8.2
+  - pytest=6.2.2
+  - python=3.8.6
+  - python-json-logger=2.0.1
+  - python_abi=3.8
   - readline=8.0
-  - regex=2020.4.4
-  - setuptools=46.1.3
-  - six=1.14.0
-  - sqlite=3.31.1
-  - tk=8.6.8
-  - toml=0.10.0
-  - typed-ast=1.4.1
-  - typing_extensions=3.7.4.1
-  - wcwidth=0.1.9
-  - wheel=0.34.2
+  - regex=2020.11.13
+  - setuptools=49.6.0
+  - sqlite=3.34.0
+  - tk=8.6.10
+  - toml=0.10.2
+  - typed-ast=1.4.2
+  - typing_extensions=3.7.4.3
+  - wcwidth=0.2.5
+  - wheel=0.36.2
   - xz=5.2.5
   - zlib=1.2.11
   - pip:
-    - daiquiri==2.1.1
-    - python-json-logger==0.1.11
+    - ptpython==3.0.7
 prefix: /home/servilla/anaconda3/envs/metapype
