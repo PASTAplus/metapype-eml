@@ -1471,6 +1471,7 @@ identified as moss or lichen."
         logger.error(e)
     #
     xml = export.to_xml(eml)
+    metapype_io.from_xml(xml)
     # print(xml)
     with open("test_eml.xml", "w") as f:
         f.write(xml)

@@ -16,6 +16,7 @@
 import json
 
 import daiquiri
+from lxml import etree
 
 from metapype.model.node import Node
 
@@ -135,3 +136,20 @@ def graph(node: Node, level: int) -> str:
         graph(child, level + 1)
 
 
+def from_xml(xml: str) -> Node:
+    _ = xml.encode("utf-8")
+    root = etree.fromstring(_)
+    _process_element(root)
+
+
+def _process_element(e):
+    tag = e.tag
+    text = e.text
+    tail = e.tail
+    attrs = e.attrib
+    print(f"tag: {tag}")
+    print(f"text: {text}")
+    print(f"tail: {tail}")
+    print(f"attrs: {attrs}\n")
+    for _ in e:
+        _process_element(_)
