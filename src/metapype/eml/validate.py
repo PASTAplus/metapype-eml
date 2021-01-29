@@ -24,7 +24,7 @@ from metapype.model.node import Node
 logger = daiquiri.getLogger("validate: " + __name__)
 
 
-def node(node: Node, errs: list=None) -> None:
+def node(node: Node, errs: list = None) -> None:
     """
     Validates a given node for rule compliance.
 
@@ -49,7 +49,7 @@ def node(node: Node, errs: list=None) -> None:
         node_rule.validate_rule(node, errs)
 
 
-def tree(root: Node, errs: list=None) -> None:
+def tree(root: Node, errs: list = None) -> None:
     """
     Recursively walks from the root node and validates
     each child node for rule compliance.
