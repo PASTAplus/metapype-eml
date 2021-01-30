@@ -58,3 +58,30 @@ def test_to_json():
     allow.add_child(permission)
     j = metapype_io.to_json(eml)
     assert isinstance(j, str)
+
+
+def test_from_xml():
+    with open(Config.EML_XML, "r") as f:
+        xml = "".join(f.readlines())
+    eml = metapype_io.from_xml(xml)
+    assert isinstance(eml, Node)
+
+
+def test_graph():
+    eml = Node(names.EML)
+    eml.add_attribute("packageId", "edi.23.1")
+    eml.add_attribute("system", "metapype")
+    access = Node(names.ACCESS, parent=eml)
+    access.add_attribute("authSystem", "pasta")
+    access.add_attribute("order", "allowFirst")
+    eml.add_child(access)
+    allow = Node(names.ALLOW, parent=access)
+    access.add_child(allow)
+    principal = Node(names.PRINCIPAL, parent=allow)
+    principal.content = "uid=gaucho,o=EDI,dc=edirepository,dc=org"
+    allow.add_child(principal)
+    permission = Node(names.PERMISSION, parent=allow)
+    permission.content = "all"
+    allow.add_child(permission)
+    g = metapype_io.graph(eml)
+    assert isinstance(g, str)
