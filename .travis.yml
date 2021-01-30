@@ -13,6 +13,7 @@ env:
   global:
     - EML_RULES=$TRAVIS_BUILD_DIR/src/metapype/eml/rules.json
     - EML_JSON=$TRAVIS_BUILD_DIR/tests/data/eml.json
+    - EML_XML=$TRAVIS_BUILD_DIR/tests/data/eml.xml
 before_install:
   - sudo apt-get -q update
 install:

@@ -61,7 +61,12 @@ def test_to_json():
 
 
 def test_from_xml():
-    with open(Config.EML_XML, "r") as f:
+    if "EML_XML" in os.environ:
+        xml_path = os.environ["EML_XML"]
+    else:
+        xml_path = Config.EML_XML
+
+    with open(xml_path, "r") as f:
         xml = "".join(f.readlines())
     eml = metapype_io.from_xml(xml)
     assert isinstance(eml, Node)
