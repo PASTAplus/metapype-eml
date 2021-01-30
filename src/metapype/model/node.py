@@ -50,6 +50,8 @@ class Node(object):
         self._parent = parent
         self._content = content
         self._attributes = {}
+        self._nspmap = {}
+        self._prefix = None
         self._children = []
         Node.set_node_instance(self)
 
@@ -66,6 +68,8 @@ class Node(object):
         o[self._name].append({"id": self._id})
         o[self._name].append({"attributes": self._attributes})
         o[self._name].append({"content": self._content})
+        o[self._name].append({"namespaces": self._nspmap})
+        o[self._name].append({"prefix": self._prefix})
         children = []
         for child in self._children:
             children.append(child.name)
@@ -115,7 +119,7 @@ class Node(object):
         Returns:
             None
         """
-        cls.store[node._id] = node
+        cls.store[node.id] = node
 
     def add_attribute(self, name, value):
         self._attributes[name] = value
@@ -135,6 +139,9 @@ class Node(object):
             self._children.append(child)
         else:
             self._children.insert(index, child)
+
+    def add_namespace(self, prefix: str, namespace: str):
+        self._nspmap[prefix] = namespace
 
     def attribute_value(self, name):
         if name in self._attributes:
@@ -362,6 +369,14 @@ class Node(object):
         self._name = name
 
     @property
+    def nspmap(self):
+        return self._nspmap
+    
+    @nspmap.setter
+    def nspmap(self, nspmap):
+        self._nspmap = nspmap
+
+    @property
     def object(self):
         return self.__object()
 
@@ -372,6 +387,14 @@ class Node(object):
     @parent.setter
     def parent(self, parent):
         self._parent = parent
+
+    @property
+    def prefix(self):
+        return self._prefix
+
+    @prefix.setter
+    def prefix(self, prefix):
+        self._prefix = prefix
 
     def remove_attribute(self, name):
         del self._attributes[name]
