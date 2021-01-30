@@ -70,6 +70,7 @@ def test_from_xml():
         xml = "".join(f.readlines())
     eml = metapype_io.from_xml(xml)
     assert isinstance(eml, Node)
+    validate.tree(eml)
 
 
 def test_graph():
