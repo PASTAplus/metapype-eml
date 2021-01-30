@@ -96,7 +96,7 @@ def from_json(node: str) -> Node:
     return _from_dict(m)
 
 
-def to_json(node: Node):
+def to_json(node: Node) -> str:
     """
     Converts a Metapype model instance to JSON
 
