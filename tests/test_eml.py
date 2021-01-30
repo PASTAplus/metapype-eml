@@ -224,7 +224,9 @@ def node():
     additional_metadata = Node(names.ADDITIONALMETADATA, parent=eml)
     eml.add_child(additional_metadata)
     metadata = Node(names.METADATA, parent=additional_metadata)
-    metadata.content = "<tag>TAG</tag>"
+    fictitious = Node("fictitious")
+    fictitious.content = "<tag>more fictitious content</tag>"
+    metadata.add_child(fictitious)
     additional_metadata.add_child(metadata)
     return eml
 
