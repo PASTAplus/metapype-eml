@@ -111,7 +111,7 @@ def to_json(node: Node):
     return json.dumps(j, indent=2)
 
 
-def graph(node: Node, level: int) -> str:
+def graph(node: Node, level: int = 0) -> str:
     """
     Return a graphic tree structure of the model instance
 
@@ -123,33 +123,40 @@ def graph(node: Node, level: int) -> str:
         str: String representation of the model instance.
     """
     indent = "  " * level
-    name = f"{node.name}[{node.id}]"
+    n = f"{node.name}[{node.id}]" if node.prefix is None else f"{node.prefix}:{node.name}[{node.id}]"
     if node.content is not None:
-        name += ": {}".format(node.content)
+        n += f": {node.content}"
     if len(node.attributes) > 0:
-        name += " " + str(node.attributes)
+        n += f" {str(node.attributes)}"
     if level == 0:
-        print(name)
+        n += "\n"
     else:
-        print(indent + "\u2570\u2500 " + name)
+        n = indent + "\u2570\u2500 " + n + "\n"
     for child in node.children:
-        graph(child, level + 1)
+        n += graph(child, level + 1)
+    return n
 
 
-def from_xml(xml: str) -> Node:
+def from_xml(xml: str, clean: bool = True, ) -> Node:
     _ = xml.encode("utf-8")
     root = etree.fromstring(_)
-    _process_element(root)
+    return _process_element(root, clean)
 
 
-def _process_element(e):
-    tag = e.tag
-    text = e.text
-    tail = e.tail
-    attrs = e.attrib
-    print(f"tag: {tag}")
-    print(f"text: {text}")
-    print(f"tail: {tail}")
-    print(f"attrs: {attrs}\n")
+def _process_element(e, clean) -> Node:
+    tag = e.tag[e.tag.find("}") + 1:]  # Remove any prepended namespace
+    node = Node(tag)
+    if clean:
+        node.content = None if e.text.strip() == '' else e.text.strip()
+    else:
+        node.content = e.text
+    for name, value in e.attrib.items():
+        if "{" not in name:
+            node.add_attribute(name, value)
+    node.nspmap = e.nsmap
+    node.prefix = e.prefix
     for _ in e:
-        _process_element(_)
+        node.add_child(_process_element(_, clean))
+    for child in node.children:
+        child.parent = node
+    return node
