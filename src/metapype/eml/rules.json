@@ -597,7 +597,7 @@
         [
         ],
         {
-            "content_rules" : ["strContent"]
+            "content_rules" : ["emptyContent"]
         }
     ],
     "methodsRule" : [

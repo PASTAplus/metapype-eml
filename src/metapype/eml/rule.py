@@ -269,6 +269,8 @@ class Rule(object):
                 self._validate_time_content(node, errs)
             elif content_rule == "yearDateContent":
                 self._validate_yeardate_content(node, errs)
+            elif content_rule == "anyContent":
+                pass
 
         if self.has_enum_content():
             enum_values = self._content["content_enum"]
@@ -395,7 +397,7 @@ class Rule(object):
         for attribute in node.attributes:
             # Test for non-allowed attribute
             if attribute not in self._attributes:
-                msg = f'"{attribute}" is not a recognized attributes of node "{node.name}"'
+                msg = f'"{attribute}" is not a recognized attribute of node "{node.name}"'
                 if errs is None:
                     raise MetapypeRuleError(msg)
                 else:
@@ -430,41 +432,42 @@ class Rule(object):
             MetapypeRuleError: Illegal child, bad sequence or choice, missing
             child, or wrong child cardinality
         """
-        i = 0
-        max_i = len(node.children)
-        for child in self._children:
-            name = child[:-2]
-            min = child[-2]
-            max = child[-1]
-            cnt = 0
-            while i < max_i:
+        if node.name != "metadata":
+            i = 0
+            max_i = len(node.children)
+            for child in self._children:
+                name = child[:-2]
+                min = child[-2]
+                max = child[-1]
+                cnt = 0
+                while i < max_i:
+                    child_name = node.children[i].name
+                    if child_name in name:
+                        cnt += 1
+                        if max is not INFINITY and cnt > max:
+                            msg = f'Maximum occurrence of "{name}" exceeded for "{node.name}"'
+                            if errs is None:
+                                raise MetapypeRuleError(msg)
+                            else:
+                                errs.append((ValidationError.MAX_OCCURRENCE_EXCEEDED, msg, node, child_name, max))
+                        i += 1
+                    else:
+                        break
+                if cnt < min:
+                    msg = (
+                        f'Minimum occurrence of "{name}" not met for "{node.name}"'
+                    )
+                    if errs is None:
+                        raise MetapypeRuleError(msg)
+                    else:
+                        errs.append((ValidationError.MIN_OCCURRENCE_UNMET, msg, node, name, min))
+            if i < max_i:
                 child_name = node.children[i].name
-                if child_name in name:
-                    cnt += 1
-                    if max is not INFINITY and cnt > max:
-                        msg = f'Maximum occurrence of "{name}" exceeded for "{node.name}"'
-                        if errs is None:
-                            raise MetapypeRuleError(msg)
-                        else:
-                            errs.append((ValidationError.MAX_OCCURRENCE_EXCEEDED, msg, node, child_name, max))
-                    i += 1
-                else:
-                    break
-            if cnt < min:
-                msg = (
-                    f'Minimum occurrence of "{name}" not met for "{node.name}"'
-                )
+                msg = f'Child "{child_name}" not allowed  for "{node.name}"'
                 if errs is None:
                     raise MetapypeRuleError(msg)
                 else:
-                    errs.append((ValidationError.MIN_OCCURRENCE_UNMET, msg, node, name, min))
-        if i < max_i:
-            child_name = node.children[i].name
-            msg = f'Child "{child_name}" not allowed  for "{node.name}"'
-            if errs is None:
-                raise MetapypeRuleError(msg)
-            else:
-                errs.append((ValidationError.CHILD_NOT_ALLOWED, msg, node, child_name))
+                    errs.append((ValidationError.CHILD_NOT_ALLOWED, msg, node, child_name))
 
     @property
     def name(self):

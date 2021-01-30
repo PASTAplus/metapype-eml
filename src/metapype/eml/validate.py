@@ -56,11 +56,13 @@ def tree(root: Node, errs: list = None) -> None:
 
     Args:
         root: Node instance of root for validates
+        errs: List container for validation errors (fail fast if None)
 
     Returns:
         None
     """
     # print(root.name)
     node(root, errs)
-    for child in root.children:
-        tree(child, errs)
+    if root.name != "metadata":
+        for child in root.children:
+            tree(child, errs)
