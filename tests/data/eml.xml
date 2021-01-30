@@ -1,0 +1,382 @@
+<eml:eml packageId="edi.23.1" system="metapype" xmlns:eml="https://eml.ecoinformatics.org/eml-2.2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://eml.ecoinformatics.org/eml-2.2.0 https://nis.lternet.edu/schemas/EML/eml-2.2.0/xsd/eml.xsd">
+    <access authSystem="pasta" order="allowFirst">
+        <allow>
+            <principal>uid=gaucho,o=EDI,dc=edirepository,dc=org</principal>
+            <permission>all</permission>
+        </allow>
+    </access>
+    <dataset>
+        <title>Green sea turtle counts: Tortuga Island 20017</title>
+        <creator>
+            <individualName>
+                <surName>Gaucho</surName>
+            </individualName>
+        </creator>
+        <pubDate>2018</pubDate>
+        <abstract>
+            <section>
+                <para>This is abstract Para 1</para>
+            </section>
+            <section>
+                <para>This is abstract Para 2</para>
+            </section>
+        </abstract>
+        <intellectualRights>
+            <section>
+                <para>This is intellectualRights Para 3</para>
+            </section>
+            <section>
+                <para>This is intellectualRights Para 4</para>
+            </section>
+        </intellectualRights>
+        <coverage>
+            <geographicCoverage>
+                <geographicDescription>Somewhere in the Rocky Mountains</geographicDescription>
+                <boundingCoordinates>
+                    <westBoundingCoordinate>-107.55538624999997</westBoundingCoordinate>
+                    <eastBoundingCoordinate>-106.45675343749997</eastBoundingCoordinate>
+                    <northBoundingCoordinate>39.48496522541802</northBoundingCoordinate>
+                    <southBoundingCoordinate>38.9530013453599</southBoundingCoordinate>
+                </boundingCoordinates>
+            </geographicCoverage>
+            <temporalCoverage>
+                <rangeOfDates>
+                    <beginDate>
+                        <calendarDate>2000</calendarDate>
+                    </beginDate>
+                    <endDate>
+                        <calendarDate>2018</calendarDate>
+                    </endDate>
+                </rangeOfDates>
+            </temporalCoverage>
+            <taxonomicCoverage>
+                <generalTaxonomicCoverage>All vascular plants were identified to family or species, mosses and lichens were identified as moss or lichen.</generalTaxonomicCoverage>
+                <taxonomicClassification>
+                    <taxonRankName>Genus</taxonRankName>
+                    <taxonRankValue>Escherichia</taxonRankValue>
+                    <taxonomicClassification>
+                        <taxonRankName>Species</taxonRankName>
+                        <taxonRankValue>coli</taxonRankValue>
+                    </taxonomicClassification>
+                </taxonomicClassification>
+            </taxonomicCoverage>
+        </coverage>
+        <contact>
+            <individualName>
+                <givenName>Chase</givenName>
+                <surName>Gaucho</surName>
+            </individualName>
+        </contact>
+        <publisher>
+            <individualName>
+                <givenName>Utah</givenName>
+                <surName>Carroll</surName>
+            </individualName>
+        </publisher>
+        <pubPlace>University of New Mexico Dept. of Biology</pubPlace>
+        <methods>
+            <methodStep>
+                <description>
+                    <section>
+                        <para>This is description Para 1</para>
+                    </section>
+                    <section>
+                        <para>This is description Para 2</para>
+                    </section>
+                </description>
+                <instrumentation>Instrument #1</instrumentation>
+                <instrumentation>Instrument #2</instrumentation>
+            </methodStep>
+            <sampling>
+                <studyExtent>
+                    <coverage>
+                        <geographicCoverage>
+                            <geographicDescription>Somewhere in the Rocky Mountains</geographicDescription>
+                            <boundingCoordinates>
+                                <westBoundingCoordinate>-107.55538624999997</westBoundingCoordinate>
+                                <eastBoundingCoordinate>-106.45675343749997</eastBoundingCoordinate>
+                                <northBoundingCoordinate>39.48496522541802</northBoundingCoordinate>
+                                <southBoundingCoordinate>38.9530013453599</southBoundingCoordinate>
+                            </boundingCoordinates>
+                        </geographicCoverage>
+                        <temporalCoverage>
+                            <singleDateTime>
+                                <calendarDate>2018</calendarDate>
+                                <time>14:34:32.001-06:00</time>
+                            </singleDateTime>
+                        </temporalCoverage>
+                        <taxonomicCoverage>
+                            <generalTaxonomicCoverage>All vascular plants were identified to family or species, mosses and lichens were identified as moss or lichen.</generalTaxonomicCoverage>
+                            <taxonomicClassification>
+                                <taxonRankName>Genus</taxonRankName>
+                                <taxonRankValue>Escherichia</taxonRankValue>
+                                <taxonomicClassification>
+                                    <taxonRankName>Species</taxonRankName>
+                                    <taxonRankValue>coli</taxonRankValue>
+                                </taxonomicClassification>
+                            </taxonomicClassification>
+                        </taxonomicCoverage>
+                    </coverage>
+                    <description>
+                        <section>
+                            <para>This is study_extent_description Para 1</para>
+                        </section>
+                        <section>
+                            <para>This is study_extent_description Para 2</para>
+                        </section>
+                    </description>
+                </studyExtent>
+                <samplingDescription>
+                    <section>
+                        <para>This is sampling_description Para 1</para>
+                    </section>
+                    <section>
+                        <para>This is sampling_description Para 2</para>
+                    </section>
+                </samplingDescription>
+            </sampling>
+            <qualityControl>
+                <description>
+                    <section>
+                        <para>This is quality_control_description Para 1</para>
+                    </section>
+                    <section>
+                        <para>This is quality_control_description Para 2</para>
+                    </section>
+                </description>
+                <instrumentation>Quality Control Instrumentation string 1</instrumentation>
+                <instrumentation>Quality Control Instrumentation string 2</instrumentation>
+            </qualityControl>
+        </methods>
+        <project>
+            <title>The Title of the Project</title>
+            <personnel>
+                <individualName>
+                    <givenName>Baxter</givenName>
+                    <surName>Duffington</surName>
+                </individualName>
+                <role>principalInvestigator</role>
+            </personnel>
+        </project>
+        <dataTable>
+            <alternateIdentifier system="EDI">https://portal.edirepository.org/nis/dataviewer?packageid=edi.23.1&amp;entityid=ce5438fb9318b1f04d06b8a0276754d6</alternateIdentifier>
+            <entityName>14CO2 data</entityName>
+            <entityDescription>Radiocarbon content of soil-respired air</entityDescription>
+            <physical system="EDI">
+                <objectName>tvan_14co2.jk.data.csv</objectName>
+                <size unit="MB">20</size>
+                <authentication method="MD5">7c9e8eb43ab7b52fa9b1db7de756d6a2</authentication>
+                <compressionMethod>zip</compressionMethod>
+                <encodingMethod>base64</encodingMethod>
+                <characterEncoding>UTF-8</characterEncoding>
+                <dataFormat>
+                    <textFormat>
+                        <numHeaderLines>3</numHeaderLines>
+                        <numFooterLines>0</numFooterLines>
+                        <recordDelimiter>\r\n</recordDelimiter>
+                        <physicalLineDelimiter>\r\n</physicalLineDelimiter>
+                        <numPhysicalLinesPerRecord>1</numPhysicalLinesPerRecord>
+                        <maxRecordLength>597</maxRecordLength>
+                        <attributeOrientation>column</attributeOrientation>
+                        <simpleDelimited>
+                            <fieldDelimiter>\t</fieldDelimiter>
+                            <collapseDelimiters>no</collapseDelimiters>
+                            <quoteCharacter>'</quoteCharacter>
+                            <literalCharacter>/</literalCharacter>
+                        </simpleDelimited>
+                    </textFormat>
+                </dataFormat>
+                <distribution>
+                    <online>
+                        <onlineDescription>network server</onlineDescription>
+                        <url function="download">https://data.abc.edu/somedataset/data</url>
+                    </online>
+                    <access authSystem="pasta" order="allowFirst">
+                        <allow>
+                            <principal>uid=ucarroll,o=EDI,dc=edirepository,dc=org</principal>
+                            <permission>write</permission>
+                        </allow>
+                    </access>
+                </distribution>
+            </physical>
+            <attributeList>
+                <attribute>
+                    <attributeName>att-1</attributeName>
+                    <attributeLabel>Attribute Label 1</attributeLabel>
+                    <attributeDefinition>Attribute 1 definition</attributeDefinition>
+                    <measurementScale>
+                        <nominal>
+                            <nonNumericDomain>
+                                <enumeratedDomain enforced="yes">
+                                    <codeDefinition order="3">
+                                        <code>HIGH</code>
+                                        <definition>high density, above 10 per square meter</definition>
+                                        <source>ISO country codes</source>
+                                    </codeDefinition>
+                                </enumeratedDomain>
+                            </nonNumericDomain>
+                        </nominal>
+                    </measurementScale>
+                    <missingValueCode>
+                        <code>SDT</code>
+                        <codeExplanation>Sensor Downtime</codeExplanation>
+                    </missingValueCode>
+                    <accuracy>
+                        <attributeAccuracyReport>An explanation of the accuracy of the observation recorded in this attribute</attributeAccuracyReport>
+                        <quantitativeAttributeAccuracyAssessment>
+                            <attributeAccuracyValue>An estimate of the accuracy of the identification</attributeAccuracyValue>
+                            <attributeAccuracyExplanation>The identification of the test that yielded the "Attribute Accuracy Value"</attributeAccuracyExplanation>
+                        </quantitativeAttributeAccuracyAssessment>
+                    </accuracy>
+                </attribute>
+                <attribute>
+                    <attributeName>att-2</attributeName>
+                    <attributeLabel>Attribute Label 2</attributeLabel>
+                    <attributeDefinition>Attribute 2 definition</attributeDefinition>
+                    <measurementScale>
+                        <ordinal>
+                            <nonNumericDomain>
+                                <textDomain>
+                                    <definition>US telephone numbers in the format (999) 888-7777</definition>
+                                    <pattern>[0-9a-zA-Z] matches simple alphanumeric strings</pattern>
+                                    <source>ISO country codes</source>
+                                </textDomain>
+                            </nonNumericDomain>
+                        </ordinal>
+                    </measurementScale>
+                </attribute>
+                <attribute>
+                    <attributeName>att-3</attributeName>
+                    <attributeLabel>Attribute Label 3</attributeLabel>
+                    <attributeDefinition>Attribute 3 definition</attributeDefinition>
+                    <storageType typeSystem="http://www.w3.org/2001/XMLSchema-datatypes">integer</storageType>
+                    <measurementScale>
+                        <interval>
+                            <unit>
+                                <standardUnit>meter</standardUnit>
+                            </unit>
+                            <precision>0.1</precision>
+                            <numericDomain>
+                                <numberType>integer</numberType>
+                                <bounds>
+                                    <minimum exclusive="false">0</minimum>
+                                    <maximum exclusive="false">10</maximum>
+                                </bounds>
+                            </numericDomain>
+                        </interval>
+                    </measurementScale>
+                </attribute>
+                <attribute>
+                    <attributeName>att-4</attributeName>
+                    <attributeLabel>Attribute Label 4</attributeLabel>
+                    <attributeDefinition>Attribute 4 definition</attributeDefinition>
+                    <measurementScale>
+                        <ratio>
+                            <unit>
+                                <customUnit>gramsPerOneThirdMeter</customUnit>
+                            </unit>
+                            <precision>0.01</precision>
+                            <numericDomain>
+                                <numberType>real</numberType>
+                                <bounds>
+                                    <minimum exclusive="false">0.0</minimum>
+                                    <maximum exclusive="false">10.0</maximum>
+                                </bounds>
+                            </numericDomain>
+                        </ratio>
+                    </measurementScale>
+                </attribute>
+                <attribute>
+                    <attributeName>att-5</attributeName>
+                    <attributeLabel>Attribute Label 5</attributeLabel>
+                    <attributeDefinition>Attribute 5 definition</attributeDefinition>
+                    <measurementScale>
+                        <dateTime>
+                            <formatString>YYYY-MM-DD</formatString>
+                            <dateTimePrecision>1</dateTimePrecision>
+                            <dateTimeDomain id="dtd-1">
+                                <bounds>
+                                    <minimum exclusive="false">2003-10-15</minimum>
+                                    <maximum exclusive="false">2019-06-30</maximum>
+                                </bounds>
+                            </dateTimeDomain>
+                        </dateTime>
+                    </measurementScale>
+                </attribute>
+            </attributeList>
+            <caseSensitive>yes</caseSensitive>
+            <numberOfRecords>454</numberOfRecords>
+        </dataTable>
+        <otherEntity>
+            <alternateIdentifier system="EDI">https://portal.edirepository.org/nis/dataviewer?packageid=edi.23.1&amp;entityid=ce5438fb9318b1f04d06b8a0276754d6</alternateIdentifier>
+            <entityName>Some Other Entity Data</entityName>
+            <entityDescription>Radiocarbon content of soil-respired air</entityDescription>
+            <physical system="EDI">
+                <objectName>tvan_14co2.jk.data.csv</objectName>
+                <size unit="MB">20</size>
+                <authentication method="password">LDAP</authentication>
+                <compressionMethod>zip</compressionMethod>
+                <encodingMethod>base64</encodingMethod>
+                <characterEncoding>UTF-8</characterEncoding>
+                <dataFormat>
+                    <textFormat>
+                        <numHeaderLines>3</numHeaderLines>
+                        <numFooterLines>0</numFooterLines>
+                        <recordDelimiter>\r\n</recordDelimiter>
+                        <physicalLineDelimiter>\r\n</physicalLineDelimiter>
+                        <numPhysicalLinesPerRecord>1</numPhysicalLinesPerRecord>
+                        <maxRecordLength>597</maxRecordLength>
+                        <attributeOrientation>column</attributeOrientation>
+                        <complex>
+                            <textFixed>
+                                <fieldWidth>12</fieldWidth>
+                                <lineNumber>3</lineNumber>
+                                <fieldStartColumn>58</fieldStartColumn>
+                            </textFixed>
+                            <textDelimited>
+                                <fieldDelimiter>,</fieldDelimiter>
+                                <collapseDelimiters>no</collapseDelimiters>
+                                <lineNumber>2</lineNumber>
+                                <quoteCharacter>'</quoteCharacter>
+                                <literalCharacter>/</literalCharacter>
+                            </textDelimited>
+                        </complex>
+                    </textFormat>
+                </dataFormat>
+                <distribution>
+                    <offline>
+                        <mediumName>hardcopy</mediumName>
+                        <mediumDensity>High Density (HD)</mediumDensity>
+                        <mediumDensityUnits>B/cm</mediumDensityUnits>
+                        <mediumVolume>650 MB</mediumVolume>
+                        <mediumFormat>NTFS</mediumFormat>
+                        <mediumNote>Some additional pertinent information about the media</mediumNote>
+                    </offline>
+                    <access authSystem="pasta" order="allowFirst">
+                        <allow>
+                            <principal>uid=ucarroll,o=EDI,dc=edirepository,dc=org</principal>
+                            <permission>write</permission>
+                        </allow>
+                    </access>
+                </distribution>
+            </physical>
+            <entityType>Unknown Entity Type</entityType>
+        </otherEntity>
+    </dataset>
+    <additionalMetadata>
+        <describes>Testing namespaces</describes>
+        <metadata  xmlns:stmml="http://www.xml-cml.org/schema/stmml-1.1">
+            <stmml:stuff>
+                This is stuff
+            </stmml:stuff>
+        </metadata>
+    </additionalMetadata>
+    <additionalMetadata>
+        <describes>Testing namespaces</describes>
+        <metadata  xmlns:stmml="http://www.xml-cml.org/schema/stmml-1.2">
+            <stmml:stuff>
+                This is stuff
+            </stmml:stuff>
+        </metadata>
+    </additionalMetadata>
+</eml:eml>
