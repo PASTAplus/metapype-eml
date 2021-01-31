@@ -49,6 +49,7 @@ class Node(object):
         self._name = name
         self._parent = parent
         self._content = content
+        self._tail = None
         self._attributes = {}
         self._nspmap = {}
         self._prefix = None
@@ -473,9 +474,10 @@ class Node(object):
         return index
 
 
-def main():
-    return 0
+    @property
+    def tail(self) -> str:
+        return self._tail
 
-
-if __name__ == "__main__":
-    main()
+    @tail.setter
+    def tail(self, content: str):
+        self._tail = content
