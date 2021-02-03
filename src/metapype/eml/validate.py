@@ -24,12 +24,12 @@ from metapype.model.node import Node
 logger = daiquiri.getLogger("validate: " + __name__)
 
 
-def node(node: Node, errs: list = None) -> None:
+def node(n: Node, errs: list = None) -> None:
     """
     Validates a given node for rule compliance.
 
     Args:
-        node: Node instance to be validated
+        n: Node instance to be validated
         errs: List container for validation errors (fail fast if None)
 
     Returns:
@@ -38,31 +38,59 @@ def node(node: Node, errs: list = None) -> None:
     Raises:
         MetapypeRuleError: An unknown type of node for EML
     """
-    if node.name not in rule.node_mappings:
-        msg = f"Unknown node rule type: {node.name}"
+    if n.name not in rule.node_mappings:
+        msg = f"Unknown node rule type: {n.name}"
         if errs is None:
             raise MetapypeRuleError(msg)
         else:
-            errs.append((ValidationError.UNKNOWN_NODE, msg, node))
+            errs.append((ValidationError.UNKNOWN_NODE, msg, n))
     else:
-        node_rule = rule.get_rule(node.name)
-        node_rule.validate_rule(node, errs)
+        node_rule = rule.get_rule(n.name)
+        node_rule.validate_rule(n, errs)
 
 
-def tree(root: Node, errs: list = None) -> None:
+def prune(n: Node) -> list:
+    """
+    Prune in place all non-valid nodes from the tree
+
+    Args:
+        n: Node
+
+    Returns: List of pruned nodes
+
+    Side-effects: Non-valid nodes are pruned from the tree
+
+    """
+    pruned = list()
+    try:
+        node(n)
+    except MetapypeRuleError:
+        for child in n.children:
+            try:
+                node(child)
+            except MetapypeRuleError:
+                pruned.append(child)
+        for child in pruned:
+            n.remove_child(child)
+            Node.delete_node_instance(child.id)
+    for child in n.children:
+        pruned += prune(child)
+    return pruned
+
+
+def tree(n: Node, errs: list = None) -> None:
     """
     Recursively walks from the root node and validates
     each child node for rule compliance.
 
     Args:
-        root: Node instance of root for validates
+        n: Node instance of root for validates
         errs: List container for validation errors (fail fast if None)
 
     Returns:
         None
     """
-    # print(root.name)
-    node(root, errs)
-    if root.name != "metadata":
-        for child in root.children:
+    node(n, errs)
+    if n.name != "metadata":
+        for child in n.children:
             tree(child, errs)
