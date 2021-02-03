@@ -51,8 +51,9 @@ class Node(object):
         self._content = content
         self._tail = None
         self._attributes = {}
-        self._nspmap = {}
+        self._nsmap = {}
         self._prefix = None
+        self._extras = {}
         self._children = []
         Node.set_node_instance(self)
 
@@ -67,10 +68,12 @@ class Node(object):
     def __object(self):
         o = {self._name: []}
         o[self._name].append({"id": self._id})
-        o[self._name].append({"attributes": self._attributes})
-        o[self._name].append({"content": self._content})
-        o[self._name].append({"namespaces": self._nspmap})
+        o[self._name].append({"nsmap": self._nsmap})
         o[self._name].append({"prefix": self._prefix})
+        o[self._name].append({"attributes": self._attributes})
+        o[self._name].append({"extras": self._extras})
+        o[self._name].append({"content": self._content})
+        o[self._name].append({"tail": self._tail})
         children = []
         for child in self._children:
             children.append(child.name)
@@ -95,6 +98,14 @@ class Node(object):
             for child in node.children:
                 cls.delete_node_instance(child.id)
         del Node.store[id]
+
+    @property
+    def extras(self):
+        return self._extras
+
+    @extras.setter
+    def extras(self, e: dict):
+        self._extras = e
 
     @classmethod
     def get_node_instance(cls, id: str):
@@ -141,8 +152,11 @@ class Node(object):
         else:
             self._children.insert(index, child)
 
+    def add_extras(self, key: str, value: str):
+        self._extras[key] = value
+
     def add_namespace(self, prefix: str, namespace: str):
-        self._nspmap[prefix] = namespace
+        self._nsmap[prefix] = namespace
 
     def attribute_value(self, name):
         if name in self._attributes:
@@ -370,12 +384,12 @@ class Node(object):
         self._name = name
 
     @property
-    def nspmap(self):
-        return self._nspmap
+    def nsmap(self):
+        return self._nsmap
     
-    @nspmap.setter
-    def nspmap(self, nspmap):
-        self._nspmap = nspmap
+    @nsmap.setter
+    def nsmap(self, nsmap):
+        self._nsmap = nsmap
 
     @property
     def object(self):
@@ -472,7 +486,6 @@ class Node(object):
             raise ValueError(msg)
 
         return index
-
 
     @property
     def tail(self) -> str:
