@@ -28,7 +28,6 @@ logger = daiquiri.getLogger("test_io: " + __name__)
 
 
 def test_from_json():
-
     if "EML_JSON" in os.environ:
         json_path = os.environ["EML_JSON"]
     else:
@@ -70,7 +69,13 @@ def test_from_xml():
         xml = "".join(f.readlines())
     eml = metapype_io.from_xml(xml)
     assert isinstance(eml, Node)
+    validate.prune(eml)
     validate.tree(eml)
+    new_xml = metapype_io.to_xml(eml)
+    with open("/home/servilla/tmp/test.xml", "w") as f:
+        f.write(new_xml)
+    print("\n")
+    print(new_xml)
 
 
 def test_graph():
