@@ -1,4 +1,7 @@
-<eml:eml packageId="edi.23.1" system="metapype" xmlns:eml="https://eml.ecoinformatics.org/eml-2.2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://eml.ecoinformatics.org/eml-2.2.0 https://nis.lternet.edu/schemas/EML/eml-2.2.0/xsd/eml.xsd">
+<eml:eml packageId="edi.23.1" system="metapype" xmlns:eml="https://eml.ecoinformatics.org/eml-2.2.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://eml.ecoinformatics.org/eml-2.2.0 https://nis.lternet.edu/schemas/EML/eml-2.2.0/xsd/eml.xsd">
+    <!-- The following section is not supported by Metapype -->
     <access authSystem="pasta" order="allowFirst">
         <allow>
             <principal>uid=gaucho,o=EDI,dc=edirepository,dc=org</principal>
@@ -362,21 +365,46 @@
             </physical>
             <entityType>Unknown Entity Type</entityType>
         </otherEntity>
+        <!-- The following section is not supported by Metapype -->
+        <referencePublication>
+            <shortName>Another pub</shortName>
+            <title>My other pub</title>
+            <creator>
+                <individualName>
+                    <surName>Gaucho</surName>
+                </individualName>
+            </creator>
+            <report>
+                <publisher>
+                    <organizationName>My Press</organizationName>
+                </publisher>
+            </report>
+        </referencePublication>
+        <!-- The following section is not supported by Metapype -->
+        <usageCitation>
+            <title>My usage citation</title>
+            <creator>
+                <individualName>
+                    <surName>Gaucho</surName>
+                </individualName>
+            </creator>
+            <personalCommunication>
+                <communicationType>
+                    chitchat
+                </communicationType>
+            </personalCommunication>
+        </usageCitation>
     </dataset>
     <additionalMetadata>
         <describes>Testing namespaces</describes>
-        <metadata  xmlns:stmml="http://www.xml-cml.org/schema/stmml-1.1">
-            <stmml:stuff>
-                This is stuff
-            </stmml:stuff>
+        <metadata>
+            <stmml:stuff xmlns:stmml="http://www.xml-cml.org/schema/stmml-1.1"> This is stuff </stmml:stuff>
         </metadata>
     </additionalMetadata>
     <additionalMetadata>
         <describes>Testing namespaces</describes>
-        <metadata  xmlns:stmml="http://www.xml-cml.org/schema/stmml-1.2">
-            <stmml:stuff>
-                This is stuff
-            </stmml:stuff>
+        <metadata>
+            <stmml:stuff xmlns:stmml="http://www.xml-cml.org/schema/stmml-1.2"> This is stuff </stmml:stuff>
         </metadata>
     </additionalMetadata>
 </eml:eml>
