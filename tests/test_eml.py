@@ -15,11 +15,14 @@
 """
 import daiquiri
 import pytest
+import os
 
+from metapype.config import Config
 from metapype.eml.exceptions import MetapypeRuleError
 import metapype.eml.names as names
 import metapype.eml.rule as rule
 import metapype.eml.validate as validate
+import metapype.model.metapype_io as metapype_io
 from metapype.model.node import Node
 
 logger = daiquiri.getLogger("test_eml: " + __name__)
@@ -335,3 +338,22 @@ def test_is_float():
         assert rule.Rule.is_float(good_val)
     for bad_val in bad_vals:
         assert not rule.Rule.is_float(bad_val)
+
+
+def test_validate_prune():
+    if "EML_XML" in os.environ:
+        xml_path = os.environ["EML_XML"]
+    else:
+        xml_path = Config.EML_XML
+
+    with open(xml_path, "r") as f:
+        xml = "".join(f.readlines())
+    eml = metapype_io.from_xml(xml)
+    assert isinstance(eml, Node)
+    errs = list()
+    validate.tree(eml, errs)
+    assert len(errs) > 0
+    validate.prune(eml)
+    errs = list()
+    validate.tree(eml, errs)
+    assert len(errs) == 0
