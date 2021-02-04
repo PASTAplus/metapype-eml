@@ -316,6 +316,7 @@
             ["additionalInfo", 0, null],
             ["intellectualRights", 0, 1],
             ["licensed", 0, null],
+            ["distribution", 0, null],
             ["coverage", 0, 1],
             ["purpose", 0, 1],
             ["introduction", 0, 1],
