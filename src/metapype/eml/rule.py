@@ -70,21 +70,27 @@ class Rule(object):
     @staticmethod
     def child_list_node_names(child_list: list):
         if list is None or len(child_list) < 3:
-            raise MetapypeRuleError("Child list must contain at least 3 elements")
+            raise MetapypeRuleError(
+                "Child list must contain at least 3 elements"
+            )
         node_names = child_list[:-2]
         return node_names
 
     @staticmethod
     def child_list_min_occurrences(child_list: list):
         if list is None or len(child_list) < 3:
-            raise MetapypeRuleError("Child list must contain at least 3 elements")
+            raise MetapypeRuleError(
+                "Child list must contain at least 3 elements"
+            )
         min_occurrences = child_list[-2]
         return min_occurrences
 
     @staticmethod
     def child_list_max_occurrences(child_list: list):
         if list is None or len(child_list) < 3:
-            raise MetapypeRuleError("Child list must contain at least 3 elements")
+            raise MetapypeRuleError(
+                "Child list must contain at least 3 elements"
+            )
         max_occurrences = child_list[-1]
         return max_occurrences
 
@@ -182,7 +188,9 @@ class Rule(object):
             raise Exception(f"Unknown attribute {attribute}")
 
     def is_allowed_child(self, child_name: str):
-        return any(child_name in child_list[:-2] for child_list in self._children)
+        return any(
+            child_name in child_list[:-2] for child_list in self._children
+        )
 
     def allowed_attribute_values(self, attribute: str):
         values = []
@@ -238,7 +246,7 @@ class Rule(object):
         """
         Validates node content for rule compliance.
         For each of the content rules configured for this rule,
-        validates the node to see if its content complies 
+        validates the node to see if its content complies
         with the content that this rule expects.
 
         Args:
@@ -283,16 +291,33 @@ class Rule(object):
             if errs is None:
                 raise MetapypeRuleError(msg)
             else:
-                errs.append((ValidationError.CONTENT_EXPECTED_EMPTY, msg, node, node.content))
+                errs.append(
+                    (
+                        ValidationError.CONTENT_EXPECTED_EMPTY,
+                        msg,
+                        node,
+                        node.content,
+                    )
+                )
 
     @staticmethod
-    def _validate_enum_content(node: Node, enum_values: list, errs: list = None):
+    def _validate_enum_content(
+        node: Node, enum_values: list, errs: list = None
+    ):
         if node.content not in enum_values:
             msg = f'Node "{node.name}" content should be one of "{enum_values}", not "{node.content}"'
             if errs is None:
                 raise MetapypeRuleError(msg)
             else:
-                errs.append((ValidationError.CONTENT_EXPECTED_ENUM, msg, node, enum_values, node.content))
+                errs.append(
+                    (
+                        ValidationError.CONTENT_EXPECTED_ENUM,
+                        msg,
+                        node,
+                        enum_values,
+                        node.content,
+                    )
+                )
 
     @staticmethod
     def _validate_int_content(node: Node, errs: list = None):
@@ -302,7 +327,14 @@ class Rule(object):
             if errs is None:
                 raise MetapypeRuleError(msg)
             else:
-                errs.append((ValidationError.CONTENT_EXPECTED_INT, msg, node, type(node.content)))
+                errs.append(
+                    (
+                        ValidationError.CONTENT_EXPECTED_INT,
+                        msg,
+                        node,
+                        type(node.content),
+                    )
+                )
 
     @staticmethod
     def _validate_float_content(node: Node, errs: list = None):
@@ -312,9 +344,18 @@ class Rule(object):
             if errs is None:
                 raise MetapypeRuleError(msg)
             else:
-                errs.append((ValidationError.CONTENT_EXPECTED_FLOAT, msg, node, type(node.content)))
+                errs.append(
+                    (
+                        ValidationError.CONTENT_EXPECTED_FLOAT,
+                        msg,
+                        node,
+                        type(node.content),
+                    )
+                )
 
-    def _validate_float_range_content(self, node: Node, minmax, errs: list = None):
+    def _validate_float_range_content(
+        self, node: Node, minmax, errs: list = None
+    ):
         self._validate_float_content(node, errs)
         float_val = float(node.content)
         if float_val < minmax[0] or float_val > minmax[1]:
@@ -322,7 +363,16 @@ class Rule(object):
             if errs is None:
                 raise MetapypeRuleError(msg)
             else:
-                errs.append((ValidationError.CONTENT_EXPECTED_RANGE, msg, node, minmax[0], minmax[1], float_val))
+                errs.append(
+                    (
+                        ValidationError.CONTENT_EXPECTED_RANGE,
+                        msg,
+                        node,
+                        minmax[0],
+                        minmax[1],
+                        float_val,
+                    )
+                )
 
     def _validate_float_range_ew_content(self, node: Node, errs: list = None):
         self._validate_float_range_content(node, (-180.0, 180.0), errs)
@@ -338,7 +388,9 @@ class Rule(object):
             if errs is None:
                 raise MetapypeRuleError(msg)
             else:
-                errs.append((ValidationError.CONTENT_EXPECTED_NONEMPTY, msg, node))
+                errs.append(
+                    (ValidationError.CONTENT_EXPECTED_NONEMPTY, msg, node)
+                )
 
     @staticmethod
     def _validate_str_content(node: Node, errs: list = None):
@@ -347,7 +399,14 @@ class Rule(object):
             if errs is None:
                 raise MetapypeRuleError(msg)
             else:
-                errs.append((ValidationError.CONTENT_EXPECTED_STRING, msg, node, type(node.content)))
+                errs.append(
+                    (
+                        ValidationError.CONTENT_EXPECTED_STRING,
+                        msg,
+                        node,
+                        type(node.content),
+                    )
+                )
 
     @staticmethod
     def _validate_time_content(node: Node, errs: list = None):
@@ -357,7 +416,14 @@ class Rule(object):
             if errs is None:
                 raise MetapypeRuleError(msg)
             else:
-                errs.append((ValidationError.CONTENT_EXPECTED_TIME_FORMAT, msg, node, node.content))
+                errs.append(
+                    (
+                        ValidationError.CONTENT_EXPECTED_TIME_FORMAT,
+                        msg,
+                        node,
+                        node.content,
+                    )
+                )
 
     @staticmethod
     def _validate_yeardate_content(node: Node, errs: list = None):
@@ -367,7 +433,14 @@ class Rule(object):
             if errs is None:
                 raise MetapypeRuleError(msg)
             else:
-                errs.append((ValidationError.CONTENT_EXPECTED_YEAR_FORMAT, msg, node, node.content))
+                errs.append(
+                    (
+                        ValidationError.CONTENT_EXPECTED_YEAR_FORMAT,
+                        msg,
+                        node,
+                        node.content,
+                    )
+                )
 
     def _validate_attributes(self, node: Node, errs: list = None) -> None:
         """
@@ -393,7 +466,14 @@ class Rule(object):
                 if errs is None:
                     raise MetapypeRuleError(msg)
                 else:
-                    errs.append((ValidationError.ATTRIBUTE_REQUIRED, msg, node, attribute))
+                    errs.append(
+                        (
+                            ValidationError.ATTRIBUTE_REQUIRED,
+                            msg,
+                            node,
+                            attribute,
+                        )
+                    )
         for attribute in node.attributes:
             # Test for non-allowed attribute
             if attribute not in self._attributes:
@@ -401,7 +481,14 @@ class Rule(object):
                 if errs is None:
                     raise MetapypeRuleError(msg)
                 else:
-                    errs.append((ValidationError.ATTRIBUTE_UNRECOGNIZED, msg, node, attribute))
+                    errs.append(
+                        (
+                            ValidationError.ATTRIBUTE_UNRECOGNIZED,
+                            msg,
+                            node,
+                            attribute,
+                        )
+                    )
             else:
                 # Test for enumerated list of allowed values
                 if (
@@ -413,7 +500,15 @@ class Rule(object):
                     if errs is None:
                         raise MetapypeRuleError(msg)
                     else:
-                        errs.append((ValidationError.ATTRIBUTE_EXPECTED_ENUM, msg, node, attribute, self._attributes[attribute][1:]))
+                        errs.append(
+                            (
+                                ValidationError.ATTRIBUTE_EXPECTED_ENUM,
+                                msg,
+                                node,
+                                attribute,
+                                self._attributes[attribute][1:],
+                            )
+                        )
 
     def _validate_children(self, node: Node, errs: list = None) -> None:
         """
@@ -421,6 +516,8 @@ class Rule(object):
 
         Iterates through the list children rules and validates whether
         the node instance complies with the rules.
+
+        Ignores validation of children if parent node is "metadata"
 
         Args:
             node: Node instance to be validated
@@ -433,41 +530,104 @@ class Rule(object):
             child, or wrong child cardinality
         """
         if node.name != "metadata":
-            i = 0
-            max_i = len(node.children)
+            node_children = list()
+            for node_child in node.children:
+                node_children.append(node_child.name)
+
+            rule_children = list()
             for child in self._children:
-                name = child[:-2]
-                min = child[-2]
-                max = child[-1]
-                cnt = 0
-                while i < max_i:
-                    child_name = node.children[i].name
-                    if child_name in name:
-                        cnt += 1
-                        if max is not INFINITY and cnt > max:
-                            msg = f'Maximum occurrence of "{name}" exceeded for "{node.name}"'
-                            if errs is None:
-                                raise MetapypeRuleError(msg)
-                            else:
-                                errs.append((ValidationError.MAX_OCCURRENCE_EXCEEDED, msg, node, child_name, max))
-                        i += 1
-                    else:
-                        break
-                if cnt < min:
-                    msg = (
-                        f'Minimum occurrence of "{name}" not met for "{node.name}"'
-                    )
+                if isinstance(child[0], str):
+                    rule_children.append(child[0])
+                else:
+                    for _ in child[:-2]:
+                        rule_children.append(_[0])
+
+            for name in node_children:
+                if name not in rule_children:
+                    msg = f"Child '{name}' not allowed in parent '{node.name}'"
+                    raise MetapypeRuleError(msg)
+
+            Rule._validate_children_sequence(node, node_children, self._children, errs)
+
+    @staticmethod
+    def _validate_children_sequence(node: Node, node_children: list, rule_children: list, errs: list = None):
+        index = 0
+        for rule_child in rule_children:
+            if isinstance(rule_child[0], str):
+                name = rule_child[0]
+                min = rule_child[-2]
+                max = rule_child[-1]
+                occurrence = 0
+                while index < len(node_children) and name == node_children[index]:
+                    occurrence += 1
+                    if max is not INFINITY and occurrence > max:
+                        msg = (
+                            f"Maximum occurrence of '{max}' exceeded for child '{node_children[index]}' in parent "
+                            f"'{node.name}'"
+                        )
+                        if errs is None:
+                            raise MetapypeRuleError(msg)
+                        else:
+                            errs.append((ValidationError.MAX_OCCURRENCE_EXCEEDED, msg, node, node_children[index], max))
+                    index += 1
+                if occurrence < min:
+                    msg = f"Minimum occurrence of '{min}' not met for child '{name}' in parent '{node.name}'"
                     if errs is None:
                         raise MetapypeRuleError(msg)
                     else:
-                        errs.append((ValidationError.MIN_OCCURRENCE_UNMET, msg, node, name, min))
-            if i < max_i:
-                child_name = node.children[i].name
-                msg = f'Child "{child_name}" not allowed  for "{node.name}"'
+                        errs.append((ValidationError.MIN_OCCURRENCE_UNMET, msg, node, node_children[index], min))
+            else:
+                index = Rule._validate_children_choice(node, node_children[index:], rule_child)
+        if index != len(node_children):
+            msg = f"Child '{node_children[index]}' is not allowed in this position for parent '{node.name}'"
+            if errs is None:
+                raise MetapypeRuleError(msg)
+            else:
+                errs.append((ValidationError.CHILD_NOT_ALLOWED, msg, node, node_children[index]))
+
+    @staticmethod
+    def _validate_children_choice(node: Node, node_children: list, rule_children: list, errs: list = None) -> int:
+        index = 0
+        choice_min = rule_children[-2]
+        choice_max = rule_children[-1]
+        choice_occurrence = 0
+        while True:
+            if choice_max is not INFINITY and choice_occurrence > choice_max:
+                msg = f"Maximum occurrence of '{choice_max}' exceeded for choice in parent '{node.name}'"
                 if errs is None:
                     raise MetapypeRuleError(msg)
                 else:
-                    errs.append((ValidationError.CHILD_NOT_ALLOWED, msg, node, child_name))
+                    errs.append((ValidationError.MAX_OCCURRENCE_EXCEEDED, msg, node, "Choice", choice_max))
+            for rule_child in rule_children[:-2]:
+                name = rule_child[0]
+                min = rule_child[-2]
+                max = rule_child[-1]
+                occurrence = 0
+                choice = False
+                while index < len(node_children) and name == node_children[index]:
+                    index += 1
+                    occurrence += 1
+                    choice = True
+                    if max is not INFINITY and occurrence == max:
+                        break
+                if choice:
+                    if occurrence < min:
+                        msg = f"Minimum occurrence of '{min}' not met for child '{name}' in parent '{node.name}'"
+                        if errs is None:
+                            raise MetapypeRuleError(msg)
+                        else:
+                            errs.append((ValidationError.MIN_OCCURRENCE_UNMET, msg, node, name, min))
+                    choice_occurrence += 1
+                    break
+            if not choice:
+                break
+        if not choice and choice_occurrence < choice_min:
+            msg = f"Minimum occurrence of '{choice_min}' not met for choice in parent '{node.name}'"
+            if errs is None:
+                raise MetapypeRuleError(msg)
+            else:
+                errs.append((ValidationError.MIN_OCCURRENCE_UNMET, msg, node, "Choice", choice_min))
+        return index
 
     @property
     def name(self):
@@ -832,12 +992,3 @@ def get_rule(node_name: str):
     """
     rule_name = get_rule_name(node_name)
     return Rule(rule_name)
-
-
-def main():
-    eml_rule = Rule("emlRule")
-    print(eml_rule)
-
-
-if __name__ == "__main__":
-    main()

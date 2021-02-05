@@ -462,7 +462,7 @@
             "enforced": [false]
         },
         [
-            ["codeDefinition", "externalCodeSet", "entityCodeList", 1, 1]
+            [["codeDefinition", 1, null], ["externalCodeSet", 1, 1], ["entityCodeList", 1, 1], 1, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -672,7 +672,7 @@
             "id": [false]
         },
         [
-            ["enumeratedDomain", "textDomain", 1, null]
+            [["enumeratedDomain", 1, 1], ["textDomain", 1, 1], 1, null]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -872,7 +872,7 @@
             "scope": [false, "document", "system"]
         },
         [
-            ["individualName", "organizationName", "positionName", 1, null],
+            [["individualName", 1, 1], ["organizationName", 1, 1], ["positionName", 1, 1], 1, null],
             ["address", 0, null],
             ["phone", 0, null],
             ["electronicMailAddress", 0, null],
