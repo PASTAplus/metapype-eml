@@ -577,7 +577,7 @@ class Rule(object):
                     else:
                         errs.append((ValidationError.MIN_OCCURRENCE_UNMET, msg, node, node_children[index], min))
             else:
-                index = Rule._validate_children_choice(node, node_children[index:], rule_child)
+                index += Rule._validate_children_choice(node, node_children[index:], rule_child)
         if index != len(node_children):
             msg = f"Child '{node_children[index]}' is not allowed in this position for parent '{node.name}'"
             if errs is None:
