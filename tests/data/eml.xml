@@ -365,35 +365,6 @@
             </physical>
             <entityType>Unknown Entity Type</entityType>
         </otherEntity>
-        <!-- The following section is not supported by Metapype -->
-        <referencePublication>
-            <shortName>Another pub</shortName>
-            <title>My other pub</title>
-            <creator>
-                <individualName>
-                    <surName>Gaucho</surName>
-                </individualName>
-            </creator>
-            <report>
-                <publisher>
-                    <organizationName>My Press</organizationName>
-                </publisher>
-            </report>
-        </referencePublication>
-        <!-- The following section is not supported by Metapype -->
-        <usageCitation>
-            <title>My usage citation</title>
-            <creator>
-                <individualName>
-                    <surName>Gaucho</surName>
-                </individualName>
-            </creator>
-            <personalCommunication>
-                <communicationType>
-                    chitchat
-                </communicationType>
-            </personalCommunication>
-        </usageCitation>
     </dataset>
     <additionalMetadata>
         <describes>Testing namespaces</describes>
