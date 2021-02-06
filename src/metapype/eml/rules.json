@@ -8,7 +8,7 @@
             "authSystem": [true]
         },
         [
-            ["allow", "deny", 1, null]
+            [["allow", 1, 1], ["deny", 1, 1], 1, null]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -269,7 +269,7 @@
         { 
         },
         [
-            ["textFixed", "textDelimited", 1, null]
+            [["textFixed", 1, 1], ["textDelimited", 1, 1], 1, null]
        ],
         {
             "content_rules" : ["emptyContent"]
@@ -282,7 +282,7 @@
             "scope": [false, "document", "system"]
         },
         [
-            ["geographicCoverage", "temporalCoverage", "taxonomicCoverage", 1, null]
+            [["geographicCoverage", 1, 1], ["temporalCoverage", 1, 1], ["taxonomicCoverage", 1, 1], 1, null]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -292,7 +292,7 @@
         { 
         },
         [
-            ["textFormat", "externallyDefinedFormat", "binaryRasterFormat", 1, 1]
+            [["textFormat", 1, 1], ["externallyDefinedFormat", 1, 1], ["binaryRasterFormat", 1, 1], 1, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -328,8 +328,7 @@
             ["pubPlace", 0, 1],
             ["methods", 0, 1],
             ["project", 0, 1],
-            ["dataTable", 0, null],
-            ["otherEntity", 0, null]
+            [["dataTable", 1, 1], ["otherEntity", 1, 1], 0, null]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -421,7 +420,7 @@
             "scope": [false, "document", "system"]
         },
         [
-            ["online", "offline", "inline", 1, 1],
+            [["online", 1, 1], ["offline", 1, 1], ["inline", 1, 1], 1, 1],
             ["access", 0, 1]
         ],
         {
@@ -586,7 +585,7 @@
         { 
         },
         [
-            ["nominal", "ordinal", "interval", "ratio", "dateTime", 1, 1]
+            [["nominal", 1, 1], ["ordinal", 1, 1], ["interval", 1, 1], ["ratio", 1, 1], ["dateTime", 1, 1], 1, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -777,7 +776,7 @@
             ["objectName", 1, 1],
             ["size", 0, 1],
             ["authentication", 0, null],
-            ["compressionMethod", "encodingMethod", 0, null],
+            [["compressionMethod", 1, 1], ["encodingMethod", 1, 1], 0, null],
             ["characterEncoding", 0, 1],
             ["dataFormat", 1, 1],
             ["distribution", 0, null]
@@ -996,7 +995,7 @@
         { 
         },
         [
-            ["coverage", "description", 1, null]
+            [["coverage", 1, 1], ["description", 1, 1], 1, null]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -1040,7 +1039,7 @@
             "scope": [false, "document", "system"]
         },
         [
-            ["singleDateTime", "rangeOfDates", 1, 1]
+            [["singleDateTime", 1, null], ["rangeOfDates", 1, 1], 1, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -1095,7 +1094,7 @@
             ["numPhysicalLinesPerRecord", 0, 1],
             ["maxRecordLength", 0, 1],
             ["attributeOrientation", 1, 1],
-            ["simpleDelimited", "complex", 1, 1]
+            [["simpleDelimited", 1, 1], ["complex", 1, 1], 1, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -1125,7 +1124,7 @@
         { 
         },
         [
-            ["standardUnit", "customUnit", 1, 1]
+            [["standardUnit", 1, 1], ["customUnit", 1, 1], 1, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
