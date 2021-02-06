@@ -49,7 +49,6 @@ def test_from_xml():
         xml = "".join(f.readlines())
     eml = metapype_io.from_xml(xml)
     assert isinstance(eml, Node)
-    validate.prune(eml)
     validate.tree(eml)
 
 

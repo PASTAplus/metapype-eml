@@ -340,20 +340,20 @@ def test_is_float():
         assert not rule.Rule.is_float(bad_val)
 
 
-def test_validate_prune():
-    if "EML_XML" in os.environ:
-        xml_path = os.environ["EML_XML"]
-    else:
-        xml_path = Config.EML_XML
-
-    with open(xml_path, "r") as f:
-        xml = "".join(f.readlines())
-    eml = metapype_io.from_xml(xml)
-    assert isinstance(eml, Node)
-    errs = list()
-    validate.tree(eml, errs)
-    assert len(errs) > 0
-    validate.prune(eml)
-    errs = list()
-    validate.tree(eml, errs)
-    assert len(errs) == 0
+# def test_validate_prune():
+#     if "EML_XML" in os.environ:
+#         xml_path = os.environ["EML_XML"]
+#     else:
+#         xml_path = Config.EML_XML
+#
+#     with open(xml_path, "r") as f:
+#         xml = "".join(f.readlines())
+#     eml = metapype_io.from_xml(xml)
+#     assert isinstance(eml, Node)
+#     errs = list()
+#     validate.tree(eml, errs)
+#     assert len(errs) > 0
+#     validate.prune(eml)
+#     errs = list()
+#     validate.tree(eml, errs)
+#     assert len(errs) == 0
