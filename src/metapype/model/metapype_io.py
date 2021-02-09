@@ -110,8 +110,6 @@ def _process_element(e, clean) -> Node:
     if clean:
         if e.text is not None:
             node.content = None if e.text.strip() == '' else e.text.strip()
-        else:
-            logger.error(e.tag)
     else:
         node.content = e.text
 
