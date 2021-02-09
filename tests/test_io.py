@@ -18,7 +18,6 @@ import os
 import daiquiri
 
 from metapype.config import Config
-from metapype.eml import names
 from metapype.eml import validate
 from metapype.model import metapype_io
 from metapype.model.node import Node
@@ -40,10 +39,8 @@ def test_from_json():
 
 
 def test_from_xml():
-    ci = False
     if "TEST_DATA" in os.environ:
         xml_path = os.environ["TEST_DATA"]
-        ci = True
     else:
         xml_path = Config.TEST_DATA
 
