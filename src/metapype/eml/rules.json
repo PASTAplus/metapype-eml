@@ -236,8 +236,8 @@
         { 
         },
         [
-            ["minimum", 1, 1],
-            ["maximum", 1, 1]
+            ["minimum", 0, 1],
+            ["maximum", 0, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -300,6 +300,9 @@
     ],
     "datasetRule" : [
         { 
+            "id": [false],
+            "system": [false],
+            "scope": [false, "document", "system"]
         },
         [
             ["alternateIdentifier", 0, null],
@@ -620,7 +623,7 @@
         [
         ],
         {
-            "content_rules" : ["nonEmptyContent"]
+            "content_rules" : ["strContent"]
         }
     ],
     "missingValueCodeRule" : [
@@ -748,12 +751,12 @@
     ],
     "phoneRule" : [
         { 
-            "phonetype" : [false, "facsimile", "tdd", "voice"]
+            "phonetype" : [false]
         },
         [
         ],
         {
-            "content_rules" : ["strContent", "nonEmptyContent"]
+            "content_rules" : ["strContent"]
         }
     ],
     "physicalRule" : [
