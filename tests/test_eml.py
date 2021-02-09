@@ -341,12 +341,12 @@ def test_is_float():
 
 
 def test_validate_prune():
-    if "EML_XML" in os.environ:
-        xml_path = os.environ["EML_XML"]
+    if "TEST_DATA" in os.environ:
+        xml_path = os.environ["TEST_DATA"]
     else:
-        xml_path = Config.EML_XML
+        xml_path = Config.TEST_DATA
 
-    with open(xml_path, "r") as f:
+    with open(f"{xml_path}/eml.xml", "r") as f:
         xml = "".join(f.readlines())
     eml = metapype_io.from_xml(xml)
     assert isinstance(eml, Node)
