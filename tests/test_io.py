@@ -28,24 +28,26 @@ logger = daiquiri.getLogger("test_io: " + __name__)
 
 
 def test_from_json():
-    if "EML_JSON" in os.environ:
-        json_path = os.environ["EML_JSON"]
+    if "TEST_DATA" in os.environ:
+        test_data = os.environ["TEST_DATA"]
     else:
-        json_path = Config.EML_JSON
+        test_data = Config.TEST_DATA
 
-    with open(json_path, "r") as f:
+    with open(f"{test_data}/eml.json", "r") as f:
         eml_json = "".join([_ for _ in f.readlines()])
     eml = metapype_io.from_json(eml_json)
     validate.tree(eml)
 
 
 def test_from_xml():
-    if "EML_XML" in os.environ:
-        xml_path = os.environ["EML_XML"]
+    ci = False
+    if "TEST_DATA" in os.environ:
+        xml_path = os.environ["TEST_DATA"]
+        ci = True
     else:
-        xml_path = Config.EML_XML
+        xml_path = Config.TEST_DATA
 
-    with open(xml_path, "r") as f:
+    with open(f"{xml_path}/eml.xml", "r") as f:
         xml = "".join(f.readlines())
     eml = metapype_io.from_xml(xml)
     assert isinstance(eml, Node)
@@ -53,12 +55,12 @@ def test_from_xml():
 
 
 def test_to_json():
-    if "EML_XML" in os.environ:
-        xml_path = os.environ["EML_XML"]
+    if "TEST_DATA" in os.environ:
+        xml_path = os.environ["TEST_DATA"]
     else:
-        xml_path = Config.EML_XML
+        xml_path = Config.TEST_DATA
 
-    with open(xml_path, "r") as f:
+    with open(f"{xml_path}/eml.xml", "r") as f:
         xml = "".join(f.readlines())
     eml = metapype_io.from_xml(xml)
     assert isinstance(eml, Node)
@@ -69,12 +71,12 @@ def test_to_json():
 
 
 def test_to_xml():
-    if "EML_JSON" in os.environ:
-        json_path = os.environ["EML_JSON"]
+    if "TEST_DATA" in os.environ:
+        test_data = os.environ["TEST_DATA"]
     else:
-        json_path = Config.EML_JSON
+        test_data = Config.TEST_DATA
 
-    with open(json_path, "r") as f:
+    with open(f"{test_data}/eml.json", "r") as f:
         eml_json = "".join([_ for _ in f.readlines()])
     eml = metapype_io.from_json(eml_json)
     validate.tree(eml)
@@ -83,12 +85,12 @@ def test_to_xml():
 
 
 def test_graph():
-    if "EML_XML" in os.environ:
-        xml_path = os.environ["EML_XML"]
+    if "TEST_DATA" in os.environ:
+        xml_path = os.environ["TEST_DATA"]
     else:
-        xml_path = Config.EML_XML
+        xml_path = Config.TEST_DATA
 
-    with open(xml_path, "r") as f:
+    with open(f"{xml_path}/eml.xml", "r") as f:
         xml = "".join(f.readlines())
     eml = metapype_io.from_xml(xml)
     assert isinstance(eml, Node)
