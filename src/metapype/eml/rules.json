@@ -390,17 +390,6 @@
             "content_rules" : ["emptyContent"]
         }
     ],
-    "descriptionRule" : [
-        { 
-            "lang": [false]
-        },
-       [
-            ["section", "para", 0, null]
-        ],
-        {
-            "content_rules" : ["emptyContent"]
-        }
-    ],
     "descriptorRule" : [
         {
             "name": [true],
@@ -436,7 +425,7 @@
         },
         [
             ["access", 0, 1],
-            ["dataset", "citation", "software", "protocol", 1, 1],
+            [["dataset", 1, 1], ["citation", 1, 1], ["software", 1, 1], ["protocol", 1, 1], 1, 1],
             ["additionalMetadata", 0, null]
         ],
         {
@@ -472,7 +461,7 @@
         },
         [
             ["codesetName", 1, 1],
-            ["citation", "codesetURL", 1, null]
+            [["citation", 1, 1], ["codesetURL", 1, 1], 1, null]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -617,7 +606,8 @@
         },
         [
             ["description", 1, 1],
-            ["instrumentation", 0, null]
+            ["instrumentation", 0, null],
+            ["dataSource", 0, null]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -709,7 +699,7 @@
         },
         [
             ["onlineDescription", 0, 1],
-            ["url", "connection", 1, 1]
+            [["url", 1, 1], ["connection", 1, 1], 1, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -889,7 +879,7 @@
             "scope": [false, "document", "system"]
         },
         [
-            ["individualName", "organizationName", "positionName", 1, null],
+            [["individualName", 1, 1], ["organizationName", 1, 1], ["positionName", 1, 1], 1, null],
             ["address", 0, null],
             ["phone", 0, null],
             ["electronicMailAddress", 0, null],
@@ -931,7 +921,7 @@
         },
         [
             ["title", 0, 1],
-            ["para", "section", 0, null]
+            [["para", 1, 1], ["section", 1, 1], 1, null]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -985,7 +975,7 @@
         {
         },
         [
-            ["descriptor", "coverage", 1, null]
+            [["descriptor", 1, 1], ["coverage", 0, 1], 1, null]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -1105,7 +1095,7 @@
             "lang": [false]
         },
         [
-            ["section", "para", "markdown", 0, null]
+            [["section", 0, null], ["para", 0, null], ["markdown", 0, null], 1, null]
         ],
         {
             "content_rules" : ["strContent"]

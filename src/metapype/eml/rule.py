@@ -22,7 +22,13 @@ from datetime import time
 import json
 
 from metapype.config import Config
-from metapype.eml.exceptions import MetapypeRuleError
+from metapype.eml.exceptions import (
+    MetapypeRuleError,
+    UnknownNodeError,
+    MaxOccurrenceExceededError,
+    MinOccurrenceUnmetError,
+    ChildNotAllowedError
+)
 from metapype.eml import names
 from metapype.eml.validation_errors import ValidationError
 from metapype.model.node import Node
@@ -234,13 +240,16 @@ class Rule(object):
             position: Integer value of child node position
 
         Raises:
-            MetapypeRuleError: Child node not permitted by given rule type
+            ChildNotAllowedError: Child node not permitted by given rule type
         """
-        for position in range(len(self.children)):
-            if node.name in self.children[position][:-2]:
+        for position, child in enumerate(self.children):
+            child_name_list = child[:-2]
+            if isinstance(child_name_list[0], list):
+                child_name_list = [_[0] for _ in child_name_list]
+            if node.name in child_name_list:
                 return position
         msg = f'Child "{node.name}" not allowed'
-        raise MetapypeRuleError(msg)
+        raise ChildNotAllowedError(msg)
 
     def _validate_content(self, node: Node, errs: list = None):
         """
@@ -545,12 +554,23 @@ class Rule(object):
             for name in node_children:
                 if name not in rule_children:
                     msg = f"Child '{name}' not allowed in parent '{node.name}'"
-                    raise MetapypeRuleError(msg)
+                    if errs is None:
+                        raise UnknownNodeError(msg)
+                    else:
+                        errs.append((ValidationError.UNKNOWN_NODE, msg, node, name))
 
-            Rule._validate_children_sequence(node, node_children, self._children, errs)
+            if self._name in (RULE_TEXT):
+                is_mixed_content = True
+            else:
+                is_mixed_content = False
+            Rule._validate_children_sequence(
+                node, node_children, self._children, is_mixed_content, errs
+            )
 
     @staticmethod
-    def _validate_children_sequence(node: Node, node_children: list, rule_children: list, errs: list = None):
+    def _validate_children_sequence(
+        node: Node, node_children: list, rule_children: list, is_mixed_content: bool, errs: list = None
+    ):
         index = 0
         for rule_child in rule_children:
             if isinstance(rule_child[0], str):
@@ -558,7 +578,9 @@ class Rule(object):
                 min = rule_child[-2]
                 max = rule_child[-1]
                 occurrence = 0
-                while index < len(node_children) and name == node_children[index]:
+                while (
+                    index < len(node_children) and name == node_children[index]
+                ):
                     occurrence += 1
                     if max is not INFINITY and occurrence > max:
                         msg = (
@@ -566,27 +588,54 @@ class Rule(object):
                             f"'{node.name}'"
                         )
                         if errs is None:
-                            raise MetapypeRuleError(msg)
+                            raise MaxOccurrenceExceededError(msg)
                         else:
-                            errs.append((ValidationError.MAX_OCCURRENCE_EXCEEDED, msg, node, node_children[index], max))
+                            errs.append(
+                                (
+                                    ValidationError.MAX_OCCURRENCE_EXCEEDED,
+                                    msg,
+                                    node,
+                                    node_children[index],
+                                    max,
+                                )
+                            )
                     index += 1
                 if occurrence < min:
                     msg = f"Minimum occurrence of '{min}' not met for child '{name}' in parent '{node.name}'"
                     if errs is None:
-                        raise MetapypeRuleError(msg)
+                        raise MinOccurrenceUnmetError(msg)
                     else:
-                        errs.append((ValidationError.MIN_OCCURRENCE_UNMET, msg, node, node_children[index], min))
+                        errs.append(
+                            (
+                                ValidationError.MIN_OCCURRENCE_UNMET,
+                                msg,
+                                node,
+                                node_children[index],
+                                min,
+                            )
+                        )
             else:
-                index += Rule._validate_children_choice(node, node_children[index:], rule_child)
+                index += Rule._validate_children_choice(
+                    node, node_children[index:], rule_child, is_mixed_content, errs
+                )
         if index != len(node_children):
             msg = f"Child '{node_children[index]}' is not allowed in this position for parent '{node.name}'"
             if errs is None:
-                raise MetapypeRuleError(msg)
+                raise ChildNotAllowedError(msg)
             else:
-                errs.append((ValidationError.CHILD_NOT_ALLOWED, msg, node, node_children[index]))
+                errs.append(
+                    (
+                        ValidationError.CHILD_NOT_ALLOWED,
+                        msg,
+                        node,
+                        node_children[index],
+                    )
+                )
 
     @staticmethod
-    def _validate_children_choice(node: Node, node_children: list, rule_children: list, errs: list = None) -> int:
+    def _validate_children_choice(
+        node: Node, node_children: list, rule_children: list, is_mixed_content: bool, errs: list = None
+    ) -> int:
         index = 0
         choice_min = rule_children[-2]
         choice_max = rule_children[-1]
@@ -595,16 +644,26 @@ class Rule(object):
             if choice_max is not INFINITY and choice_occurrence > choice_max:
                 msg = f"Maximum occurrence of '{choice_max}' exceeded for choice in parent '{node.name}'"
                 if errs is None:
-                    raise MetapypeRuleError(msg)
+                    raise MaxOccurrenceExceededError(msg)
                 else:
-                    errs.append((ValidationError.MAX_OCCURRENCE_EXCEEDED, msg, node, "Choice", choice_max))
+                    errs.append(
+                        (
+                            ValidationError.MAX_OCCURRENCE_EXCEEDED,
+                            msg,
+                            node,
+                            "Choice",
+                            choice_max,
+                        )
+                    )
             for rule_child in rule_children[:-2]:
                 name = rule_child[0]
                 min = rule_child[-2]
                 max = rule_child[-1]
                 occurrence = 0
                 choice = False
-                while index < len(node_children) and name == node_children[index]:
+                while (
+                    index < len(node_children) and name == node_children[index]
+                ):
                     index += 1
                     occurrence += 1
                     choice = True
@@ -614,19 +673,35 @@ class Rule(object):
                     if occurrence < min:
                         msg = f"Minimum occurrence of '{min}' not met for child '{name}' in parent '{node.name}'"
                         if errs is None:
-                            raise MetapypeRuleError(msg)
+                            raise MinOccurrenceUnmetError(msg)
                         else:
-                            errs.append((ValidationError.MIN_OCCURRENCE_UNMET, msg, node, name, min))
+                            errs.append(
+                                (
+                                    ValidationError.MIN_OCCURRENCE_UNMET,
+                                    msg,
+                                    node,
+                                    name,
+                                    min,
+                                )
+                            )
                     choice_occurrence += 1
                     break
             if not choice:
                 break
-        if not choice and choice_occurrence < choice_min:
+        if not choice and choice_occurrence < choice_min and not is_mixed_content:
             msg = f"Minimum occurrence of '{choice_min}' not met for choice in parent '{node.name}'"
             if errs is None:
-                raise MetapypeRuleError(msg)
+                raise MinOccurrenceUnmetError(msg)
             else:
-                errs.append((ValidationError.MIN_OCCURRENCE_UNMET, msg, node, "Choice", choice_min))
+                errs.append(
+                    (
+                        ValidationError.MIN_OCCURRENCE_UNMET,
+                        msg,
+                        node,
+                        "Choice",
+                        choice_min,
+                    )
+                )
         return index
 
     @property
@@ -679,6 +754,7 @@ RULE_COMPLEX = "complexRule"
 RULE_COVERAGE = "coverageRule"
 RULE_DATAFORMAT = "dataFormatRule"
 RULE_DATASET = "datasetRule"
+RULE_DATASOURCE = "datasetRule"
 RULE_DATATABLE = "dataTableRule"
 RULE_DATETIME = "dateTimeRule"
 RULE_DATETIMEDOMAIN = "dateTimeDomainRule"
@@ -808,6 +884,7 @@ node_mappings = {
     names.CUSTOMUNIT: RULE_ANYSTRING,
     names.DATAFORMAT: RULE_DATAFORMAT,
     names.DATASET: RULE_DATASET,
+    names.DATASOURCE: RULE_DATASOURCE,
     names.DATATABLE: RULE_DATATABLE,
     names.DATETIME: RULE_DATETIME,
     names.DATETIMEDOMAIN: RULE_DATETIMEDOMAIN,
