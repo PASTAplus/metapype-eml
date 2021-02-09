@@ -16,7 +16,7 @@
 import daiquiri
 
 from metapype.eml import rule
-from metapype.eml.exceptions import MetapypeRuleError
+from metapype.eml.exceptions import MetapypeRuleError, UnknownNodeError
 from metapype.eml.validation_errors import ValidationError
 from metapype.model.node import Node
 
@@ -41,7 +41,7 @@ def node(n: Node, errs: list = None) -> None:
     if n.name not in rule.node_mappings:
         msg = f"Unknown node rule type: {n.name}"
         if errs is None:
-            raise MetapypeRuleError(msg)
+            raise UnknownNodeError(msg)
         else:
             errs.append((ValidationError.UNKNOWN_NODE, msg, n))
     else:
@@ -62,19 +62,20 @@ def prune(n: Node) -> list:
 
     """
     pruned = list()
-    try:
-        node(n)
-    except MetapypeRuleError:
+    if n.name != "metadata":
+        try:
+            node(n)
+        except MetapypeRuleError:
+            for child in n.children:
+                try:
+                    node(child)
+                except UnknownNodeError:
+                    pruned.append(child)
+            for child in pruned:
+                n.remove_child(child)
+                Node.delete_node_instance(child.id)
         for child in n.children:
-            try:
-                node(child)
-            except MetapypeRuleError:
-                pruned.append(child)
-        for child in pruned:
-            n.remove_child(child)
-            Node.delete_node_instance(child.id)
-    for child in n.children:
-        pruned += prune(child)
+            pruned += prune(child)
     return pruned
 
 
