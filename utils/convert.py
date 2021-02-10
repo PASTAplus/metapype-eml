@@ -80,7 +80,7 @@ def main(json_path: str, recursive: bool, overwrite: bool):
         if not overwrite:
             ext = date.today().strftime("%Y%m%d")
             if Path(f"{json_file}.{ext}").exists():
-                msg = f"Previous version '{json_file}.{ext}' alread exists"
+                msg = f"Previous version '{json_file}.{ext}' already exists"
                 raise IOError(msg)
             Path(json_file).replace(f"{json_file}.{ext}")
         with open(json_file, "w") as f:
