@@ -538,7 +538,14 @@ class Rule(object):
             MetapypeRuleError: Illegal child, bad sequence or choice, missing
             child, or wrong child cardinality
         """
-        if node.name != "metadata":
+        if node.name == names.METADATA:
+            if len(node.children) > 1:
+                msg = f"Maximum occurrence of 1 child exceeded in parent '{names.METADATA}'"
+                if errs is None:
+                    raise MaxOccurrenceExceededError(msg)
+                else:
+                    errs.append((ValidationError.MAX_OCCURRENCE_EXCEEDED, msg, node))
+        else:
             node_children = list()
             for node_child in node.children:
                 node_children.append(node_child.name)
