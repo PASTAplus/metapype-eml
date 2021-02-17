@@ -192,15 +192,20 @@ class Node(object):
             Node
 
         """
+        # Make a shallow copy and give it a new ID
         _copy = copy.copy(self)
         _copy._id = str(uuid.uuid1())
         Node.set_node_instance(_copy)
+        # Construct the attributes dictionary so it's not just a reference to self's version
         _copy.attributes = {}
         for key, val in self.attributes.items():
             _copy.attributes[key] = val
+        # Construct the children list so it's not just a reference to self's version
         _copy.children = []
         for child in self.children:
-            _copy.children.append(child.copy())
+            _child_copy = child.copy()
+            _child_copy.parent = _copy
+            _copy.children.append(_child_copy)
         return _copy
 
     def find_all_children(self, child_name):
