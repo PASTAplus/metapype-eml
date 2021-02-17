@@ -195,8 +195,12 @@ class Node(object):
         _copy = copy.copy(self)
         _copy._id = str(uuid.uuid1())
         Node.set_node_instance(_copy)
+        _copy.attributes = {}
+        for key, val in self.attributes.items():
+            _copy.attributes[key] = val
+        _copy.children = []
         for child in self.children:
-            child.copy()
+            _copy.children.append(child.copy())
         return _copy
 
     def find_all_children(self, child_name):
