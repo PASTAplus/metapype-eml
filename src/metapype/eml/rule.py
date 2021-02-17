@@ -267,6 +267,8 @@ class Rule(object):
         Raises:
             MetapypeRuleError: Illegal attribute or missing required attribute
         """
+        if node.content is not None:
+            node.content.encode(encoding="utf-8", errors="strict")
         for content_rule in self._content["content_rules"]:
             if content_rule == "emptyContent":
                 self._validate_empty_content(node, errs)
