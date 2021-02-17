@@ -23,11 +23,12 @@ import json
 
 from metapype.config import Config
 from metapype.eml.exceptions import (
-    MetapypeRuleError,
-    UnknownNodeError,
+    ChildNotAllowedError,
     MaxOccurrenceExceededError,
+    MetapypeRuleError,
     MinOccurrenceUnmetError,
-    ChildNotAllowedError
+    StrContentUnicodeError,
+    UnknownNodeError,
 )
 from metapype.eml import names
 from metapype.eml.validation_errors import ValidationError
@@ -418,6 +419,22 @@ class Rule(object):
                         type(node.content),
                     )
                 )
+        if node.content is not None:
+            try:
+                node.content.encode(encoding="utf-8", errors="strict")
+            except UnicodeError as ex:
+                msg = f'Node "{node.name}" content contains non-unicode character(s)'
+                if errs is None:
+                    raise StrContentUnicodeError(msg)
+                else:
+                    errs.append(
+                        (
+                            ValidationError.CONTENT_EXPECTED_STRING,
+                            msg,
+                            node,
+                            type(node.content),
+                        )
+                    )
 
     @staticmethod
     def _validate_time_content(node: Node, errs: list = None):

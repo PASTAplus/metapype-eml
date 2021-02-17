@@ -83,6 +83,10 @@ class MinOccurrenceUnmetError(MetapypeRuleError):
     pass
 
 
+class StrContentUnicodeError(MetapypeRuleError):
+    pass
+
+
 class UnknownAttributeError(MetapypeRuleError):
     pass
 

@@ -29,5 +29,6 @@ class ValidationError(Enum):
     CONTENT_EXPECTED_YEAR_FORMAT = auto()
     MAX_OCCURRENCE_EXCEEDED = auto()
     MIN_OCCURRENCE_UNMET = auto()
+    STR_CONTENT_UNICODE_ERROR = auto()
     UNKNOWN_ATTRIBUTE = auto()
     UNKNOWN_NODE = auto()
