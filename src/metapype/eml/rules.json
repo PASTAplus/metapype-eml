@@ -82,8 +82,8 @@
             "scope": [false, "document", "system"]
         },
         [
-            ["propertyURI"],
-            ["valueURI"]
+            ["propertyURI", 1, 1],
+            ["valueURI", 1, 1]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -124,7 +124,7 @@
         [
         ],
         {
-            "content_rules" : ["anyURIContent", "nonEmptyContent"]
+            "content_rules" : ["uriContent", "nonEmptyContent"]
         }
     ],
     "attributeListRule" : [
@@ -806,6 +806,16 @@
             "content_rules" : ["emptyContent"]
         }
     ],
+    "propertyUriRule" : [
+        {
+            "label": [true]
+        },
+        [
+        ],
+        {
+            "content_rules" : ["uriContent"]
+        }
+    ],
     "qualityControlRule" : [
         { 
         },
@@ -1130,7 +1140,7 @@
         [
         ],
         {
-            "content_rules" : ["anyURIContent", "nonEmptyContent"]
+            "content_rules" : ["uriContent", "nonEmptyContent"]
         }
     ],
     "userIdRule" : [
@@ -1151,6 +1161,16 @@
         ],
         {
             "content_rules" : ["strContent"]
+        }
+    ],
+    "valueUriRule" : [
+        {
+            "label": [true]
+        },
+        [
+        ],
+        {
+            "content_rules" : ["uriContent"]
         }
     ],
     "yearDateRule" : [

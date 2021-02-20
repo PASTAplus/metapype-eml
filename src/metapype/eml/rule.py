@@ -14,12 +14,18 @@
 :Created:
     7/10/18
 """
-import os
-
-import daiquiri
 import datetime
 from datetime import time
 import json
+import os
+
+import daiquiri
+from rfc3986 import uri_reference, validators
+from rfc3986.exceptions import (
+    InvalidComponentsError,
+    MissingComponentError,
+    UnpermittedComponentError
+)
 
 from metapype.config import Config
 from metapype.eml.exceptions import (
@@ -27,7 +33,9 @@ from metapype.eml.exceptions import (
     MaxOccurrenceExceededError,
     MetapypeRuleError,
     MinOccurrenceUnmetError,
+    ContentExpectedUriError,
     StrContentUnicodeError,
+    UnknownContentRuleError,
     UnknownNodeError,
 )
 from metapype.eml import names
@@ -145,6 +153,32 @@ class Rule(object):
                     break
                 except ValueError as ex:
                     logger.debug(ex)
+        return is_valid
+
+    @staticmethod
+    def is_uri(val: str = None) -> bool:
+        """
+        Boolean to determine whether node content is a valid uri.
+        Args:
+            val: String value of uri
+
+        Returns: boolean
+
+        """
+        is_valid = False
+        validator = validators.Validator().allow_schemes(
+            "http", "https", "ftp"
+        ).require_presence_of(
+            "scheme", "host", "path"
+        ).check_validity_of(
+            "scheme", "host", "path"
+        )
+        uri = uri_reference(val)
+        try:
+            validator.validate(uri)
+            is_valid = True
+        except (InvalidComponentsError, MissingComponentError, UnpermittedComponentError) as ex:
+            logger.debug(ex)
         return is_valid
 
     @staticmethod
@@ -285,10 +319,24 @@ class Rule(object):
                 self._validate_str_content(node, errs)
             elif content_rule == "timeContent":
                 self._validate_time_content(node, errs)
+            elif content_rule == 'uriContent':
+                self._validate_uri_content(node, errs)
             elif content_rule == "yearDateContent":
                 self._validate_yeardate_content(node, errs)
             elif content_rule == "anyContent":
                 pass
+            else:
+                msg = f"Node {node.name} content type rule {content_rule} not recognized"
+                if errs is None:
+                    raise UnknownContentRuleError(msg)
+                else:
+                    errs.append(
+                        (
+                            ValidationError.UNKNOWN_CONTENT_RULE,
+                            msg,
+                            node,
+                        )
+                    )
 
         if self.has_enum_content():
             enum_values = self._content["content_enum"]
@@ -445,6 +493,23 @@ class Rule(object):
                 errs.append(
                     (
                         ValidationError.CONTENT_EXPECTED_TIME_FORMAT,
+                        msg,
+                        node,
+                        node.content,
+                    )
+                )
+
+    @staticmethod
+    def _validate_uri_content(node: Node, errs: list = None):
+        uri = node.content
+        if uri is not None and not Rule.is_uri(uri):
+            msg = f'Node "{node.name}" uri content "{uri}" is not valid'
+            if errs is None:
+                raise ContentExpectedUriError(msg)
+            else:
+                errs.append(
+                    (
+                        ValidationError.CONTENT_EXPECTED_URI,
                         msg,
                         node,
                         node.content,
@@ -818,6 +883,7 @@ RULE_PHONE = "phoneRule"
 RULE_PHYSICAL = "physicalRule"
 RULE_PRINCIPAL = "principalRule"
 RULE_PROJECT = "projectRule"
+RULE_PROPERTYURI = "propertyUriRule"
 RULE_QUALITYCONTROL = "qualityControlRule"
 RULE_QUANTITATIVEATTRIBUTEACCURACYASSESSMENT = (
     "quantitativeAttributeAccuracyAssessmentRule"
@@ -849,6 +915,7 @@ RULE_UNIT = "unitRule"
 RULE_URL = "urlRule"
 RULE_USERID = "userIdRule"
 RULE_VALUE = "valueRule"
+RULE_VALUEURI = "valueUriRule"
 RULE_YEARDATE = "yearDateRule"
 
 
@@ -1016,7 +1083,7 @@ node_mappings = {
     names.PRECISION: RULE_ANYSTRING,
     names.PRINCIPAL: RULE_PRINCIPAL,
     names.PROJECT: RULE_PROJECT,
-    names.PROPERTYURI: RULE_ANYURI,
+    names.PROPERTYURI: RULE_PROPERTYURI,
     names.PUBDATE: RULE_YEARDATE,
     names.PUBLISHER: RULE_RESPONSIBLEPARTY,
     names.PUBPLACE: RULE_ANYSTRING,
@@ -1065,7 +1132,7 @@ node_mappings = {
     names.USERID: RULE_USERID,
     names.VALUE: RULE_VALUE,
     names.VALUEATTRIBUTEREFERENCE: RULE_ANYSTRING,
-    names.VALUEURI: RULE_ANYURI,
+    names.VALUEURI: RULE_VALUEURI,
     names.WESTBOUNDINGCOORDINATE: RULE_BOUNDINGCOORDINATE_EW,
 }
 

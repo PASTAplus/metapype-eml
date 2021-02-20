@@ -75,6 +75,10 @@ class ContentExpectedYearFormatError(MetapypeRuleError):
     pass
 
 
+class ContentExpectedUriError(MetapypeRuleError):
+    pass
+
+
 class MaxOccurrenceExceededError(MetapypeRuleError):
     pass
 
@@ -88,6 +92,10 @@ class StrContentUnicodeError(MetapypeRuleError):
 
 
 class UnknownAttributeError(MetapypeRuleError):
+    pass
+
+
+class UnknownContentRuleError(MetapypeRuleError):
     pass
 
 

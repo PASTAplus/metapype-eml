@@ -362,3 +362,30 @@ def test_validate_prune():
     errs = list()
     validate.tree(eml, errs)
     assert len(errs) == 0
+
+
+def test_is_uri():
+    good_uri = "http://purl.obolibrary.org/obo/IAO_0000136"
+    assert rule.Rule.is_uri(good_uri)
+    # Bad scheme (requires http or https)
+    bad_uri = "htp://purl.obolibrary.org/obo/IAO_0000136"
+    assert not rule.Rule.is_uri(bad_uri)
+    # Missing path
+    bad_uri = "http://purl.obolibrary.org"
+    assert not rule.Rule.is_uri(bad_uri)
+    # Missing host and path
+    bad_uri = "http://"
+    assert not rule.Rule.is_uri(bad_uri)
+
+
+def test_validate_annotation():
+    annotation = Node(names.ANNOTATION)
+    property_uri = Node(names.PROPERTYURI)
+    property_uri.content = "http://purl.obolibrary.org/obo/IAO_0000136"
+    property_uri.add_attribute("label", "some property label")
+    annotation.add_child(property_uri)
+    value_uri = Node(names.VALUEURI)
+    value_uri.content = "http://purl.obolibrary.org/obo/IAO_0000136"
+    value_uri.add_attribute("label", "some value label")
+    annotation.add_child(value_uri)
+    validate.tree(annotation)
