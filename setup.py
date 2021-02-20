@@ -28,7 +28,7 @@ with open(path.join(here, "LICENSE"), encoding="utf-8") as f:
 
 setup(
     name='metapype',
-    version='2021.02.17',
+    version='2021.02.20',
     description='Metapype for EML',
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -40,7 +40,7 @@ setup(
     exclude_package_data={"": ["settings.py, properties.py, config.py"], },
     package_dir={"": "src"},
     python_requires=">=3.8.*",
-    install_requires=["click>=7.1.2", "daiquiri>=3.0.0",  "lxml>=4.6.2",],
+    install_requires=["click=7.1.2", "daiquiri=3.0.0",  "lxml=4.6.2", "rfc3986=1.4.0"],
     classifiers=["License :: OSI Approved :: Apache Software License",],
 )
 
