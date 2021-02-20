@@ -30,7 +30,7 @@ dependencies:
   - more-itertools=8.6.0
   - mypy_extensions=0.4.3
   - ncurses=6.2
-  - openssl=1.1.1i
+  - openssl=1.1.1j
   - packaging=20.8
   - parso=0.8.1
   - pathspec=0.8.1
@@ -46,6 +46,7 @@ dependencies:
   - python_abi=3.8
   - readline=8.0
   - regex=2020.11.13
+  - rfc3986=1.4.0
   - setuptools=49.6.0
   - sqlite=3.34.0
   - tk=8.6.10
