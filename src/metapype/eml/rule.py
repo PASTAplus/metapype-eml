@@ -605,10 +605,10 @@ class Rule(object):
         """
         Validates node children for rule compliance.
 
-        Iterates through the list children rules and validates whether
-        the node instance complies with the rules.
-
-        Ignores validation of children if parent node is "metadata"
+        1. Ignores validation of children if parent node is "metadata"
+        2. Ensures children are valid for node
+        3. Iterates through the list children rules and validates whether
+           the node instance complies with the rules.
 
         Args:
             node: Node instance to be validated
@@ -621,6 +621,7 @@ class Rule(object):
             child, or wrong child cardinality
         """
         if node.name == names.METADATA:
+            # Metadata nodes may contain any type of child node, but only one such node
             if len(node.children) > 1:
                 msg = f"Maximum occurrence of 1 child exceeded in parent '{names.METADATA}'"
                 if errs is None:
@@ -639,7 +640,7 @@ class Rule(object):
                 else:
                     for _ in child[:-2]:
                         rule_children.append(_[0])
-
+            # Test for illegal children nodes
             for name in node_children:
                 if name not in rule_children:
                     msg = f"Child '{name}' not allowed in parent '{node.name}'"
@@ -648,7 +649,7 @@ class Rule(object):
                     else:
                         errs.append((ValidationError.UNKNOWN_NODE, msg, node, name))
 
-            if self._name in (RULE_TEXT):
+            if self._name in (RULE_TEXT, RULE_ANYNAME):
                 is_mixed_content = True
             else:
                 is_mixed_content = False
