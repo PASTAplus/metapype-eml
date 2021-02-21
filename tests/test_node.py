@@ -18,6 +18,7 @@ import pytest
 
 from metapype.eml import names
 from metapype.eml import validate
+import metapype.model.metapype_io as metapype_io
 from metapype.model.node import Node
 from metapype.model.node import Shift
 
@@ -51,11 +52,27 @@ def test_add_child(node):
 
 
 def test_copy():
-    node = Node(names.GIVENNAME)
-    node.content = "Chase"
-    validate.node(node)
-    node_copy = node.copy()
-    validate.node(node_copy)
+    creator = Node(names.CREATOR)
+    creator.add_attribute("id", "creator")
+    creator.add_namespace("eml", "https://eml.ecoinformatics.org/eml-2.2.0")
+    individual_name = Node(names.INDIVIDUALNAME)
+    creator.add_child(individual_name)
+    given_name = Node(names.GIVENNAME, content="Chase")
+    given_name.add_attribute("lang", "Spanish")
+    individual_name.add_child(given_name)
+    sur_name = Node(names.SURNAME, content="Gaucho")
+    sur_name.add_attribute("lang", "Spanish")
+    individual_name.add_child(sur_name)
+    individual_name = Node(names.INDIVIDUALNAME)
+    creator.add_child(individual_name)
+    given_name = Node(names.GIVENNAME, content="Cactus")
+    individual_name.add_child(given_name)
+    sur_name = Node(names.SURNAME, content="Jack")
+    individual_name.add_child(sur_name)
+    validate.tree(creator)
+    creator_copy = creator.copy()
+    validate.tree(creator_copy)
+    assert is_deep_copy(creator, creator_copy)
 
 
 def test_create_node(node):
@@ -333,3 +350,60 @@ def test_delete_node_no_children():
     assert principal is node
     Node.delete_node_instance(eml.id, children=False)
     assert principal.id in Node.store
+
+
+def is_deep_copy(node1: Node, node2: Node) -> bool:
+    if id(node1) == id(node2):
+        return False
+
+    if node1.name != node2.name:
+        return False
+
+    if node1.content != node2.content:
+        return False
+
+    if node1.tail != node2.tail:
+        return False
+
+    if len(node1.attributes) != len(node2.attributes):
+        return False
+    else:
+        for key in node1.attributes.keys():
+            try:
+                if node1.attributes[key] != node2.attributes[key]:
+                    return False
+            except KeyError:
+                return False
+
+    if len(node1.nsmap) != len(node2.nsmap):
+        return False
+    else:
+        for key in node1.nsmap.keys():
+            try:
+                if node1.nsmap[key] != node2.nsmap[key]:
+                    return False
+            except KeyError:
+                return False
+
+    if node1.prefix != node2.prefix:
+        return False
+
+    if len(node1.extras) != len(node2.extras):
+        return False
+    else:
+        for key in node1.extras.keys():
+            try:
+                if node1.extras[key] != node2.extras[key]:
+                    return False
+            except KeyError:
+                return False
+
+    if len(node1.children) != len(node2.children):
+        return False
+    else:
+        for index in range(len(node1.children)):
+            child1 = node1.children[index]
+            child2 = node2.children[index]
+            return is_deep_copy(child1, child2)
+
+    return True

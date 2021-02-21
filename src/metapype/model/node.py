@@ -149,8 +149,10 @@ class Node(object):
         """
         if index is None:
             self._children.append(child)
+            child.parent = self
         else:
             self._children.insert(index, child)
+            child.parent = self
 
     def add_extras(self, key: str, value: str):
         self._extras[key] = value
@@ -222,6 +224,12 @@ class Node(object):
         _copy.attributes = {}
         for key, val in self.attributes.items():
             _copy.attributes[key] = val
+        _copy.nsmap = {}
+        for key, val in self.nsmap.items():
+            _copy.nsmap[key] = val
+        _copy.extras = {}
+        for key, val in self.extras.items():
+            _copy.extras[key] = val
         # Construct the children list so it's not just a reference to self's version
         _copy.children = []
         for child in self.children:
