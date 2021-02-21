@@ -244,7 +244,7 @@ def to_xml(node: Node, parent: Node = None, level: int = 0) -> str:
         open_tag = f"{indent}<{tag}{attributes}>{content}"
         close_tag = f"</{tag}>\n"
     else:
-        open_tag = f"{indent}<{tag}{attributes}>\n"
+        open_tag = f"{indent}<{tag}{attributes.strip()}>\n"
         close_tag = f"{indent}</{tag}>\n"
 
     xml += open_tag
