@@ -127,7 +127,7 @@ def to_json(node: Node):
 
     """
     j = objectify(node)
-    return json.dumps(j, indent=2)
+    return json.dumps(j)
 
 
 def from_xml_element(xml_elem, metapype_node, metapype_parent):
