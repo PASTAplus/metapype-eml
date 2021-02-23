@@ -849,6 +849,16 @@
             "content_rules" : ["emptyContent"]
         }
     ],
+    "referencesRule" : [
+        {
+            "system": [false]
+        },
+        [
+        ],
+        {
+            "content_rules" : ["strContent", "nonEmptyContent"]
+        }
+    ],
     "relatedProjectRule" : [
         {
             "id": [false],
@@ -868,18 +878,22 @@
         }
     ],
     "responsiblePartyRule" : [
-        { 
+        {
             "id": [false],
             "system": [false],
             "scope": [false, "document", "system"]
         },
         [
-            [["individualName", 1, 1], ["organizationName", 1, 1], ["positionName", 1, 1], 1, null],
-            ["address", 0, null],
-            ["phone", 0, null],
-            ["electronicMailAddress", 0, null],
-            ["onlineUrl", 0, null],
-            ["userId", 0, null]
+            [
+                [["individualName", 1, 1], ["organizationName", 1, 1], ["positionName", 1, 1], 1, null],
+                ["address", 0, null],
+                ["phone", 0, null],
+                ["electronicMailAddress", 0, null],
+                ["onlineUrl", 0, null],
+                ["userId", 0, null]
+            ],
+            ["references", 1, 1],
+            1, 1
         ],
         {
             "content_rules" : ["emptyContent"]
