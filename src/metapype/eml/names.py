@@ -195,6 +195,7 @@ QUANTITATIVEATTRIBUTEACCURACYASSESSMENT = (
 QUOTECHARACTER = "quoteCharacter"
 RANGEOFDATES = "rangeOfDates"
 RATIO = "ratio"
+REFERENCES = "references"
 RELATED_PROJECT = "relatedProject"
 ROLE = "role"
 ROWCOLUMNORIENTATION = "rowColumnOrientation"
