@@ -201,6 +201,7 @@ class Rule(object):
         self._attributes = rule_data[0]
         self._children = rule_data[1]
         self._content = rule_data[2]
+        self._named_children = self._get_children(self._children)
 
     def child_insert_index(self, parent: Node, new_child: Node) -> int:
         """
@@ -229,9 +230,7 @@ class Rule(object):
             raise Exception(f"Unknown attribute {attribute}")
 
     def is_allowed_child(self, child_name: str):
-        return any(
-            child_name in child_list[:-2] for child_list in self._children
-        )
+        return child_name in self._named_children
 
     def allowed_attribute_values(self, attribute: str):
         values = []
@@ -632,30 +631,25 @@ class Rule(object):
             node_children = list()
             for node_child in node.children:
                 node_children.append(node_child.name)
-
-            rule_children = list()
-            for child in self._children:
-                if isinstance(child[0], str):
-                    rule_children.append(child[0])
-                else:
-                    for _ in child[:-2]:
-                        rule_children.append(_[0])
             # Test for illegal children nodes
             for name in node_children:
-                if name not in rule_children:
+                if not self.is_allowed_child(name):
                     msg = f"Child '{name}' not allowed in parent '{node.name}'"
                     if errs is None:
-                        raise UnknownNodeError(msg)
+                        raise ChildNotAllowedError(msg)
                     else:
-                        errs.append((ValidationError.UNKNOWN_NODE, msg, node, name))
+                        errs.append((ValidationError.CHILD_NOT_ALLOWED, msg, node, name))
 
             if self._name in (RULE_TEXT, RULE_ANYNAME):
                 is_mixed_content = True
             else:
                 is_mixed_content = False
-            Rule._validate_children_sequence(
-                node, node_children, self._children, is_mixed_content, errs
-            )
+
+            modality = self._get_child_modality(self._children)
+            if modality == "sequence":
+                Rule._validate_children_sequence(node, node_children, self._children, is_mixed_content, errs)
+            elif modality == "choice":
+                Rule._validate_children_choice(node, node_children, self._children, is_mixed_content, errs)
 
     @staticmethod
     def _validate_children_sequence(
@@ -663,7 +657,11 @@ class Rule(object):
     ):
         index = 0
         for rule_child in rule_children:
-            if isinstance(rule_child[0], str):
+            if Rule._get_child_modality(rule_child) == "choice":
+                index += Rule._validate_children_choice(
+                    node, node_children[index:], rule_child, is_mixed_content, errs
+                )
+            else:
                 name = rule_child[0]
                 min = rule_child[-2]
                 max = rule_child[-1]
@@ -704,10 +702,6 @@ class Rule(object):
                                 min,
                             )
                         )
-            else:
-                index += Rule._validate_children_choice(
-                    node, node_children[index:], rule_child, is_mixed_content, errs
-                )
         if index != len(node_children):
             msg = f"Child '{node_children[index]}' is not allowed in this position for parent '{node.name}'"
             if errs is None:
@@ -746,36 +740,41 @@ class Rule(object):
                         )
                     )
             for rule_child in rule_children[:-2]:
-                name = rule_child[0]
-                min = rule_child[-2]
-                max = rule_child[-1]
-                occurrence = 0
-                choice = False
-                while (
-                    index < len(node_children) and name == node_children[index]
-                ):
-                    index += 1
-                    occurrence += 1
-                    choice = True
-                    if max is not INFINITY and occurrence == max:
-                        break
-                if choice:
-                    if occurrence < min:
-                        msg = f"Minimum occurrence of '{min}' not met for child '{name}' in parent '{node.name}'"
-                        if errs is None:
-                            raise MinOccurrenceUnmetError(msg)
-                        else:
-                            errs.append(
-                                (
-                                    ValidationError.MIN_OCCURRENCE_UNMET,
-                                    msg,
-                                    node,
-                                    name,
-                                    min,
+                if Rule._get_child_modality(rule_child) == "sequence":
+                    rule_children_names = Rule._get_children(rule_child)
+                    if index < len(node_children) and node_children[index] in rule_children_names:
+                        Rule._validate_children_sequence(node, node_children, rule_child, is_mixed_content, errs)
+                        choice = True
+                        choice_occurrence += 1
+                else:
+                    name = rule_child[0]
+                    min = rule_child[-2]
+                    max = rule_child[-1]
+                    occurrence = 0
+                    choice = False
+                    while index < len(node_children) and name == node_children[index]:
+                        index += 1
+                        occurrence += 1
+                        choice = True
+                        if max is not INFINITY and occurrence == max:
+                            break
+                    if choice:
+                        if occurrence < min:
+                            msg = f"Minimum occurrence of '{min}' not met for child '{name}' in parent '{node.name}'"
+                            if errs is None:
+                                raise MinOccurrenceUnmetError(msg)
+                            else:
+                                errs.append(
+                                    (
+                                        ValidationError.MIN_OCCURRENCE_UNMET,
+                                        msg,
+                                        node,
+                                        name,
+                                        min,
+                                    )
                                 )
-                            )
-                    choice_occurrence += 1
-                    break
+                        choice_occurrence += 1
+                        break
             if not choice:
                 break
         if not choice and choice_occurrence < choice_min and not is_mixed_content:
@@ -793,6 +792,28 @@ class Rule(object):
                     )
                 )
         return index
+
+    @staticmethod
+    def _get_child_modality(child: list) -> str:
+        if len(child) > 3 and not isinstance(child[-1], list):
+            mode = "choice"
+        elif len(child) == 3 and isinstance(child[0], str):
+            mode = "child"
+        else:
+            mode = "sequence"
+        return mode
+
+    @staticmethod
+    def _get_children(children: list) -> list:
+        allowed = list()
+        if Rule._get_child_modality(children) == "choice":
+            allowed += Rule._get_children(children[:-2])
+        elif Rule._get_child_modality(children) == "sequence":
+            for child in children:
+                allowed += Rule._get_children(child)
+        else:
+            allowed.append(children[0])
+        return allowed
 
     @property
     def name(self):
@@ -891,6 +912,7 @@ RULE_QUANTITATIVEATTRIBUTEACCURACYASSESSMENT = (
 )
 RULE_RANGEOFDATES = "rangeOfDatesRule"
 RULE_RATIO = "ratioRule"
+RULE_REFERENCES = "referencesRule"
 RULE_RELATEDPROJECT = "relatedProjectRule"
 RULE_RESPONSIBLEPARTY = "responsiblePartyRule"
 RULE_RESPONSIBLEPARTY_WITH_ROLE = "responsiblePartyWithRoleRule"
@@ -1095,6 +1117,7 @@ node_mappings = {
     names.RANGEOFDATES: RULE_RANGEOFDATES,
     names.RATIO: RULE_INTERVALRATIO,
     names.RECORDDELIMITER: RULE_ANYSTRING,
+    names.REFERENCES: RULE_REFERENCES,
     names.RELATED_PROJECT: RULE_RELATEDPROJECT,
     names.ROLE: RULE_ANYSTRING,
     names.ROWCOLUMNORIENTATION: RULE_ROWCOLUMN,
