@@ -389,3 +389,38 @@ def test_validate_annotation():
     value_uri.add_attribute("label", "some value label")
     annotation.add_child(value_uri)
     validate.tree(annotation)
+
+
+def test_responsible_party():
+    creator = Node(names.CREATOR)
+    creator.add_attribute("id", "creator")
+    creator.add_namespace("eml", "https://eml.ecoinformatics.org/eml-2.2.0")
+    individual_name = Node(names.INDIVIDUALNAME)
+    creator.add_child(individual_name)
+    given_name = Node(names.GIVENNAME, content="Chase")
+    given_name.add_attribute("lang", "Spanish")
+    individual_name.add_child(given_name)
+    sur_name = Node(names.SURNAME, content="Gaucho")
+    sur_name.add_attribute("lang", "Spanish")
+    individual_name.add_child(sur_name)
+    individual_name = Node(names.INDIVIDUALNAME)
+    creator.add_child(individual_name)
+    given_name = Node(names.GIVENNAME, content="Cactus")
+    individual_name.add_child(given_name)
+    sur_name = Node(names.SURNAME, content="Jack")
+    individual_name.add_child(sur_name)
+    phone = Node(names.PHONE, content="999-999-9999")
+    creator.add_child(phone)
+    validate.tree(creator)
+
+
+def test_references():
+    creator = Node(names.CREATOR)
+    references = Node(names.REFERENCES)
+    creator.add_child(references)
+    validate.node(creator)
+
+
+def test_get_children():
+    r = rule.Rule("responsiblePartyRule")
+    assert len(r._named_children) == 9
