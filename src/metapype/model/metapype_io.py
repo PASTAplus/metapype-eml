@@ -14,6 +14,7 @@
     12/30/20
 """
 import json
+import re
 
 import daiquiri
 from lxml import etree
@@ -78,6 +79,18 @@ def _from_dict(node: dict, parent: Node = None) -> Node:
     return node
 
 
+def _format_extras(name: str, nsmap: dict) -> str:
+    match = re.match(r"^\{(.*)\}(.*)$", name)
+    nsname = name
+    if match is not None:
+        uri = match.group(1)
+        target = match.group(2)
+        for k, v in nsmap.items():
+            if uri == v:
+                nsname = f"{k}:{target}"
+    return nsname
+
+
 def _nsp_unique(child_nsmap: dict, parent_nsmap: dict) -> dict:
     nsmap = dict()
     for child_nsp in child_nsmap:
@@ -116,6 +129,10 @@ def _process_element(e, clean) -> Node:
     for name, value in e.attrib.items():
         if "{" not in name:
             node.add_attribute(name, value)
+        else:
+            nsname = _format_extras(name, node.nsmap)
+            node.add_extras(nsname, value)
+
     for _ in e:
         if _.tag is not etree.Comment:
             node.add_child(_process_element(_, clean))
@@ -232,19 +249,26 @@ def to_xml(node: Node, parent: Node = None, level: int = 0) -> str:
 
     attributes = ""
     if len(node.attributes) > 0:
-        attributes += " " + " ".join([f"{k}=\"{v}\"" for k, v in node.attributes.items()])
+        attributes += " ".join([f"{k}=\"{v}\"" for k, v in node.attributes.items()])
+
     if parent is None:
         attributes += " " + " ".join([f"xmlns:{k}=\"{v}\"" for k, v in node.nsmap.items()])
     elif node.nsmap != parent.nsmap:
         nsmap = _nsp_unique(node.nsmap, parent.nsmap)
         attributes += " " + " ".join([f"xmlns:{k}=\"{v}\"" for k, v in nsmap.items()])
 
+    if len(node.extras) > 0:
+        attributes += " " + " ".join([f"{k}=\"{v}\"" for k, v in node.extras.items()])
+
+    if len(attributes) > 0:
+        attributes = " " + attributes
+
     if node.content is not None:
         content = escape(node.content)
         open_tag = f"{indent}<{tag}{attributes}>{content}"
         close_tag = f"</{tag}>\n"
     else:
-        open_tag = f"{indent}<{tag}{attributes.strip()}>\n"
+        open_tag = f"{indent}<{tag}{attributes}>\n"
         close_tag = f"{indent}</{tag}>\n"
 
     xml += open_tag
