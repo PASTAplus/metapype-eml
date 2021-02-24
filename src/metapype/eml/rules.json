@@ -132,7 +132,11 @@
             "id": [false]
         },
         [
-            ["attribute", 1, null]
+            [
+                ["attribute", 1, null]
+            ],
+            ["references", 1, 1],
+            1, 1
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -145,16 +149,20 @@
             "scope": [false, "document", "system"]
         },
         [
-            ["attributeName", 1, 1],
-            ["attributeLabel", 0, null],
-            ["attributeDefinition", 1, 1],
-            ["storageType", 0, null],
-            ["measurementScale", 1, 1],
-            ["missingValueCode", 0, null],
-            ["accuracy", 0, 1],
-            ["coverage", 0, 1],
-            ["methods", 0, 1],
-            ["annotation", 0, null]
+            [
+                ["attributeName", 1, 1],
+                ["attributeLabel", 0, null],
+                ["attributeDefinition", 1, 1],
+                ["storageType", 0, null],
+                ["measurementScale", 1, 1],
+                ["missingValueCode", 0, null],
+                ["accuracy", 0, 1],
+                ["coverage", 0, 1],
+                ["methods", 0, 1],
+                ["annotation", 0, null]
+            ],
+            ["references", 1, 1],
+            1, 1
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -305,33 +313,38 @@
             "scope": [false, "document", "system"]
         },
         [
-            ["alternateIdentifier", 0, null],
-            ["shortName", 0, 1],
-            ["title", 1, null],
-            ["creator", 1, null],
-            ["metadataProvider", 0, null],
-            ["associatedParty", 0, null],
-            ["pubDate", 0, 1],
-            ["language", 0, 1],
-            ["series", 0, 1],
-            ["abstract", 0, 1],
-            ["keywordSet", 0, null],
-            ["additionalInfo", 0, null],
-            ["intellectualRights", 0, 1],
-            ["licensed", 0, null],
-            ["distribution", 0, null],
-            ["coverage", 0, 1],
-            ["purpose", 0, 1],
-            ["introduction", 0, 1],
-            ["gettingStarted", 0, 1],
-            ["acknowledgements", 0, 1],
-            ["maintenance", 0, 1],
-            ["contact", 1, null],
-            ["publisher", 0, 1],
-            ["pubPlace", 0, 1],
-            ["methods", 0, 1],
-            ["project", 0, 1],
-            [["dataTable", 1, 1], ["otherEntity", 1, 1], 0, null]
+            [
+                ["alternateIdentifier", 0, null],
+                ["shortName", 0, 1],
+                ["title", 1, null],
+                ["creator", 1, null],
+                ["metadataProvider", 0, null],
+                ["associatedParty", 0, null],
+                ["pubDate", 0, 1],
+                ["language", 0, 1],
+                ["series", 0, 1],
+                ["abstract", 0, 1],
+                ["keywordSet", 0, null],
+                ["additionalInfo", 0, null],
+                ["intellectualRights", 0, 1],
+                ["licensed", 0, null],
+                ["distribution", 0, null],
+                ["coverage", 0, 1],
+                ["annotation", 0, null],
+                ["purpose", 0, 1],
+                ["introduction", 0, 1],
+                ["gettingStarted", 0, 1],
+                ["acknowledgements", 0, 1],
+                ["maintenance", 0, 1],
+                ["contact", 1, null],
+                ["publisher", 0, 1],
+                ["pubPlace", 0, 1],
+                ["methods", 0, 1],
+                ["project", 0, 1],
+                [["dataTable", 1, 1], ["otherEntity", 1, 1], 0, null]
+            ],
+            ["references", 1, 1],
+            1, 1
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -344,16 +357,20 @@
             "scope": [false, "document", "system"]
         },
         [
-            ["alternateIdentifier", 0, null],
-            ["entityName", 1, 1],
-            ["entityDescription", 0, 1],
-            ["physical", 0, null],
-            ["coverage", 0, 1],
-            ["methods", 0, 1],
-            ["additionalInfo", 0, null],
-            ["attributeList", 1, 1],
-            ["caseSensitive", 0, 1],
-            ["numberOfRecords", 0, 1]
+            [
+                ["alternateIdentifier", 0, null],
+                ["entityName", 1, 1],
+                ["entityDescription", 0, 1],
+                ["physical", 0, null],
+                ["coverage", 0, 1],
+                ["methods", 0, 1],
+                ["additionalInfo", 0, null],
+                ["attributeList", 1, 1],
+                ["caseSensitive", 0, 1],
+                ["numberOfRecords", 0, 1]
+            ],
+            ["references", 1, 1],
+            1, 1
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -715,15 +732,19 @@
             "scope": [false, "document", "system"]
         },
         [
-            ["alternateIdentifier", 0, null],
-            ["entityName", 1, 1],
-            ["entityDescription", 0, 1],
-            ["physical", 0, null],
-            ["coverage", 0, 1],
-            ["methods", 0, 1],
-            ["additionalInfo", 0, null],
-            ["attributeList", 0, 1],
-            ["entityType", 1, 1]
+            [
+                ["alternateIdentifier", 0, null],
+                ["entityName", 1, 1],
+                ["entityDescription", 0, 1],
+                ["physical", 0, null],
+                ["coverage", 0, 1],
+                ["methods", 0, 1],
+                ["additionalInfo", 0, null],
+                ["attributeList", 0, 1],
+                ["entityType", 1, 1]
+            ],
+            ["references", 1, 1],
+            1, 1
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -794,13 +815,17 @@
             "scope": [false, "document", "system"]
         },
         [
-            ["title", 1, null],
-            ["personnel", 1, null],
-            ["abstract", 0, 1],
-            ["funding", 0, 1],
-            ["award", 0, null],
-            ["studyAreaDescription", 0, 1],
-            ["relatedProject", 0, null]
+            [
+                ["title", 1, null],
+                ["personnel", 1, null],
+                ["abstract", 0, 1],
+                ["funding", 0, 1],
+                ["award", 0, null],
+                ["studyAreaDescription", 0, 1],
+                ["relatedProject", 0, null]
+            ],
+            ["references", 1, 1],
+            1, 1
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -935,7 +960,6 @@
         [
             ["studyExtent", 1, 1],
             ["samplingDescription", 1, 1],
-            ["spatialSamplingUnits", 0, 1],
             ["citation", 0, null]
         ],
         {
