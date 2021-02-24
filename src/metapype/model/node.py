@@ -392,6 +392,54 @@ class Node(object):
                 break
         return ancestry
 
+    @staticmethod
+    def is_equal(node1, node2) -> bool:
+        if id(node1) == id(node2):
+            return False
+        if node1.name != node2.name:
+            return False
+        if node1.content != node2.content:
+            return False
+        if node1.tail != node2.tail:
+            return False
+        if len(node1.attributes) != len(node2.attributes):
+            return False
+        else:
+            for key in node1.attributes.keys():
+                try:
+                    if node1.attributes[key] != node2.attributes[key]:
+                        return False
+                except KeyError:
+                    return False
+        if len(node1.nsmap) != len(node2.nsmap):
+            return False
+        else:
+            for key in node1.nsmap.keys():
+                try:
+                    if node1.nsmap[key] != node2.nsmap[key]:
+                        return False
+                except KeyError:
+                    return False
+        if node1.prefix != node2.prefix:
+            return False
+        if len(node1.extras) != len(node2.extras):
+            return False
+        else:
+            for key in node1.extras.keys():
+                try:
+                    if node1.extras[key] != node2.extras[key]:
+                        return False
+                except KeyError:
+                    return False
+        if len(node1.children) != len(node2.children):
+            return False
+        else:
+            for index in range(len(node1.children)):
+                child1 = node1.children[index]
+                child2 = node2.children[index]
+                return Node.is_equal(child1, child2)
+        return True
+
     @property
     def name(self):
         return self._name
