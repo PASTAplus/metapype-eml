@@ -370,9 +370,6 @@ def test_is_uri():
     # Bad scheme (requires http or https)
     bad_uri = "htp://purl.obolibrary.org/obo/IAO_0000136"
     assert not rule.Rule.is_uri(bad_uri)
-    # Missing path
-    bad_uri = "http://purl.obolibrary.org"
-    assert not rule.Rule.is_uri(bad_uri)
     # Missing host and path
     bad_uri = "http://"
     assert not rule.Rule.is_uri(bad_uri)
