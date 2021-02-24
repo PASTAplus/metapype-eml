@@ -1,7 +1,6 @@
 <eml:eml packageId="edi.23.1" system="metapype" xmlns:eml="https://eml.ecoinformatics.org/eml-2.2.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="https://eml.ecoinformatics.org/eml-2.2.0 https://nis.lternet.edu/schemas/EML/eml-2.2.0/xsd/eml.xsd">
-    <!-- The following section is not supported by Metapype -->
     <access authSystem="pasta" order="allowFirst">
         <allow>
             <principal>uid=gaucho,o=EDI,dc=edirepository,dc=org</principal>
@@ -10,11 +9,14 @@
     </access>
     <dataset>
         <title>Green sea turtle counts: Tortuga Island 20017</title>
-        <creator>
+        <creator id="creator">
             <individualName>
                 <surName>Gaucho</surName>
             </individualName>
         </creator>
+        <metadataProvider>
+            <references>creator</references>
+        </metadataProvider>
         <pubDate>2018</pubDate>
         <abstract>
             <section>
