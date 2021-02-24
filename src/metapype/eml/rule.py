@@ -169,7 +169,7 @@ class Rule(object):
         validator = validators.Validator().allow_schemes(
             "http", "https", "ftp"
         ).require_presence_of(
-            "scheme", "host", "path"
+            "scheme", "host"
         ).check_validity_of(
             "scheme", "host", "path"
         )
