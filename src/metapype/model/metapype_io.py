@@ -184,11 +184,12 @@ def from_json(node: str) -> Node:
     return _from_dict(m)
 
 
-def to_json(node: Node) -> str:
+def to_json(node: Node, indent: int = None) -> str:
     """
     Converts a Metapype model instance to JSON
 
     Args:
+        indent:
         node: node of the model instance
 
     Returns:
@@ -196,7 +197,7 @@ def to_json(node: Node) -> str:
 
     """
     j = _serialize(node)
-    return json.dumps(j, indent=2)
+    return json.dumps(j, indent=indent)
 
 
 def graph(node: Node, level: int = 0) -> str:
