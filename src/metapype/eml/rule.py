@@ -16,8 +16,8 @@
 """
 import datetime
 from datetime import time
+import importlib.resources
 import json
-import os
 
 import daiquiri
 from rfc3986 import uri_reference, validators
@@ -27,7 +27,6 @@ from rfc3986.exceptions import (
     UnpermittedComponentError
 )
 
-from metapype.config import Config
 from metapype.eml.exceptions import (
     ChildNotAllowedError,
     MaxOccurrenceExceededError,
@@ -36,7 +35,6 @@ from metapype.eml.exceptions import (
     ContentExpectedUriError,
     StrContentUnicodeError,
     UnknownContentRuleError,
-    UnknownNodeError,
 )
 from metapype.eml import names
 from metapype.eml.validation_errors import ValidationError
@@ -62,14 +60,9 @@ def load_rules():
     """
     Load rules from the JSON file into the rules dict
     """
-    if "EML_RULES" in os.environ:
-        json_path = os.environ["EML_RULES"]
-    else:
-        json_path = Config.EML_RULES
 
-    with open(json_path) as fh:
-        _rules_dict = json.load(fh)
-
+    rules = importlib.resources.read_text("metapype.eml", "rules.json")
+    _rules_dict = json.loads(rules)
     return _rules_dict
 
 
