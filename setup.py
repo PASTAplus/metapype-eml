@@ -25,20 +25,22 @@ with open(path.join(here, "README.md"), encoding="utf-8") as f:
 with open(path.join(here, "LICENSE"), encoding="utf-8") as f:
     full_license = f.read()
 
+with open(path.join(here, "src/metapype/VERSION.txt"), encoding="utf-8") as f:
+    version = f.read()
+
 
 setup(
     name='metapype',
-    version='2021.02.23',
-    description='Metapype for EML',
+    version=version,
+    description='Metapype: science metadata manipulation library',
     long_description=long_description,
     long_description_content_type="text/markdown",
-    author="EDI",
+    author="Environmental Data Initiative",
     url="https://github.com/PASTAplus/metapype-eml",
     license=full_license,
-    packages=find_packages(where="src"),
-    include_package_data=True,
-    exclude_package_data={"": ["settings.py, properties.py, config.py"], },
+    packages=find_packages(where="src", include=["metapype", "metapype.eml", "metapype.model"]),
     package_dir={"": "src"},
+    include_package_data=True,
     python_requires=">=3.8.*",
     install_requires=["click==7.1.2", "daiquiri==3.0.0",  "lxml==4.6.2", "rfc3986==1.4.0"],
     classifiers=["License :: OSI Approved :: Apache Software License",],
