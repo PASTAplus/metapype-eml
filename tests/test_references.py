@@ -16,7 +16,7 @@ import os
 
 import daiquiri
 
-from metapype.config import Config
+import tests
 import metapype.eml.names as names
 import metapype.eml.references as references
 import metapype.eml.validate as validate
@@ -31,7 +31,7 @@ def test_expand():
     if "TEST_DATA" in os.environ:
         xml_path = os.environ["TEST_DATA"]
     else:
-        xml_path = Config.TEST_DATA
+        xml_path = tests.test_data_path
 
     with open(f"{xml_path}/eml.xml", "r") as f:
         xml = "".join(f.readlines())

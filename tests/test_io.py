@@ -17,7 +17,7 @@ import os
 
 import daiquiri
 
-from metapype.config import Config
+import tests
 from metapype.eml import validate
 from metapype.model import metapype_io
 from metapype.model.node import Node
@@ -30,7 +30,7 @@ def test_from_json():
     if "TEST_DATA" in os.environ:
         test_data = os.environ["TEST_DATA"]
     else:
-        test_data = Config.TEST_DATA
+        test_data = tests.test_data_path
 
     with open(f"{test_data}/eml.json", "r") as f:
         eml_json = "".join([_ for _ in f.readlines()])
@@ -42,7 +42,7 @@ def test_from_xml():
     if "TEST_DATA" in os.environ:
         xml_path = os.environ["TEST_DATA"]
     else:
-        xml_path = Config.TEST_DATA
+        xml_path = tests.test_data_path
 
     with open(f"{xml_path}/eml.xml", "r") as f:
         xml = "".join(f.readlines())
@@ -55,7 +55,7 @@ def test_to_json():
     if "TEST_DATA" in os.environ:
         xml_path = os.environ["TEST_DATA"]
     else:
-        xml_path = Config.TEST_DATA
+        xml_path = tests.test_data_path
 
     with open(f"{xml_path}/eml.xml", "r") as f:
         xml = "".join(f.readlines())
@@ -71,7 +71,7 @@ def test_to_xml():
     if "TEST_DATA" in os.environ:
         test_data = os.environ["TEST_DATA"]
     else:
-        test_data = Config.TEST_DATA
+        test_data = tests.test_data_path
 
     with open(f"{test_data}/eml.json", "r") as f:
         eml_json = "".join([_ for _ in f.readlines()])
@@ -85,7 +85,7 @@ def test_graph():
     if "TEST_DATA" in os.environ:
         xml_path = os.environ["TEST_DATA"]
     else:
-        xml_path = Config.TEST_DATA
+        xml_path = tests.test_data_path
 
     with open(f"{xml_path}/eml.xml", "r") as f:
         xml = "".join(f.readlines())

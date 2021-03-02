@@ -17,7 +17,7 @@ import daiquiri
 import pytest
 import os
 
-from metapype.config import Config
+import tests
 from metapype.eml.exceptions import MetapypeRuleError
 import metapype.eml.names as names
 import metapype.eml.rule as rule
@@ -344,7 +344,7 @@ def test_validate_prune():
     if "TEST_DATA" in os.environ:
         xml_path = os.environ["TEST_DATA"]
     else:
-        xml_path = Config.TEST_DATA
+        xml_path = tests.test_data_path
 
     with open(f"{xml_path}/eml.xml", "r") as f:
         xml = "".join(f.readlines())

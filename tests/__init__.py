@@ -29,3 +29,4 @@ logger = daiquiri.getLogger(__name__)
 
 
 sys.path.insert(0, os.path.abspath("../src"))
+test_data_path = os.path.abspath(os.path.dirname(__file__)) + "/data"
