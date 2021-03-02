@@ -25,6 +25,5 @@ script:
   - python --version
   - pip freeze
   - pip check || true
-  - cp $TRAVIS_BUILD_DIR/src/metapype/config.py.template $TRAVIS_BUILD_DIR/src/metapype/config.py
   - pytest
 after_success:
