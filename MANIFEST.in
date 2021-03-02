@@ -1,0 +1,4 @@
+# Metapype manifest - 20210302
+include src/metapype/eml/rules.json
+include src/metapype/VERSION.txt
+global-include src/metapype/*.md
