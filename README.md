@@ -2,7 +2,7 @@
 
 <p align="left"><img src="https://raw.githubusercontent.com/PASTAplus/metapype-eml/master/docs/metapype.png" width="300" height="200"/></p>
 
-#### A lightweight Pyhon 3 library for generating EML metadata
+#### A lightweight Python 3 library for generating EML metadata
 
 [![Build Status](https://travis-ci.org/PASTAplus/metapype-eml.svg?branch=master)](https://travis-ci.org/PASTAplus/metapype-eml)
 
@@ -13,7 +13,7 @@ Metapype is a Python 3 library for building, saving, and exporting scientific
 metadata using a flexible metadata content model in a hierarchical tree-like
 structure. Metapype only provides the primitives (as a Python application
 programmable interface) for operating on metadata; it is expected that client
-applications will use the Metapype API to build more robust and user friendly
+applications will use the Metapype API to build more robust and user-friendly
 applications.
 
 This version of Metapype is designed to reflect the content structure of the
@@ -323,7 +323,6 @@ with open('test_eml.json', 'w') as f:
 with open('test_eml.json', 'r') as f:
     json_str = f.read()
 eml = metapype.model.metapype_io.from_json(json.loads(json_str))
-
 ```
 
 <hr/>
