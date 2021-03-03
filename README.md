@@ -1,6 +1,6 @@
 # Metapype for EML
 
-<p align="left"><img src="https://raw.githubusercontent.com/PASTAplus/metapype-eml/blob/master/docs/metapype.png" width="300" height="200"/></p>
+<p align="left"><img src="https://raw.githubusercontent.com/PASTAplus/metapype-eml/master/docs/metapype.png" width="300" height="200"/></p>
 
 #### A lightweight Pyhon 3 library for generating EML metadata
 
