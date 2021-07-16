@@ -5,3 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.0.3] 2021-07-16
+### Added
+- Test for non-valid EML in `test_eml.py`.
+### Changed/Fixed
+- Changed from using protected methods/attributes to public
+  methods/attributes in method `_validate_children` of `rule.py`.
+- Fixed case where children index values may be out of range in method
+  `_validate_children_choice` of `rule.py`.
