@@ -242,6 +242,15 @@ def test_validate_tree(node):
     assert validate.tree(node) is None
 
 
+def test_validate_bad_tree(node):
+    dataset: Node = node.find_child(names.DATASET)
+    creator: Node = dataset.find_child(names.CREATOR)
+    dataset.remove_child(creator)
+    errs = list()
+    assert validate.tree(node, errs) is None
+    assert len(errs) != 0
+
+
 def test_get_rule():
     r = rule.get_rule(names.ACCESS)
     assert r.name == rule.RULE_ACCESS
