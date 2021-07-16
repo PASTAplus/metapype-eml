@@ -620,11 +620,14 @@ class Rule(object):
                     raise MaxOccurrenceExceededError(msg)
                 else:
                     errs.append((ValidationError.MAX_OCCURRENCE_EXCEEDED, msg, node))
+
+        # Begin validation of children
         else:
             node_children = list()
             for node_child in node.children:
                 node_children.append(node_child.name)
-            # Test for illegal children nodes
+
+            # Test for non-valid children
             for name in node_children:
                 if not self.is_allowed_child(name):
                     msg = f"Child '{name}' not allowed in parent '{node.name}'"
@@ -633,16 +636,16 @@ class Rule(object):
                     else:
                         errs.append((ValidationError.CHILD_NOT_ALLOWED, msg, node, name))
 
-            if self._name in (RULE_TEXT, RULE_ANYNAME):
+            if self.name in (RULE_TEXT, RULE_ANYNAME):
                 is_mixed_content = True
             else:
                 is_mixed_content = False
 
-            modality = self._get_child_modality(self._children)
+            modality = self._get_children_modality(self.children)
             if modality == "sequence":
-                Rule._validate_children_sequence(node, node_children, self._children, is_mixed_content, errs)
+                Rule._validate_children_sequence(node, node_children, self.children, is_mixed_content, errs)
             elif modality == "choice":
-                Rule._validate_children_choice(node, node_children, self._children, is_mixed_content, errs)
+                Rule._validate_children_choice(node, node_children, self.children, is_mixed_content, errs)
 
     @staticmethod
     def _validate_children_sequence(
@@ -650,7 +653,7 @@ class Rule(object):
     ):
         index = 0
         for rule_child in rule_children:
-            if Rule._get_child_modality(rule_child) == "choice":
+            if Rule._get_children_modality(rule_child) == "choice":
                 index += Rule._validate_children_choice(
                     node, node_children[index:], rule_child, is_mixed_content, errs
                 )
@@ -676,7 +679,7 @@ class Rule(object):
                                     ValidationError.MAX_OCCURRENCE_EXCEEDED,
                                     msg,
                                     node,
-                                    node_children[index],
+                                    None if index >= len(node_children) else node_children[index],
                                     max,
                                 )
                             )
@@ -691,7 +694,7 @@ class Rule(object):
                                 ValidationError.MIN_OCCURRENCE_UNMET,
                                 msg,
                                 node,
-                                node_children[index],
+                                None if index >= len(node_children) else node_children[index],
                                 min,
                             )
                         )
@@ -733,12 +736,13 @@ class Rule(object):
                         )
                     )
             for rule_child in rule_children[:-2]:
-                if Rule._get_child_modality(rule_child) == "sequence":
+                if Rule._get_children_modality(rule_child) == "sequence":
                     rule_children_names = Rule._get_children(rule_child)
                     if index < len(node_children) and node_children[index] in rule_children_names:
                         Rule._validate_children_sequence(node, node_children, rule_child, is_mixed_content, errs)
                         choice = True
                         choice_occurrence += 1
+                #  Rule child is child instance, not a complex set of either sequence or choice
                 else:
                     name = rule_child[0]
                     min = rule_child[-2]
@@ -767,9 +771,9 @@ class Rule(object):
                                     )
                                 )
                         choice_occurrence += 1
-                        break
+                        break  # while loop
             if not choice:
-                break
+                break  # for loop
         if not choice and choice_occurrence < choice_min and not is_mixed_content:
             msg = f"Minimum occurrence of '{choice_min}' not met for choice in parent '{node.name}'"
             if errs is None:
@@ -787,10 +791,10 @@ class Rule(object):
         return index
 
     @staticmethod
-    def _get_child_modality(child: list) -> str:
-        if len(child) > 3 and not isinstance(child[-1], list):
+    def _get_children_modality(children: list) -> str:
+        if len(children) > 3 and not isinstance(children[-1], list):
             mode = "choice"
-        elif len(child) == 3 and isinstance(child[0], str):
+        elif len(children) == 3 and isinstance(children[0], str):
             mode = "child"
         else:
             mode = "sequence"
@@ -799,9 +803,9 @@ class Rule(object):
     @staticmethod
     def _get_children(children: list) -> list:
         allowed = list()
-        if Rule._get_child_modality(children) == "choice":
+        if Rule._get_children_modality(children) == "choice":
             allowed += Rule._get_children(children[:-2])
-        elif Rule._get_child_modality(children) == "sequence":
+        elif Rule._get_children_modality(children) == "sequence":
             for child in children:
                 allowed += Rule._get_children(child)
         else:
