@@ -75,6 +75,15 @@ class Rule(object):
     processing content validation.
     """
 
+    def __init__(self, rule_name):
+        self._name = rule_name
+        rule_data = rules_dict[rule_name]
+        self._attributes = rule_data[0]
+        self._children = rule_data[1]
+        self._content = rule_data[2]
+        self._named_children = self._get_children(self._children)
+        self._node_index = 0
+
     @staticmethod
     def child_list_node_names(child_list: list):
         if list is None or len(child_list) < 3:
@@ -187,14 +196,6 @@ class Rule(object):
             except ValueError as ex:
                 logger.debug(ex)
         return is_valid
-
-    def __init__(self, rule_name):
-        self._name = rule_name
-        rule_data = rules_dict[rule_name]
-        self._attributes = rule_data[0]
-        self._children = rule_data[1]
-        self._content = rule_data[2]
-        self._named_children = self._get_children(self._children)
 
     def child_insert_index(self, parent: Node, new_child: Node) -> int:
         """
@@ -621,7 +622,6 @@ class Rule(object):
                 else:
                     errs.append((ValidationError.MAX_OCCURRENCE_EXCEEDED, msg, node))
 
-        # Begin validation of children
         else:
             node_children = list()
             for node_child in node.children:
@@ -641,7 +641,8 @@ class Rule(object):
             else:
                 is_mixed_content = False
 
-            modality = self._get_children_modality(self.children)
+            # Begin validation of children
+            modality = Rule._get_children_modality(self.children)
             if modality == "sequence":
                 Rule._validate_children_sequence(node, node_children, self.children, is_mixed_content, errs)
             elif modality == "choice":
@@ -791,14 +792,35 @@ class Rule(object):
         return index
 
     @staticmethod
-    def _get_children_modality(children: list) -> str:
-        if len(children) > 3 and not isinstance(children[-1], list):
-            mode = "choice"
-        elif len(children) == 3 and isinstance(children[0], str):
-            mode = "child"
-        else:
+    def _get_children_modality(rule_children: list) -> str:
+        if Rule._is_sequence(rule_children):
             mode = "sequence"
+        elif Rule._is_choice(rule_children):
+            mode = "choice"
+        else:
+            mode = "rule"
         return mode
+
+    @staticmethod
+    def _is_rule(rule_children: list) -> bool:
+        is_rule = False
+        if len(rule_children) == 3 and isinstance(rule_children[0], str):
+            is_rule = True
+        return is_rule
+
+    @staticmethod
+    def _is_sequence(rule_children: list) -> bool:
+        is_sequence = False
+        if isinstance(rule_children[-1], list):
+            is_sequence = True
+        return is_sequence
+
+    @staticmethod
+    def _is_choice(rule_children: list) -> bool:
+        is_choice = False
+        if len(rule_children) >= 3 and isinstance(rule_children[-2], int):
+            is_choice = True
+        return is_choice
 
     @staticmethod
     def _get_children(children: list) -> list:
