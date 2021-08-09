@@ -931,14 +931,21 @@
             "scope": [false, "document", "system"]
         },
         [
-            [["individualName", 1, 1], ["organizationName", 1, 1], ["positionName", 1, 1], 1, null],
-            ["address", 0, null],
-            ["phone", 0, null],
-            ["electronicMailAddress", 0, null],
-            ["onlineUrl", 0, null],
-            ["userId", 0, null],
-            ["role", 1, 1]
-         ],
+            [
+                [
+                    [["individualName", 1, 1], ["organizationName", 1, 1], ["positionName", 1, 1], 1, null],
+                    ["address", 0, null],
+                    ["phone", 0, null],
+                    ["electronicMailAddress", 0, null],
+                    ["onlineUrl", 0, null],
+                    ["userId", 0, null]
+                ],
+                ["references", 1, 1],
+                1, 1
+            ],
+            ["role", 1, 1],
+            1, 1
+        ],
         {
             "content_rules" : ["emptyContent"]
         }
