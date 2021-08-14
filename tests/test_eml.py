@@ -22,6 +22,7 @@ from metapype.eml.exceptions import MetapypeRuleError
 import metapype.eml.names as names
 import metapype.eml.rule as rule
 import metapype.eml.validate as validate
+from metapype.eml.exceptions import ChildNotAllowedError
 import metapype.model.metapype_io as metapype_io
 from metapype.model.node import Node
 
@@ -420,6 +421,31 @@ def test_responsible_party():
     validate.tree(creator)
 
 
+def test_responsible_party_with_role():
+    personnel = Node(names.PERSONNEL)
+    personnel.add_attribute("id", "personnel")
+    personnel.add_namespace("eml", "https://eml.ecoinformatics.org/eml-2.2.0")
+    individual_name = Node(names.INDIVIDUALNAME)
+    personnel.add_child(individual_name)
+    given_name = Node(names.GIVENNAME, content="Chase")
+    given_name.add_attribute("lang", "Spanish")
+    individual_name.add_child(given_name)
+    sur_name = Node(names.SURNAME, content="Gaucho")
+    sur_name.add_attribute("lang", "Spanish")
+    individual_name.add_child(sur_name)
+    individual_name = Node(names.INDIVIDUALNAME)
+    personnel.add_child(individual_name)
+    given_name = Node(names.GIVENNAME, content="Cactus")
+    individual_name.add_child(given_name)
+    sur_name = Node(names.SURNAME, content="Jack")
+    individual_name.add_child(sur_name)
+    phone = Node(names.PHONE, content="999-999-9999")
+    personnel.add_child(phone)
+    role = Node(names.ROLE, content="metadataGuru")
+    personnel.add_child(role)
+    validate.tree(personnel)
+
+
 def test_references():
     creator = Node(names.CREATOR)
     references = Node(names.REFERENCES)
@@ -429,4 +455,55 @@ def test_references():
 
 def test_get_children():
     r = rule.Rule("responsiblePartyRule")
-    assert len(r._named_children) == 9
+    assert len(r._rule_children_names) == 9
+
+
+def test_validate_choice():
+    attribute = Node(names.ATTRIBUTE)
+    attribute_name = Node(names.ATTRIBUTENAME)
+    attribute.add_child(attribute_name)
+    attribute_definition = Node(names.ATTRIBUTEDEFINITION)
+    attribute.add_child(attribute_definition)
+    measurement_scale = Node(names.MEASUREMENTSCALE)
+    attribute.add_child(measurement_scale)
+    # references = Node(names.REFERENCES)
+    # attribute.add_child(references)
+    validate.node(attribute)
+
+
+def test_validate_sequence():
+    errs = list()
+    entity_code_list = Node(names.ENTITYCODELIST)
+    entity_reference = Node(names.ENTITYREFERENCE)
+    entity_code_list.add_child(entity_reference)
+    value_attribute_reference = Node(names.VALUEATTRIBUTEREFERENCE)
+    entity_code_list.add_child(value_attribute_reference)
+    definition_attribute_reference = Node(names.DEFINITIONATTRIBUTEREFERENCE)
+    entity_code_list.add_child(definition_attribute_reference)
+    validate.node(entity_code_list)
+
+
+def test_validate_sequence_bad_order():
+    externally_defined_format = Node(names.EXTERNALLYDEFINEDFORMAT)
+    format_name = Node(names.FORMATNAME)
+    externally_defined_format.add_child(format_name)
+    format_version = Node(names.FORMATVERSION)
+    citation = Node(names.CITATION)
+    externally_defined_format.add_child(citation)
+    externally_defined_format.add_child(format_version)
+    try:
+        validate.node(externally_defined_format)
+    except ChildNotAllowedError as e:
+        assert isinstance(e, ChildNotAllowedError)
+
+
+def test_validate_layered_choice():
+    responsible_party = Node(names.CONTACT)
+    individual_name = Node(names.INDIVIDUALNAME)
+    responsible_party.add_child(individual_name)
+    responsible_party.add_child(individual_name)
+    position_name = Node(names.POSITIONNAME)
+    responsible_party.add_child(position_name)
+    phone = Node(names.PHONE)
+    responsible_party.add_child(phone)
+    validate.node(responsible_party)
