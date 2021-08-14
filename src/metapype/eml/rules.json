@@ -943,11 +943,34 @@
                 ["references", 1, 1],
                 1, 1
             ],
-            ["role", 1, 1],
-            1, 1
+            ["role", 1, null]
         ],
         {
             "content_rules" : ["emptyContent"]
+        }
+    ],
+    "roleRule" : [
+        {
+        },
+        [
+        ],
+        {
+            "content_rules" : ["strContent"],
+            "content_enum" : [
+                "contentProvider",
+                "custodianSteward",
+                "owner",
+                "user",
+                "distributor",
+                "metadataProvider",
+                "originator",
+                "pointOfContact",
+                "principalInvestigator",
+                "processor",
+                "publisher",
+                "author",
+                "editor"
+            ]
         }
     ],
    "rowColumnRule" : [
