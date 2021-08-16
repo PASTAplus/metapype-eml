@@ -441,7 +441,7 @@ def test_responsible_party_with_role():
     individual_name.add_child(sur_name)
     phone = Node(names.PHONE, content="999-999-9999")
     personnel.add_child(phone)
-    role = Node(names.ROLE, content="metadataGuru")
+    role = Node(names.ROLE, content="metadataProvider")
     personnel.add_child(role)
     validate.tree(personnel)
 
@@ -507,3 +507,14 @@ def test_validate_layered_choice():
     phone = Node(names.PHONE)
     responsible_party.add_child(phone)
     validate.node(responsible_party)
+
+
+def test_is_mixed_content():
+    abstract = Node(names.ABSTRACT, content="blah blah blah")
+    validate.node(abstract)
+    city = Node(names.CITY, content="Albuquerque")
+    validate.node(city)
+    city = Node(names.CITY)
+    value = Node(names.VALUE, content="Albuquerque")
+    city.add_child(value)
+    validate.node(city)

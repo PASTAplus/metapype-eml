@@ -248,7 +248,7 @@ class Rule(object):
         content, attributes, and children.
 
         Args:
-            node: Node instance to be validates
+            node: Node instance to be validated
             errs: List of validation errors
 
         Returns:
@@ -257,10 +257,15 @@ class Rule(object):
         Raises:
             MetapypeRuleError: Illegal attribute or missing required attribute
         """
+        if self.name in (RULE_TEXT, RULE_ANYNAME):
+            is_mixed_content = True
+        else:
+            is_mixed_content = False
+
         self._node = node
-        self._validate_content(node, errs)
+        self._validate_content(node, is_mixed_content, errs)
         self._validate_attributes(node, errs)
-        self._validate_children(errs)
+        self._validate_children(is_mixed_content, errs)
 
     def _get_child_position(self, node: Node):
         """
@@ -284,7 +289,7 @@ class Rule(object):
         msg = f'Child "{node.name}" not allowed'
         raise ChildNotAllowedError(msg)
 
-    def _validate_content(self, node: Node, errs: list = None):
+    def _validate_content(self, node: Node, is_mixed_content: bool, errs: list = None):
         """
         Validates node content for rule compliance.
         For each of the content rules configured for this rule,
@@ -312,7 +317,7 @@ class Rule(object):
             elif content_rule == "intContent":
                 self._validate_int_content(node, errs)
             elif content_rule == "nonEmptyContent":
-                self._validate_non_empty_content(node, errs)
+                self._validate_non_empty_content(node, is_mixed_content, errs)
             elif content_rule == "strContent":
                 self._validate_str_content(node, errs)
             elif content_rule == "timeContent":
@@ -437,9 +442,8 @@ class Rule(object):
         self._validate_float_range_content(node, (-90.0, 90.0), errs)
 
     @staticmethod
-    def _validate_non_empty_content(node: Node, errs: list = None):
-        # if len(node.children) == 0 and node.content is None:
-        if node.content is None or len(str(node.content)) == 0:
+    def _validate_non_empty_content(node: Node, is_mixed_content: bool, errs: list = None):
+        if (node.content is None or len(str(node.content)) == 0) and not is_mixed_content:
             msg = f'Node "{node.name}" content should not be empty'
             if errs is None:
                 raise MetapypeRuleError(msg)
@@ -599,7 +603,7 @@ class Rule(object):
                             )
                         )
 
-    def _validate_children(self, errs: list = None) -> None:
+    def _validate_children(self, is_mixed_content: bool, errs: list = None) -> None:
         """
         Validates node children for rule compliance.
 
@@ -637,11 +641,6 @@ class Rule(object):
                     else:
                         errs.append((ValidationError.CHILD_NOT_ALLOWED, msg, self._node, node_child_name))
 
-            if self.name in (RULE_TEXT, RULE_ANYNAME):
-                is_mixed_content = True
-            else:
-                is_mixed_content = False
-
             if len(self._children) > 0:
                 # Begin validation of children
                 modality = Rule._get_children_modality(self._children)
@@ -649,6 +648,7 @@ class Rule(object):
                     self._validate_sequence(self._children, is_mixed_content, errs)
                 else:
                     self._validate_choice(self._children, is_mixed_content, errs)
+
             if self._node_index != len(self._node_children_names):
                 msg = (
                     f"Child '{self._node_children_names[self._node_index]}' "
@@ -671,7 +671,7 @@ class Rule(object):
             if Rule._get_children_modality(rule_child) == "choice":
                 self._validate_choice(rule_child, is_mixed_content, errs)
             else:
-                self._validate_rule_child(rule_child, is_mixed_content, False, errs)
+                self._validate_rule_child(rule_child, False, errs)
 
     def _validate_choice(self, rule_children: list, is_mixed_content: bool, errs: list = None):
         choice_min = rule_children[-2]
@@ -695,7 +695,7 @@ class Rule(object):
                         choice_occurrence += 1
                 else:
                     if self._node_children_names[self._node_index] == rule_child[0]:
-                        self._validate_rule_child(rule_child, is_mixed_content, True, errs)
+                        self._validate_rule_child(rule_child, True, errs)
                         choice_occurrence += 1
         if choice_max is not INFINITY and choice_occurrence > choice_max:
             msg = f"Maximum occurrence of '{choice_max}' exceeded for choice in parent '{self._node.name}'"
@@ -711,7 +711,7 @@ class Rule(object):
                         choice_min,
                     )
                 )
-        if choice_occurrence < choice_min:
+        if choice_occurrence < choice_min and not is_mixed_content:
             msg = f"Minimum occurrence of '{choice_min}' not met for choice in parent '{self._node.name}'"
             if errs is None:
                 raise MinOccurrenceUnmetError(msg)
@@ -726,9 +726,7 @@ class Rule(object):
                     )
                 )
 
-    def _validate_rule_child(
-            self, rule_child: list, is_mixed_content: bool, limit_max: bool, errs: list = None
-    ):
+    def _validate_rule_child(self, rule_child: list, limit_max: bool, errs: list = None):
         rule_child_name = rule_child[0]
         rule_child_min = rule_child[-2]
         rule_child_max = rule_child[-1]
