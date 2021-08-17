@@ -816,17 +816,17 @@ class Rule(object):
 
     @staticmethod
     def _get_rule_children_names(children: list) -> list:
-        allowed = list()
+        children_names = list()
         if len(children) > 0:
             modality = Rule._get_children_modality(children)
             if modality == "choice":
-                allowed += Rule._get_rule_children_names(children[:-2])
+                children_names += Rule._get_rule_children_names(children[:-2])
             elif modality == "sequence":
                 for child in children:
-                    allowed += Rule._get_rule_children_names(child)
+                    children_names += Rule._get_rule_children_names(child)
             else:
-                allowed.append(children[0])
-        return allowed
+                children_names.append(children[0])
+        return children_names
 
     @property
     def name(self):
