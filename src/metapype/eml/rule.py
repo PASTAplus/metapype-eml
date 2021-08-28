@@ -18,6 +18,7 @@ import datetime
 from datetime import time
 import importlib.resources
 import json
+from typing import Optional
 
 import daiquiri
 from rfc3986 import uri_reference, validators
@@ -214,12 +215,57 @@ class Rule(object):
             int: Index location of new child node
 
         """
-        new_child_position = self._get_child_position(new_child)
-        for index in range(len(parent.children) - 1, -1, -1):
-            child_position = self._get_child_position(parent.children[index])
-            if new_child_position >= child_position:
-                return index + 1
-        return 0
+        if not self.is_allowed_child(new_child.name):
+            msg = f"Child '{new_child.name}' not allowed in parent '{parent.name}'"
+            raise ChildNotAllowedError()
+        else:
+            index = 0
+            if len(parent.children) > 0:
+                new_child_index = self._get_child_position(new_child.name)
+                for position, child in enumerate(parent.children):
+                    parent_child_index = self._get_child_position(child.name)
+                    if parent_child_index > new_child_index:
+                        return position
+                index = len(parent.children)
+            return index
+
+    def _get_child_position(self, name: str) -> (Optional[int], None):
+        """
+        Returns the permitted position of a child node for a given rule type
+
+        Args:
+            node: Child node seeking position in sequence of allowable children
+
+        Returns:
+            position: Integer value of child node position
+
+        Raises:
+            ChildNotAllowedError: Child node not permitted by given rule type
+        """
+        try:
+            index = self._rule_children_names.index(name)
+            return index
+        except ValueError as e:
+            logger.error(e)
+            return None
+
+
+    @staticmethod
+    def _is_in_path(rule_children: list, node: Node) -> bool:
+        is_in_path = False
+        if Rule._is_rule_child(rule_children):
+            return rule_children[0] == node.name
+        elif Rule._is_sequence(rule_children):
+            for child in rule_children:
+                is_in_path = Rule._is_in_path(child, node)
+                if is_in_path:
+                    break
+        else:
+            for child in rule_children[:-2]:
+                is_in_path = Rule._is_in_path(child, node)
+                if is_in_path:
+                    break
+        return is_in_path
 
     def is_required_attribute(self, attribute: str):
         if attribute in self._attributes:
@@ -266,28 +312,6 @@ class Rule(object):
         self._validate_content(node, is_mixed_content, errs)
         self._validate_attributes(node, errs)
         self._validate_children(is_mixed_content, errs)
-
-    def _get_child_position(self, node: Node):
-        """
-        Returns the permitted position of a child node for a given rule type
-
-        Args:
-            node: Child node seeking position in sequence of allowable children
-
-        Returns:
-            position: Integer value of child node position
-
-        Raises:
-            ChildNotAllowedError: Child node not permitted by given rule type
-        """
-        for position, child in enumerate(self.children):
-            child_name_list = child[:-2]
-            if isinstance(child_name_list[0], list):
-                child_name_list = [_[0] for _ in child_name_list]
-            if node.name in child_name_list:
-                return position
-        msg = f'Child "{node.name}" not allowed'
-        raise ChildNotAllowedError(msg)
 
     def _validate_content(self, node: Node, is_mixed_content: bool, errs: list = None):
         """
@@ -700,11 +724,11 @@ class Rule(object):
         if choice_max is not INFINITY and choice_occurrence > choice_max:
             msg = f"Maximum occurrence of '{choice_max}' exceeded for choice in parent '{self._node.name}'"
             if errs is None:
-                raise MinOccurrenceUnmetError(msg)
+                raise MaxOccurrenceExceededError(msg)
             else:
                 errs.append(
                     (
-                        ValidationError.MIN_OCCURRENCE_UNMET,
+                        ValidationError.MAX_OCCURRENCE_EXCEEDED,
                         msg,
                         self._node,
                         "Choice",
