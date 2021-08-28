@@ -21,6 +21,7 @@ import tests
 from metapype.eml.exceptions import MetapypeRuleError
 import metapype.eml.names as names
 import metapype.eml.rule as rule
+from metapype.eml.rule import Rule
 import metapype.eml.validate as validate
 from metapype.eml.exceptions import ChildNotAllowedError
 import metapype.model.metapype_io as metapype_io
@@ -307,19 +308,19 @@ def test_is_allowed_child():
     assert not allowed
 
 
-def test_child_insert_index():
-    eml = Node(names.EML)
-    eml.add_attribute("packageId", "edi.23.1")
-    eml.add_attribute("system", "metapype")
-    access = Node(names.ACCESS, parent=eml)
-    eml.add_child(access)
-    additional_metadata = Node(names.ADDITIONALMETADATA, parent=eml)
-    eml.add_child(additional_metadata)
-    r = rule.get_rule(names.EML)
-    dataset = Node(names.DATASET, parent=eml)
-    index = r.child_insert_index(eml, dataset)
-    eml.add_child(dataset, index=index)
-    validate.node(eml)
+# def test_child_insert_index():
+#     eml = Node(names.EML)
+#     eml.add_attribute("packageId", "edi.23.1")
+#     eml.add_attribute("system", "metapype")
+#     access = Node(names.ACCESS, parent=eml)
+#     eml.add_child(access)
+#     additional_metadata = Node(names.ADDITIONALMETADATA, parent=eml)
+#     eml.add_child(additional_metadata)
+#     r = rule.get_rule(names.EML)
+#     dataset = Node(names.DATASET, parent=eml)
+#     index = r.child_insert_index(eml, dataset)
+#     eml.add_child(dataset, index=index)
+#     validate.node(eml)
 
 
 def test_is_yeardate():
@@ -518,3 +519,40 @@ def test_is_mixed_content():
     value = Node(names.VALUE, content="Albuquerque")
     city.add_child(value)
     validate.node(city)
+
+
+def test_is_in_path():
+    associated_party = Node(names.ASSOCIATEDPARTY)
+    organization_name = Node(names.ORGANIZATIONNAME)
+    associated_party.add_child(organization_name)
+    address = Node(names.ADDRESS)
+    associated_party.add_child(address)
+    online_url = Node(names.ONLINEURL)
+    associated_party.add_child(online_url)
+    phone = Node(names.PHONE)
+    r = rule.get_rule(names.ASSOCIATEDPARTY)
+    print("\n")
+    assert Rule._is_in_path(r.children, phone)
+    # para = Node(names.PARA)
+    # r = rule.get_rule(names.ASSOCIATEDPARTY)
+    # assert not Rule._is_in_path(r.children, para)
+
+
+def test_child_insert_index():
+    associated_party = Node(names.ASSOCIATEDPARTY)
+    organization_name = Node(names.ORGANIZATIONNAME)
+    associated_party.add_child(organization_name)
+    address = Node(names.ADDRESS)
+    associated_party.add_child(address)
+    online_url = Node(names.ONLINEURL)
+    associated_party.add_child(online_url)
+    role = Node(names.ROLE)
+    associated_party.add_child(role)
+    new_child = Node(names.POSITIONNAME)
+    r = rule.get_rule(names.ASSOCIATEDPARTY)
+    index = r.child_insert_index(associated_party, new_child)
+    associated_party.add_child(new_child, index)
+    print("\n")
+    for position, child in enumerate(associated_party.children):
+        print(position, child.name)
+    validate.node(associated_party)
