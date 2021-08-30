@@ -205,7 +205,9 @@ class Rule(object):
     def child_insert_index(self, parent: Node, new_child: Node) -> int:
         """
         Determines the index location of a new child node in a given parent node
-        based on the parent node's rule type
+        based on the parent node's rule type. Note that only a legal position in
+        the list of possible children is guaranteed; parent node validity may be
+        based on other constraint of the rule type.
 
         Args:
             parent: Parent node of which to be adding child node
@@ -215,40 +217,17 @@ class Rule(object):
             int: Index location of new child node
 
         """
-        if not self.is_allowed_child(new_child.name):
-            msg = f"Child '{new_child.name}' not allowed in parent '{parent.name}'"
-            raise ChildNotAllowedError()
-        else:
-            index = 0
-            if len(parent.children) > 0:
-                new_child_index = self._get_child_position(new_child.name)
-                for position, child in enumerate(parent.children):
-                    parent_child_index = self._get_child_position(child.name)
-                    if parent_child_index > new_child_index:
-                        return position
-                index = len(parent.children)
-            return index
-
-    def _get_child_position(self, name: str) -> (Optional[int], None):
-        """
-        Returns the permitted position of a child node for a given rule type
-
-        Args:
-            node: Child node seeking position in sequence of allowable children
-
-        Returns:
-            position: Integer value of child node position
-
-        Raises:
-            ChildNotAllowedError: Child node not permitted by given rule type
-        """
         try:
-            index = self._rule_children_names.index(name)
-            return index
+            new_child_index = self._rule_children_names.index(new_child.name)
         except ValueError as e:
-            logger.error(e)
-            return None
-
+            msg = f"Child '{new_child.name}' not allowed in parent '{parent.name}'"
+            raise ChildNotAllowedError(msg)
+        for index, child in enumerate(parent.children):
+            parent_child_index = self._rule_children_names.index(child.name)
+            if parent_child_index > new_child_index:
+                return index
+        index = len(parent.children)
+        return index
 
     @staticmethod
     def _is_in_path(rule_children: list, node: Node) -> bool:
