@@ -112,3 +112,8 @@ venv.bak/
 # Project files
 config.py
 test_eml.*
+/docs/cap.md
+/utils/harness.py
+/utils/Test for Lake Baikal.json
+/utils/Test for Lake Baikal.json.20210209
+/utils/Test for Lake Baikal.json.original
