@@ -4,7 +4,10 @@
 
 #### A lightweight Python 3 library for generating EML metadata
 
-[![Build Status](https://travis-ci.org/PASTAplus/metapype-eml.svg?branch=master)](https://travis-ci.org/PASTAplus/metapype-eml)
+[comment]: <> ([![Build Status]&#40;https://travis-ci.org/PASTAplus/metapype-eml.svg?branch=master&#41;]&#40;https://travis-ci.org/PASTAplus/metapype-eml&#41;)
+
+![metapype](https://github.com/PASTAplus/metapype-eml/workflows/metapype-build/badge.svg)
+
 
 
 <hr />
