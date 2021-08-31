@@ -83,10 +83,6 @@ class Rule(object):
         self._children = rule_data[1]
         self._content = rule_data[2]
         self._rule_children_names = self._get_rule_children_names(self._children)
-        self._node_index = 0
-        self._node = None
-        self._node_children_names = list()
-
         self._depth = 0
 
     @staticmethod
@@ -287,10 +283,9 @@ class Rule(object):
         else:
             is_mixed_content = False
 
-        self._node = node
         self._validate_content(node, is_mixed_content, errs)
         self._validate_attributes(node, errs)
-        self._validate_children(is_mixed_content, errs)
+        self._validate_children(node, is_mixed_content, errs)
 
     def _validate_content(self, node: Node, is_mixed_content: bool, errs: list = None):
         """
@@ -606,7 +601,7 @@ class Rule(object):
                             )
                         )
 
-    def _validate_children(self, is_mixed_content: bool, errs: list = None) -> None:
+    def _validate_children(self, node: Node, is_mixed_content: bool, errs: list = None) -> None:
         """
         Validates node children for rule compliance.
 
@@ -622,6 +617,10 @@ class Rule(object):
             MetapypeRuleError: Illegal child, bad sequence or choice, missing
             child, or wrong child cardinality
         """
+        self._node = node
+        self._node_children_names = []
+        self._node_index = 0
+
         if self._node.name == names.METADATA:
             # Metadata nodes may contain any type of child node, but only one such node
             if len(self._node.children) > 1:
