@@ -17,9 +17,9 @@ applications will use the Metapype API to build more robust and user-friendly
 applications.
 
 This version of Metapype is designed to reflect the content structure of the
-Ecological Metadata Language (EML) XML schema; it is not, however, locked
-into a specific version of EML. As such, Metapype can support multiple
-versions of metadata standards.
+Ecological Metadata Language (EML) XML schema (version 2.2.0); it is not,
+however, locked into a specific version of EML. As such, Metapype can support
+multiple versions of metadata standards.
 
 Metapype is divided into a metadata content model and a set of validation
 rules that enforce model compliance to a specific metadata standard, including
@@ -51,7 +51,7 @@ getters (see the Node API).
 
 <p align="center"><img src="https://raw.githubusercontent.com/PASTAplus/metapype-eml/master/docs/node.png" /></p>
 
-A compliant EML 2.1.1 metadata content model tree is found in the following
+A compliant EML 2.2.0 metadata content model tree is found in the following
 diagram (this diagram represents an instance of a Metapype tree model):
 
 <p align="center"><img src="https://raw.githubusercontent.com/PASTAplus/metapype-eml/master/docs/eml_model.png"/></p>
@@ -60,87 +60,39 @@ diagram (this diagram represents an instance of a Metapype tree model):
 
 Metadata validation is critical to ensure that the working model complies with
 all requirements and constraints declared within the metadata standard, and in
-this case, the EML XML schema. A valid metadata content model implies that
+this case, the EML 2.2.0 XML schema. A valid metadata content model implies that
 every node of the tree complies with the syntax of the metadata standard being
 modeled. Metapype can process the model instance through a series of
 *validation* rules to ensure compliance with the EML XML schema. A critical
 exception is raised if any node within the model fails validation during
 processing.
 
-A metadata standard validation rule is a codified set of constraints that
-follow the same (or similar) requirements that are declared within the
-corresponding metadata standard. In this version of Metapype (for EML), these
-rules are written in accordance with the element definitions as declared in
-the EML XML schema and are written as unique Python functions. Each rule
-enforces content requirements, the presence of XML attributes, and if a
-"complex" XML element is being modeled, the sequence or choice of descendant
-elements, including descendant cardinality (rules do not, however, support
-all XML schema constructs such as `groups` or `all`). Rule functions implicitly
+A metadata validation rule is a codified set of constraints declared
+in a JSON format. A rule is divided into three distinct sections that are used
+to verify: 1) attribute information, 2) sub-element (or children) definitions,
+and 3) content information. Rule functions implicitly
 return `None` unless an exception occurs during the evaluation process;
 exceptions are of the class `exceptions.MetapypeRuleError`.
 
-Rules are divided into three parts for validating the components of an EML
-element: 1) element specific constraints, 2) attributes, and 3) sub-
-elements complex types, if present.
+The following is an example of the "access" rule:
 
-Element specific constraints, if any, are written as Python conditional
-statements (e.g., `if`, `else`, or `elif`) and provide a "fail fast" method
-for node validation. Element specific constraints are best used for enforcing
-content data types, enumerations, or other detailed constraints declared in
-the XML schema. Conditional statements may be chained together for validating
-multiple or different constraints imposed by the corresponding element.
-
-The rule section for XML attributes is represented as a Python dictionary, where
-attribute names are the "keys" and their optional or required status the
-"values". Attributes, as defined in a node instance, are validated against
-those of the rule's attribute dictionary using a function called
-`validate._attributes`. Errors during this step may result from the
-presence of illegal attributes or attributes that are required, but missing
-from the node. The literal value of node attributes are not evaluated during
-this validation phase, but can be codified as a node-specific constraint
-described earlier (see example below).
-
-The rule section for sub-element validation is declared as a nested Python
-list that contains the children of the node instance. This data structure is a
-"list-of-lists": the outer list specifies the sequence in which children may
-occur, while the inner list(s) specifies what child node (or children, if a
-choice) may occur at the current location in the sequence. The cardinality
-(i.e., minimum and maximum occurrence) of each child node is always set to the
-last two positions of the inner list, thereby making the values accessible
-through list slicing (i.e., `rule[-2:]`). The "list-of-lists" data structure
-is passed to a function, called `validate._children`, that
-iterates through both the rule-based list and the list of children from the
-node instance to validate compliance as specified in the given rule.
-Validation failure at this point indicates that the node contains illegal
-children, children occurring in the wrong sequence, or children occurring too
-few or too many times (a cardinality violation).
-
-The following is an example of the "access" rule as codified in Python:
-
-```Python
-def access_rule(node: Node):
-    # Specific constraint section
-    if 'order' in node.attributes:
-        allowed = ['allowFirst', 'denyFirst']
-        if node.attributes['order'] not in allowed:
-            msg = '"{0}:order" attribute must be one of "{1}"'.format(node.name, allowed)
-            raise MetapypeRuleError(msg)
-
-    # Attribute section
-    attributes = {
-        'id': OPTIONAL,
-        'system': OPTIONAL,
-        'scope': OPTIONAL,
-        'order': OPTIONAL,
-        'authSystem': REQUIRED
+```JSON
+"accessRule" : [
+    {
+        "id": [false],
+        "system": [false],
+        "scope": [false, "document", "system"],
+        "order": [false, "allowFirst", "denyFirst"],
+        "authSystem": [true]
+    },
+    [
+        [["allow", 1, 1], ["deny", 1, 1], 1, null]
+    ],
+    {
+        "content_rules" : ["emptyContent"]
     }
-    _attributes(attributes, node)
+],
 
-    # Children section
-    children = [
-        ['allow', 'deny', 1, INFINITY]
-    ]
-    _children(children, node)
 ```
 
 This `access_rule` example demonstrates the use of all three rule sections: 1)
@@ -148,7 +100,7 @@ The element specific constraints validate the value of a specific node attribute
 In this case, the `order` attribute, if defined, must have a value of either
 `allowFirst` or `denyFirst` only. 2) The XML attributes rule defines the
 set of acceptable attributes to be `id`, `system`, `order`, and `authSystem`;
-all defined attributes are *optional* with the exception of `authSystem`,
+all defined attributes are *optional* except the `authSystem`,
 which is *required*. And finally, 3) the sub-element children section defines a
 single node choice of either an `allow` or `deny` child, along with the
 cardinality of 1 to infinity.
