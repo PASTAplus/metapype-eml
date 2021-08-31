@@ -818,7 +818,7 @@ class Rule(object):
 
     @staticmethod
     def _get_rule_children_names(children: list) -> list:
-        children_names = list()
+        children_names = []
         if len(children) > 0:
             modality = Rule._get_children_modality(children)
             if modality == "choice":
