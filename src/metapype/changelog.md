@@ -14,3 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   methods/attributes in method `_validate_children` of `rule.py`.
 - Fixed case where children index values may be out of range in method
   `_validate_children_choice` of `rule.py`.
+
+## [0.0.4] 2021-08-30
+### Added
+- New method `Rule._validate_rule_child()` for verifying node child cardinality. 
+### Changed/Fixed
+- Refactored `Rule._validate_children` using recursion to simplify logic, including
+  rewriting key `Rule` methods `_validate_choice()` and `_validate_sequence()`.
+- Refactored `Rule.get_child_index()` to use `_rule_children_names` when
+  calculating the insertion index of new node children.
