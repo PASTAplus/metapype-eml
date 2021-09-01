@@ -4,9 +4,8 @@ channels:
   - defaults
 dependencies:
   - python=3.8
-  - pytest
-  - black
   - lxml
   - rfc3986
   - daiquiri
+  - pytest
 prefix: /home/servilla/anaconda3/envs/metapype
