@@ -955,22 +955,7 @@
         [
         ],
         {
-            "content_rules" : ["strContent"],
-            "content_enum" : [
-                "contentProvider",
-                "custodianSteward",
-                "owner",
-                "user",
-                "distributor",
-                "metadataProvider",
-                "originator",
-                "pointOfContact",
-                "principalInvestigator",
-                "processor",
-                "publisher",
-                "author",
-                "editor"
-            ]
+            "content_rules" : ["strContent"]
         }
     ],
    "rowColumnRule" : [
@@ -1179,7 +1164,7 @@
             [["section", 0, null], ["para", 0, null], ["markdown", 0, null], 1, null]
         ],
         {
-            "content_rules" : ["strContent"]
+            "content_rules" : ["strContent", "nonEmptyContent"]
         }
     ],
     "timeRule" : [
