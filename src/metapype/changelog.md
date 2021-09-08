@@ -23,3 +23,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   rewriting key `Rule` methods `_validate_choice()` and `_validate_sequence()`.
 - Refactored `Rule.get_child_index()` to use `_rule_children_names` when
   calculating the insertion index of new node children.
+
+## [0.0.5] 2021-09-01
+### Changed/Fixed
+- Converted build CI to use GitHub Actions from Travis CI.
+
+## [0.0.6] 2021-09-08
+### Changed/Fixed
+- Reverted roleRule to allow any string content.
+- Fixed mixed content type textRule where zero length content was allowed; zero
+  length content should result in a MetapypeException.
