@@ -441,14 +441,15 @@ class Rule(object):
 
     @staticmethod
     def _validate_non_empty_content(node: Node, is_mixed_content: bool, errs: list = None):
-        if (node.content is None or len(str(node.content)) == 0) and not is_mixed_content:
-            msg = f'Node "{node.name}" content should not be empty'
-            if errs is None:
-                raise MetapypeRuleError(msg)
-            else:
-                errs.append(
-                    (ValidationError.CONTENT_EXPECTED_NONEMPTY, msg, node)
-                )
+        if node.content is None or len(str(node.content)) == 0:
+            if (is_mixed_content and len(node.children) == 0) or not is_mixed_content:
+                msg = f'Node "{node.name}" content should not be empty'
+                if errs is None:
+                    raise MetapypeRuleError(msg)
+                else:
+                    errs.append(
+                        (ValidationError.CONTENT_EXPECTED_NONEMPTY, msg, node)
+                    )
 
     @staticmethod
     def _validate_str_content(node: Node, errs: list = None):
