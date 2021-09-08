@@ -460,7 +460,7 @@ def test_responsible_party_with_role():
     individual_name.add_child(sur_name)
     phone = Node(names.PHONE, content="999-999-9999")
     personnel.add_child(phone)
-    role = Node(names.ROLE, content="metadataProvider")
+    role = Node(names.ROLE, content="drummer")
     personnel.add_child(role)
     validate.tree(personnel)
 
@@ -529,8 +529,40 @@ def test_validate_layered_choice():
 
 
 def test_is_mixed_content():
+    # Testing textRule
+    abstract = Node(names.ABSTRACT)
+    with pytest.raises(MetapypeRuleError) as ei:
+        validate.node(abstract)
+    assert "content should not be empty" in str(ei.value)
+    abstract = Node(names.ABSTRACT, content="")
+    with pytest.raises(MetapypeRuleError) as ei:
+        validate.node(abstract)
+    assert "content should not be empty" in str(ei.value)
     abstract = Node(names.ABSTRACT, content="blah blah blah")
     validate.node(abstract)
+    abstract = Node(names.ABSTRACT, content="blah blah blah")
+    para = Node(names.PARA, content="more blah blah blah")
+    abstract.add_child(para)
+    validate.node(abstract)
+    abstract = Node(names.ABSTRACT)
+    para = Node(names.PARA, content="more blah blah blah")
+    abstract.add_child(para)
+    validate.node(abstract)
+    title = Node(names.TITLE, content="more blah blah blah")
+    abstract.add_child(title)
+    with pytest.raises(MetapypeRuleError) as ei:
+        validate.node(abstract)
+    assert "not allowed in parent" in str(ei.value)
+
+    # Testing anyNameRule
+    city = Node(names.CITY)
+    with pytest.raises(MetapypeRuleError) as ei:
+        validate.node(city)
+    assert "content should not be empty" in str(ei.value)
+    city = Node(names.CITY, content="")
+    with pytest.raises(MetapypeRuleError) as ei:
+        validate.node(city)
+    assert "content should not be empty" in str(ei.value)
     city = Node(names.CITY, content="Albuquerque")
     validate.node(city)
     city = Node(names.CITY)
