@@ -18,14 +18,14 @@ import pytest
 import os
 
 import tests
-from metapype.eml.exceptions import MetapypeRuleError
+from metapype.eml.exceptions import MetapypeRuleError, ChildNotAllowedError
 import metapype.eml.names as names
 import metapype.eml.rule as rule
 from metapype.eml.rule import Rule
 import metapype.eml.validate as validate
-from metapype.eml.exceptions import ChildNotAllowedError
 import metapype.model.metapype_io as metapype_io
 from metapype.model.node import Node
+from metapype.eml.validation_errors import ValidationError
 
 logger = daiquiri.getLogger("test_eml: " + __name__)
 
@@ -460,9 +460,19 @@ def test_responsible_party_with_role():
     individual_name.add_child(sur_name)
     phone = Node(names.PHONE, content="999-999-9999")
     personnel.add_child(phone)
+    errs = []
+    # Without role, should get an error
+    with pytest.raises(MetapypeRuleError):
+        validate.tree(personnel)
+    # Error should name 'role' as the cause
+    validate.tree(personnel, errs)
+    for err_code, msg, node, *args in errs:
+        err_cause, min = args
+        assert err_cause == 'role'
+    # With role, it should be ok
     role = Node(names.ROLE, content="drummer")
     personnel.add_child(role)
-    validate.tree(personnel)
+    validate.tree(personnel, errs)
 
 
 def test_references():
@@ -569,6 +579,43 @@ def test_is_mixed_content():
     value = Node(names.VALUE, content="Albuquerque")
     city.add_child(value)
     validate.node(city)
+
+
+def test_nonempty_mixed_content():
+    title = Node(names.TITLE, content="")
+    with pytest.raises(MetapypeRuleError):
+        validate.node(title)
+
+
+def test_missing_numerical_unit():
+    unit = Node(names.UNIT, parent=None)
+    r = rule.get_rule(names.UNIT)
+    with pytest.raises(MetapypeRuleError):
+        r.validate_rule(unit)
+    # Check error
+    errs = []
+    validate.tree(unit, errs)
+    assert len(errs) == 1
+    err_code, msg, node, *args = errs[0]
+    assert err_code == ValidationError.MIN_CHOICE_UNMET
+    assert args[0] == 'unit'
+    # With a customUnit, it should be ok
+    custom_unit = Node(names.CUSTOMUNIT, parent=unit)
+    custom_unit.content = 'bushels per parsec'
+    unit.add_child(custom_unit)
+    validate.tree(unit)
+
+
+def test_taxonid():
+    taxonId = Node(names.TAXONID, parent=None)
+    taxonId.content = "42"
+    r = rule.get_rule(names.TAXONID)
+    # without the provider, we should get an error
+    with pytest.raises(MetapypeRuleError):
+        r.validate_rule(taxonId)
+    # with the provider, it should be ok
+    taxonId.add_attribute("provider", "https://www.itis.gov")
+    r.validate_rule(taxonId)
 
 
 def test_is_in_path():

@@ -1057,6 +1057,16 @@
             "content_rules" : ["emptyContent"]
         }
     ],
+    "taxonIdRule" : [
+        {
+            "provider": [true]
+        },
+        [
+        ],
+        {
+            "content_rules" : ["strContent", "nonEmptyContent"]
+        }
+    ],
     "taxonomicClassificationRule" : [
         { 
             "id": [false],

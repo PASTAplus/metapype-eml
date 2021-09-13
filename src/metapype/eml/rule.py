@@ -680,6 +680,7 @@ class Rule(object):
         choice_min = rule_children[-2]
         choice_max = rule_children[-1]
         choice_occurrence = 0
+
         while (
                 self._node_index < len(self._node_children_names) and
                 self._node_children_names[self._node_index] in self._get_rule_children_names(rule_children)
@@ -707,11 +708,11 @@ class Rule(object):
             else:
                 errs.append(
                     (
-                        ValidationError.MAX_OCCURRENCE_EXCEEDED,
+                        ValidationError.MAX_CHOICE_EXCEEDED,
                         msg,
                         self._node,
-                        "Choice",
-                        choice_min,
+                        self._node.name,
+                        choice_max,
                     )
                 )
         if choice_occurrence < choice_min and not is_mixed_content:
@@ -721,10 +722,10 @@ class Rule(object):
             else:
                 errs.append(
                     (
-                        ValidationError.MIN_OCCURRENCE_UNMET,
+                        ValidationError.MIN_CHOICE_UNMET,
                         msg,
                         self._node,
-                        "Choice",
+                        self._node.name,
                         choice_min,
                     )
                 )
@@ -774,8 +775,9 @@ class Rule(object):
                         ValidationError.MIN_OCCURRENCE_UNMET,
                         msg,
                         self._node,
-                        None if self._node_index >= len(self._node_children_names)
-                        else self._node_children_names[self._node_index],
+                        rule_child_name,
+                        # None if self._node_index >= len(self._node_children_names)
+                        # else self._node_children_names[self._node_index],
                         rule_child_min,
                     )
                 )
