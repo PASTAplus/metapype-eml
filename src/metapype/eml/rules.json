@@ -1064,7 +1064,7 @@
         [
         ],
         {
-            "content_rules" : ["strContent", "nonEmptyContent"]
+            "content_rules" : ["strContent"]
         }
     ],
     "taxonomicClassificationRule" : [
