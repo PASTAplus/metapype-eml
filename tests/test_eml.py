@@ -609,13 +609,12 @@ def test_missing_numerical_unit():
 def test_taxonid():
     taxonId = Node(names.TAXONID, parent=None)
     taxonId.content = "42"
-    r = rule.get_rule(names.TAXONID)
     # without the provider, we should get an error
     with pytest.raises(MetapypeRuleError):
-        r.validate_rule(taxonId)
+        validate.node(taxonId)
     # with the provider, it should be ok
     taxonId.add_attribute("provider", "https://www.itis.gov")
-    r.validate_rule(taxonId)
+    validate.node(taxonId)
 
 
 def test_is_in_path():
@@ -630,9 +629,3 @@ def test_is_in_path():
     r = rule.get_rule(names.ASSOCIATEDPARTY)
     print("\n")
     assert Rule._is_in_path(r.children, phone)
-    # para = Node(names.PARA)
-    # r = rule.get_rule(names.ASSOCIATEDPARTY)
-    # assert not Rule._is_in_path(r.children, para)
-
-
-# def test_child_insert_index():
