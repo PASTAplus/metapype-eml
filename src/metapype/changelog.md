@@ -33,3 +33,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Reverted roleRule to allow any string content.
 - Fixed mixed content type textRule where zero length content was allowed; zero
   length content should result in a MetapypeException.
+
+## [0.0.7] 2021-09-15
+### Changed/Fixed
+- Add taxonIdRule validation support.
+- Improve rule failure analysis for validation of choice actions.
