@@ -38,3 +38,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed/Fixed
 - Add taxonIdRule validation support.
 - Improve rule failure analysis for validation of choice actions.
+
+## [0.0.8] 2021-09-22
+### Added
+- Add supported for geographic coverage altitude.
+### Changed/Fixed
+- Fixed interpretation of 0 in `is_float()`.
