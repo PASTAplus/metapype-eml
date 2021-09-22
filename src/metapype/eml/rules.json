@@ -75,6 +75,23 @@
             "content_rules" : ["strContent", "nonEmptyContent"]
         }
     ],
+
+    "altitudeUnitsRule" : [
+        {
+        },
+        [
+        ],
+        {
+            "content_rules" : ["strContent"],
+            "content_enum" : ["", "meter", "nanometer", "micrometer", "micron",
+            "millimeter", "centimeter", "decimeter", "dekameter", "hectameter",
+            "kilometer", "megameter", "angstrom", "inch", "foot",
+            "Foot_US", "yard", "mile", "nauticalMile", "fathom",
+            "Foot_Gold_Coast", "Yard_Indian", "Link_Clarke", "Yard_Sears"
+            ]
+        }
+    ],
+
     "annotationRule" : [
         {
             "id": [false],
@@ -209,6 +226,18 @@
             "content_rules" : ["emptyContent"]
         }
     ],
+    "boundingAltitudesRule" : [
+        {
+        },
+        [
+            ["altitudeMinimum", 1, 1],
+            ["altitudeMaximum", 1, 1],
+            ["altitudeUnits", 1, 1]
+       ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
     "boundingCoordinateRule_EW" : [
         {
         },
@@ -234,7 +263,8 @@
             ["westBoundingCoordinate", 1, 1],
             ["eastBoundingCoordinate", 1, 1],
             ["northBoundingCoordinate", 1, 1],
-            ["southBoundingCoordinate", 1, 1]
+            ["southBoundingCoordinate", 1, 1],
+            ["boundingAltitudes", 0, 1]
        ],
         {
             "content_rules" : ["emptyContent"]
@@ -674,6 +704,15 @@
 
         {
             "content_rules" : ["emptyContent"]
+        }
+    ],
+    "nonNegativeFloatRule" : [
+        {
+        },
+        [
+        ],
+        {
+            "content_rules" : ["floatContent_Nonnegative", "nonEmptyContent"]
         }
     ],
     "nonNumericDomainRule" : [

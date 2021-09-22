@@ -119,12 +119,13 @@ class Rule(object):
         (or can be converted to) a valid float value.
         """
         is_valid = False
-        if val:
-            try:
-                __ = float(val)
-                is_valid = True
-            except ValueError:
-                pass
+        if val is None:
+            return False
+        try:
+            __ = float(val)
+            is_valid = True
+        except ValueError:
+            pass
         return is_valid
 
     @staticmethod
@@ -312,6 +313,8 @@ class Rule(object):
                 self._validate_float_range_ew_content(node, errs)
             elif content_rule == "floatRangeContent_NS":
                 self._validate_float_range_ns_content(node, errs)
+            elif content_rule == "floatContent_Nonnegative":
+                self._validate_float_content_nonnegative(node, errs)
             elif content_rule == "intContent":
                 self._validate_int_content(node, errs)
             elif content_rule == "nonEmptyContent":
@@ -433,11 +436,35 @@ class Rule(object):
                     )
                 )
 
+    def _validate_float_nonnegative(
+        self, node: Node, errs: list = None
+    ):
+        self._validate_float_content(node, errs)
+        float_val = float(node.content)
+        if float_val < 0:
+            msg = f'Node "{node.name}" content should be non-negative'
+            if errs is None:
+                raise MetapypeRuleError(msg)
+            else:
+                errs.append(
+                    (
+                        ValidationError.CONTENT_EXPECTED_RANGE,
+                        msg,
+                        node,
+                        0,
+                        None,
+                        float_val,
+                    )
+                )
+
     def _validate_float_range_ew_content(self, node: Node, errs: list = None):
         self._validate_float_range_content(node, (-180.0, 180.0), errs)
 
     def _validate_float_range_ns_content(self, node: Node, errs: list = None):
         self._validate_float_range_content(node, (-90.0, 90.0), errs)
+
+    def _validate_float_content_nonnegative(self, node: Node, errs: list = None):
+        self._validate_float_nonnegative(node, errs)
 
     @staticmethod
     def _validate_non_empty_content(node: Node, is_mixed_content: bool, errs: list = None):
@@ -864,6 +891,7 @@ RULE_ADDITIONALMETADATA = "additionalMetadataRule"
 RULE_ADDRESS = "addressRule"
 RULE_ALLOW = "allowRule"
 RULE_ALTERNATEIDENTIFIER = "alternateIdentifierRule"
+RULE_ALTITUDEUNITS = "altitudeUnitsRule"
 RULE_ANNOTATION = "annotationRule"
 RULE_ANYINT = "anyIntRule"
 RULE_ANYNAME = "anyNameRule"
@@ -874,6 +902,7 @@ RULE_ATTRIBUTELIST = "attributeListRule"
 RULE_AUTHENTICATION = "authenticationRule"
 RULE_AWARD = "awardRule"
 RULE_BINARYRASTER_FORMAT = "binaryRasterFormatRule"
+RULE_BOUNDINGALTITUDES = "boundingAltitudesRule"
 RULE_BOUNDINGCOORDINATE_EW = "boundingCoordinateRule_EW"
 RULE_BOUNDINGCOORDINATE_NS = "boundingCoordinateRule_NS"
 RULE_BOUNDINGCOORDINATES = "boundingCoordinatesRule"
@@ -912,6 +941,7 @@ RULE_MINMAX = "minMaxRule"
 RULE_MISSINGVALUECODE = "missingValueCodeRule"
 RULE_MULTIBAND = "multiBandRule"
 RULE_NOMINAL = "nominalOrdinalRule"
+RULE_NONNEGATIVEFLOAT = "nonNegativeFloatRule"
 RULE_NONNUMERICDOMAIN = "nonNumericDomainRule"
 RULE_NUMERICDOMAIN = "numericDomainRule"
 RULE_OFFLINE = "offlineRule"
@@ -974,6 +1004,9 @@ node_mappings = {
     names.ADMINISTRATIVEAREA: RULE_ANYNAME,
     names.ALLOW: RULE_ALLOW,
     names.ALTERNATEIDENTIFIER: RULE_ALTERNATEIDENTIFIER,
+    names.ALTITUDEMAXIMUM: RULE_ANYSTRING,
+    names.ALTITUDEMINIMUM: RULE_ANYSTRING,
+    names.ALTITUDEUNITS: RULE_ALTITUDEUNITS,
     names.ANNOTATION: RULE_ANNOTATION,
     names.ASSOCIATEDPARTY: RULE_RESPONSIBLEPARTY_WITH_ROLE,
     names.ATTRIBUTE: RULE_ATTRIBUTE,
@@ -993,6 +1026,7 @@ node_mappings = {
     names.BANDROWBYTES: RULE_ANYSTRING,
     names.BEGINDATE: RULE_SINGLEDATETIME,
     names.BINARYRASTERFORMAT: RULE_BINARYRASTER_FORMAT,
+    names.BOUNDINGALTITUDES: RULE_BOUNDINGALTITUDES,
     names.BOUNDINGCOORDINATES: RULE_BOUNDINGCOORDINATES,
     names.BOUNDS: RULE_BOUNDS,
     names.BYTEORDER: RULE_ANYSTRING,
@@ -1097,6 +1131,7 @@ node_mappings = {
     names.NBANDS: RULE_ANYINT,
     names.NBITS: RULE_ANYINT,
     names.NOMINAL: RULE_NOMINAL,
+    names.NONNEGATIVEFLOAT: RULE_NONNEGATIVEFLOAT,
     names.NONNUMERICDOMAIN: RULE_NONNUMERICDOMAIN,
     names.NORTHBOUNDINGCOORDINATE: RULE_BOUNDINGCOORDINATE_NS,
     names.NUMBEROFRECORDS: RULE_ANYSTRING,

@@ -617,6 +617,47 @@ def test_taxonid():
     validate.node(taxonId)
 
 
+def test_bounding_altitudes():
+    bounding_coordinates = Node(names.BOUNDINGCOORDINATES, parent=None)
+    bc_west = Node(names.WESTBOUNDINGCOORDINATE, parent=bounding_coordinates)
+    bc_east = Node(names.EASTBOUNDINGCOORDINATE, parent=bounding_coordinates)
+    bc_north = Node(names.NORTHBOUNDINGCOORDINATE, parent=bounding_coordinates)
+    bc_south = Node(names.SOUTHBOUNDINGCOORDINATE, parent=bounding_coordinates)
+    bc_west.content = "0.0"
+    bc_east.content = "0.0"
+    bc_north.content = "0.0"
+    bc_south.content = "0.0"
+    bounding_coordinates.add_child(bc_west)
+    bounding_coordinates.add_child(bc_east)
+    bounding_coordinates.add_child(bc_north)
+    bounding_coordinates.add_child(bc_south)
+    # without boundingAltitudes should be ok
+    validate.node(bounding_coordinates)
+    # boundingAltitudes should fail if not all required children present
+    bounding_altitudes = Node(names.BOUNDINGALTITUDES, parent=bounding_coordinates)
+    bounding_coordinates.add_child(bounding_altitudes)
+    with pytest.raises(MetapypeRuleError):
+        validate.tree(bounding_coordinates)
+    altitude_minimum = Node(names.ALTITUDEMINIMUM, parent=bounding_altitudes)
+    bounding_altitudes.add_child(altitude_minimum)
+    with pytest.raises(MetapypeRuleError):
+        validate.tree(bounding_coordinates)
+    altitude_minimum.content = "0.0"
+    with pytest.raises(MetapypeRuleError):
+        validate.tree(bounding_coordinates)
+    # boundingAltitudes should fail if not all required children have content
+    altitude_maximum = Node(names.ALTITUDEMAXIMUM, parent=bounding_altitudes)
+    bounding_altitudes.add_child(altitude_maximum)
+    altitude_units = Node(names.ALTITUDEUNITS, parent=bounding_altitudes)
+    bounding_altitudes.add_child(altitude_units)
+    with pytest.raises(MetapypeRuleError):
+        validate.tree(bounding_coordinates)
+    # with content filled in, should pass
+    altitude_maximum.content = "1000.0"
+    altitude_units.content = "meter"
+    validate.tree(bounding_coordinates)
+
+
 def test_is_in_path():
     associated_party = Node(names.ASSOCIATEDPARTY)
     organization_name = Node(names.ORGANIZATIONNAME)
