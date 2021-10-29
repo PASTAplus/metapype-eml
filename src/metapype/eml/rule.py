@@ -279,7 +279,7 @@ class Rule(object):
         Raises:
             MetapypeRuleError: Illegal attribute or missing required attribute
         """
-        if self.name in (RULE_TEXT, RULE_ANYNAME):
+        if self.name in (RULE_TEXT, RULE_ANYNAME, RULE_PARA, RULE_SUBSCRIPT, RULE_SUPERSCRIPT):
             is_mixed_content = True
         else:
             is_mixed_content = False
@@ -920,6 +920,7 @@ RULE_DENY = "denyRule"
 RULE_DESCRIPTOR = "descriptorRule"
 RULE_DISTRIBUTION = "distributionRule"
 RULE_EML = "emlRule"
+RULE_EMPHASIS = "anyStringRule"
 RULE_ENTITYCODELIST = "entityCodeListRule"
 RULE_ENUMERATEDDOMAIN = "enumeratedDomainRule"
 RULE_EXTERNALCODESET = "externalCodeSetRule"
@@ -928,10 +929,12 @@ RULE_FUNDING = "fundingRule"
 RULE_GEOGRAPHICCOVERAGE = "geographicCoverageRule"
 RULE_INDIVIDUALNAME = "individualNameRule"
 RULE_INTERVALRATIO = "intervalRatioRule"
+RULE_ITEMIZEDLIST = "itemizedlistRule"
 RULE_KEYWORD = "keywordRule"
 RULE_KEYWORDSET = "keywordSetRule"
 RULE_KEYWORDTHESAURUS = "keywordThesaurusRule"
 RULE_LICENSED = "licensedRule"
+RULE_LISTITEM = "listitemRule"
 RULE_MAINTENANCE = "maintenanceRule"
 RULE_MEASUREMENTSCALE = "measurementScaleRule"
 RULE_METADATA = "metadataRule"
@@ -946,8 +949,10 @@ RULE_NONNUMERICDOMAIN = "nonNumericDomainRule"
 RULE_NUMERICDOMAIN = "numericDomainRule"
 RULE_OFFLINE = "offlineRule"
 RULE_ONLINE = "onlineRule"
+RULE_ORDEREDLIST = "orderedlistRule"
 RULE_ORDINAL = "nominalOrdinalRule"
 RULE_OTHERENTITY = "otherEntityRule"
+RULE_PARA = "paraRule"
 RULE_PERMISSION = "permissionRule"
 RULE_PHONE = "phoneRule"
 RULE_PHYSICAL = "physicalRule"
@@ -955,9 +960,7 @@ RULE_PRINCIPAL = "principalRule"
 RULE_PROJECT = "projectRule"
 RULE_PROPERTYURI = "propertyUriRule"
 RULE_QUALITYCONTROL = "qualityControlRule"
-RULE_QUANTITATIVEATTRIBUTEACCURACYASSESSMENT = (
-    "quantitativeAttributeAccuracyAssessmentRule"
-)
+RULE_QUANTITATIVEATTRIBUTEACCURACYASSESSMENT = ("quantitativeAttributeAccuracyAssessmentRule")
 RULE_RANGEOFDATES = "rangeOfDatesRule"
 RULE_RATIO = "ratioRule"
 RULE_REFERENCES = "referencesRule"
@@ -974,6 +977,8 @@ RULE_SIZE = "sizeRule"
 RULE_STORAGETYPE = "storageTypeRule"
 RULE_STUDYAREADESCRIPTION = "studyAreaDescriptionRule"
 RULE_STUDYEXTENT = "studyExtentRule"
+RULE_SUBSCRIPT = "subscriptRule"
+RULE_SUPERSCRIPT = "superscriptRule"
 RULE_TAXONID = "taxonIdRule"
 RULE_TAXONOMICCLASSIFICATION = "taxonomicClassificationRule"
 RULE_TAXONOMICCOVERAGE = "taxonomicCoverageRule"
@@ -1069,6 +1074,7 @@ node_mappings = {
     names.EASTBOUNDINGCOORDINATE: RULE_BOUNDINGCOORDINATE_EW,
     names.ELECTRONICMAILADDRESS: RULE_ANYNAME,
     names.EML: RULE_EML,
+    names.EMPHASIS: RULE_EMPHASIS,
     names.ENCODINGMETHOD: RULE_ANYSTRING,
     names.ENDDATE: RULE_SINGLEDATETIME,
     names.ENTITYCODELIST: RULE_ENTITYCODELIST,
@@ -1100,6 +1106,7 @@ node_mappings = {
     names.INTELLECTUALRIGHTS: RULE_TEXT,
     names.INTERVAL: RULE_INTERVALRATIO,
     names.INTRODUCTION: RULE_TEXT,
+    names.ITEMIZEDLIST: RULE_ITEMIZEDLIST,
     names.KEYWORD: RULE_KEYWORD,
     names.KEYWORDSET: RULE_KEYWORDSET,
     names.KEYWORDTHESAURUS: RULE_KEYWORDTHESAURUS,
@@ -1108,7 +1115,9 @@ node_mappings = {
     names.LICENSED: RULE_LICENSED,
     names.LICENSENAME: RULE_ANYSTRING,
     names.LINENUMBER: RULE_ANYINT,
+    names.LISTITEM: RULE_LISTITEM,
     names.LITERALCHARACTER: RULE_ANYSTRING,
+    names.LITERALLAYOUT: RULE_ANYSTRING,
     names.MAINTENANCE: RULE_MAINTENANCE,
     names.MAINTENANCEUPDATEFREQUENCY: RULE_ANYSTRING,
     names.MARKDOWN: RULE_ANYSTRING,
@@ -1146,10 +1155,11 @@ node_mappings = {
     names.ONLINEDESCRIPTION: RULE_ANYSTRING,
     names.ONLINEURL: RULE_ANYURI,
     names.ORDERATTRIBUTEREFERENCE: RULE_ANYSTRING,
+    names.ORDEREDLIST: RULE_ORDEREDLIST,
     names.ORDINAL: RULE_ORDINAL,
     names.ORGANIZATIONNAME: RULE_ANYNAME,
     names.OTHERENTITY: RULE_OTHERENTITY,
-    names.PARA: RULE_ANYSTRING,
+    names.PARA: RULE_PARA,
     names.PATTERN: RULE_ANYSTRING,
     names.PERMISSION: RULE_PERMISSION,
     names.PERSONNEL: RULE_RESPONSIBLEPARTY_WITH_ROLE,
@@ -1192,6 +1202,8 @@ node_mappings = {
     names.STORAGETYPE: RULE_STORAGETYPE,
     names.STUDYAREADESCRIPTION: RULE_STUDYAREADESCRIPTION,
     names.STUDYEXTENT: RULE_STUDYEXTENT,
+    names.SUBSCRIPT: RULE_SUBSCRIPT,
+    names.SUPERSCRIPT: RULE_SUPERSCRIPT,
     names.SURNAME: RULE_ANYNAME,
     names.TAXONID: RULE_TAXONID,
     names.TAXONOMICCLASSIFICATION: RULE_TAXONOMICCLASSIFICATION,

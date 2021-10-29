@@ -567,6 +567,16 @@
             "content_rules" : ["emptyContent"]
         }
     ],
+    "itemizedlistRule" : [
+        {
+        },
+        [
+            ["listitem", 1, null]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
     "keywordRule" : [
         { 
             "keywordType" : [false, "place", "stratum", "temporal", "theme", "taxonomic"]
@@ -604,6 +614,16 @@
             ["licenseName", 1, 1],
             ["url", 0, 1],
             ["identifier", 0, 1]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
+    "listitemRule" : [
+        {
+        },
+        [
+            [["para", 1, 1], ["itemizedlist", 1, 1], ["orderedlist", 1, 1], 1, null]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -764,6 +784,16 @@
             "content_rules" : ["emptyContent"]
         }
     ],
+    "orderedlistRule" : [
+        {
+        },
+        [
+            ["listitem", 1, null]
+        ],
+        {
+            "content_rules" : ["emptyContent"]
+        }
+    ],
     "otherEntityRule" : [
         { 
             "id": [false],
@@ -794,9 +824,18 @@
             "lang": [false]
         },
         [
+            [
+                ["value", 0, null],
+                ["itemizedlist", 1, 1],
+                ["orderedlist", 1, 1],
+                ["emphasis", 1, 1],
+                ["subscript", 1, 1],
+                ["superscript", 1, 1],
+                ["literalLayout", 1, 1]
+            , 0, null]
         ],
         {
-            "content_rules" : ["strContent", "nonEmptyContent"]
+            "content_rules" : ["strContent"]
         }
     ],
     "permissionRule" : [
@@ -1026,7 +1065,7 @@
         },
         [
             ["title", 0, 1],
-            [["para", 1, 1], ["section", 1, 1], 1, null]
+            [["para", 1, null], ["section", 1, null], 1, null]
         ],
         {
             "content_rules" : ["emptyContent"]
@@ -1094,6 +1133,36 @@
         ],
         {
             "content_rules" : ["emptyContent"]
+        }
+    ],
+    "subscriptRule" : [
+        {
+            "lang": [false]
+        },
+        [
+            [
+                ["value", 0, null],
+                ["subscript", 0, null],
+                ["superscript", 0, null]
+            , 0, null]
+        ],
+        {
+            "content_rules" : ["strContent"]
+        }
+    ],
+    "superscriptRule" : [
+        {
+            "lang": [false]
+        },
+        [
+            [
+                ["value", 0, null],
+                ["subscript", 0, null],
+                ["superscript", 0, null]
+            , 0, null]
+        ],
+        {
+            "content_rules" : ["strContent"]
         }
     ],
     "taxonIdRule" : [
@@ -1257,7 +1326,7 @@
     ],
     "valueRule" : [
         { 
-            "lang": [true]
+            "lang": [false]
         },
         [
         ],
