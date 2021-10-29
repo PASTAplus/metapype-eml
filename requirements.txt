@@ -3,7 +3,7 @@ click==8.0.1
 daiquiri==3.0.0
 iniconfig==1.1.1
 lxml==4.6.3
-metapype==0.0.5
+metapype==0.0.8
 more-itertools==8.8.0
 packaging==21.0
 pip==21.2.4
