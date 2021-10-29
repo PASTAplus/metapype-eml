@@ -16,7 +16,7 @@
 import daiquiri
 
 from metapype.eml import rule
-from metapype.eml.exceptions import MetapypeRuleError, UnknownNodeError
+from metapype.eml.exceptions import MetapypeRuleError, UnknownNodeError, ChildNotAllowedError
 from metapype.eml.validation_errors import ValidationError
 from metapype.model.node import Node
 
@@ -49,12 +49,13 @@ def node(n: Node, errs: list = None) -> None:
         node_rule.validate_rule(n, errs)
 
 
-def prune(n: Node) -> list:
+def prune(n: Node, strict: bool = False) -> list:
     """
     Prune in place all non-valid nodes from the tree
 
     Args:
         n: Node
+        strict:
 
     Returns: List of pruned nodes
 
@@ -65,17 +66,35 @@ def prune(n: Node) -> list:
     if n.name != "metadata":
         try:
             node(n)
-        except MetapypeRuleError:
-            for child in n.children:
+        except UnknownNodeError as ex:
+            logger.info(f"Prunning: {n.name}")
+            pruned.append(n)
+            if n.parent is not None:
+                n.parent.remove_child(n)
+            Node.delete_node_instance(n.id)
+            return pruned
+        except ChildNotAllowedError as ex:
+            r = rule.get_rule(n.name)
+            children = n.children.copy()
+            for child in children:
+                if not r.is_allowed_child(child.name):
+                    logger.info(f"Prunning: {child.name}")
+                    pruned.append(child)
+                    n.remove_child(child)
+                    Node.delete_node_instance(child.id)
+        except MetapypeRuleError as ex:
+            logger.info(ex)
+        children = n.children.copy()
+        for child in children:
+            pruned += prune(child, strict)
+            if strict and child not in pruned:
                 try:
                     node(child)
-                except UnknownNodeError:
+                except MetapypeRuleError as ex:
+                    logger.info(f"Prunning: {child.name}")
                     pruned.append(child)
-            for child in pruned:
-                n.remove_child(child)
-                Node.delete_node_instance(child.id)
-        for child in n.children:
-            pruned += prune(child)
+                    n.remove_child(child)
+                    Node.delete_node_instance(child.id)
     return pruned
 
 
