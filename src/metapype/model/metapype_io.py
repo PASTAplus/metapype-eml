@@ -122,7 +122,11 @@ def _process_element(e, clean) -> Node:
 
     if clean:
         if e.text is not None:
-            node.content = None if e.text.strip() == '' else e.text.strip()
+            # if text consists entirely of one or more spaces and/or non-breaking spaces, keep it
+            if re.search("^[ \xA0]+$", e.text):
+                node.content = e.text
+            else:
+                node.content = None if e.text.strip() == '' else e.text.strip()
     else:
         node.content = e.text
 
