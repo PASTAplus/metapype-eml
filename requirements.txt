@@ -2,7 +2,7 @@ attrs==21.2.0
 click==8.0.1
 daiquiri==3.0.0
 iniconfig==1.1.1
-lxml==4.6.3
+lxml==4.6.5
 metapype==0.0.8
 more-itertools==8.8.0
 packaging==21.0
