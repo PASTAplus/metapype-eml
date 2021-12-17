@@ -67,7 +67,7 @@ def prune(n: Node, strict: bool = False) -> list:
         try:
             node(n)
         except UnknownNodeError as ex:
-            # logger.info(f"Pruning: {n.name}")
+            logger.debug(f"Pruning: {n.name}")
             pruned.append((n, str(ex)))
             if n.parent is not None:
                 n.parent.remove_child(n)
@@ -78,7 +78,7 @@ def prune(n: Node, strict: bool = False) -> list:
             children = n.children.copy()
             for child in children:
                 if not r.is_allowed_child(child.name):
-                    # logger.info(f"Pruning: {child.name}")
+                    logger.debug(f"Pruning: {child.name}")
                     pruned.append((child, str(ex)))
                     n.remove_child(child)
                     Node.delete_node_instance(child.id)
@@ -91,7 +91,7 @@ def prune(n: Node, strict: bool = False) -> list:
                 try:
                     node(child)
                 except MetapypeRuleError as ex:
-                    # logger.info(f"Pruning: {child.name}")
+                    logger.debug(f"Pruning: {child.name}")
                     pruned.append((child, str(ex)))
                     n.remove_child(child)
                     Node.delete_node_instance(child.id)
