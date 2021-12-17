@@ -41,6 +41,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.0.8] 2021-09-22
 ### Added
-- Add supported for geographic coverage altitude.
+- Add support for geographic coverage altitude.
 ### Changed/Fixed
 - Fixed interpretation of 0 in `is_float()`.
+
+## [0.0.9] 2021-11-03
+### Added
+- Add support for text type elements.
+### Changed/Fixed
+- Fixed the "prune" capabilities to better create metapype-valid models from imported
+  EML XML documents.
