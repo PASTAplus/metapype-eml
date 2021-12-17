@@ -3,9 +3,10 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python=3.8
-  - lxml
   - rfc3986
   - daiquiri
   - pytest
+  - python=3.8
+  - lxml
+  - click
 prefix: /home/servilla/anaconda3/envs/metapype
