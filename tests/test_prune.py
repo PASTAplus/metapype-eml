@@ -12,17 +12,25 @@
 :Created:
     10/26/21
 """
+import os
+
 import daiquiri
-import pytest
 
 import metapype.model.metapype_io as metapype_io
 import metapype.eml.validate as validate
+import tests
+
+
+logger = daiquiri.getLogger(__name__)
 
 
 def test_prune():
-    print()
-    eml_xml = "./data/eml"
-    with open(f"{eml_xml}.xml", "r") as f:
+    if "TEST_DATA" in os.environ:
+        test_data = os.environ["TEST_DATA"]
+    else:
+        test_data = tests.test_data_path
+
+    with open(f"{test_data}/eml.xml", "r") as f:
         xml = "".join(f.readlines())
     eml = metapype_io.from_xml(xml)
     pruned = validate.prune(eml, strict=True)
@@ -32,6 +40,4 @@ def test_prune():
     validate.tree(eml, errs)
     for err in errs:
         print(err)
-    # with open(f"{eml_xml}.new.xml", "w") as f:
-    #     f.write(metapype_io.to_xml(eml))
 
