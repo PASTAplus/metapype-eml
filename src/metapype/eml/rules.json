@@ -395,6 +395,7 @@
                 ["coverage", 0, 1],
                 ["methods", 0, 1],
                 ["additionalInfo", 0, null],
+                ["annotation", 0, null],
                 ["attributeList", 1, 1],
                 ["caseSensitive", 0, 1],
                 ["numberOfRecords", 0, 1]
@@ -809,6 +810,7 @@
                 ["coverage", 0, 1],
                 ["methods", 0, 1],
                 ["additionalInfo", 0, null],
+                ["annotation", 0, null],
                 ["attributeList", 0, 1],
                 ["entityType", 1, 1]
             ],
