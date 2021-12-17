@@ -51,3 +51,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed/Fixed
 - Fixed the "prune" capabilities to better create metapype-valid models from imported
   EML XML documents.
+
+## [0.0.10] 2021-12-16
+### Added
+- Add the "annotation" child element to dataTable and otherEntity rules.
+### Changed/Fixed
+- Change logging to debug in prune function.
