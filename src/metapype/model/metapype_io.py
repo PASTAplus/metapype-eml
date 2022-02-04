@@ -122,13 +122,23 @@ def _process_element(e, clean) -> Node:
 
     if clean:
         if e.text is not None:
-            # if text consists entirely of one or more spaces and/or non-breaking spaces, keep it
-            if re.search("^[ \xA0]+$", e.text):
+            if tag in ("markdown", "literalLayout"):
                 node.content = e.text
             else:
-                node.content = None if e.text.strip() == '' else e.text.strip()
+                # if text consists entirely of one or more spaces and/or non-breaking spaces, keep it
+                if re.search("^[ \xA0]+$", e.text):
+                    node.content = e.text
+                else:
+                    node.content = None if e.text.strip() == '' else e.text.strip()
+        if e.tail is not None:
+            # if tail consists entirely of one or more spaces and/or non-breaking spaces, keep it
+            if re.search("^[ \xA0]+$", e.tail):
+                node.tail = e.tail
+            else:
+                node.tail = None if e.tail.strip() == '' else e.tail.strip()
     else:
         node.content = e.text
+        node.tail = e.tail
 
     for name, value in e.attrib.items():
         if "{" not in name:
@@ -248,7 +258,8 @@ def from_xml(xml: str, clean: bool = True, ) -> Node:
 
 def to_xml(node: Node, parent: Node = None, level: int = 0) -> str:
     xml = ""
-    indent = "  " * level
+    spacing = "  "
+    indent = spacing * level
 
     tag = f"{node.name}" if node.prefix is None else f"{node.prefix}:{node.name}"
 
@@ -257,7 +268,8 @@ def to_xml(node: Node, parent: Node = None, level: int = 0) -> str:
         attributes += " ".join([f"{k}=\"{v}\"" for k, v in node.attributes.items()])
 
     if parent is None:
-        attributes += " " + " ".join([f"xmlns:{k}=\"{v}\"" for k, v in node.nsmap.items()])
+        if len(node.nsmap) > 0:
+            attributes += " " + " ".join([f"xmlns:{k}=\"{v}\"" for k, v in node.nsmap.items()])
     elif node.nsmap != parent.nsmap:
         nsmap = _nsp_unique(node.nsmap, parent.nsmap)
         attributes += " " + " ".join([f"xmlns:{k}=\"{v}\"" for k, v in nsmap.items()])
@@ -275,6 +287,10 @@ def to_xml(node: Node, parent: Node = None, level: int = 0) -> str:
     else:
         open_tag = f"{indent}<{tag}{attributes}>\n"
         close_tag = f"{indent}</{tag}>\n"
+
+    if node.tail is not None:
+        tail = escape(node.tail)
+        close_tag += tail
 
     xml += open_tag
     for child in node.children:
