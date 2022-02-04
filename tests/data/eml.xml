@@ -20,11 +20,30 @@
         <pubDate>2018</pubDate>
         <abstract>
             <section>
-                <para>This is abstract Para 1</para>
+                <para>This is <emphasis>abstract</emphasis> <subscript>Para 1</subscript></para>
             </section>
             <section>
                 <para>This is abstract Para 2</para>
+                <para>This is abstract Para 3</para>
             </section>
+            <section>
+                <para>
+                    <literalLayout>
+                        | Tables   |      Are      |  Cool |
+                        |----------|:-------------:|------:|
+                        | col 1 is |  left-aligned | $1600 |
+                        | col 2 is |    centered   |   $12 |
+                        | col 3 is | right-aligned |    $1 |
+                    </literalLayout>
+                </para>
+            </section>
+            <markdown>
+| Tables   |      Are      |  Cool |
+|----------|:-------------:|------:|
+| col 1 is |  left-aligned | $1600 |
+| col 2 is |    centered   |   $12 |
+| col 3 is | right-aligned |    $1 |                        
+             </markdown>
         </abstract>
         <intellectualRights>
             <section>
