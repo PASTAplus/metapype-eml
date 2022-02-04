@@ -46,7 +46,7 @@ def test_from_xml():
 
     with open(f"{xml_path}/eml.xml", "r") as f:
         xml = "".join(f.readlines())
-    eml = metapype_io.from_xml(xml)
+    eml = metapype_io.from_xml(xml, True, ("literalLayout", "markdown"))
     assert isinstance(eml, Node)
     validate.tree(eml)
 
