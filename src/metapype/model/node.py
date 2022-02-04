@@ -255,6 +255,7 @@ class Node(object):
             if child_node.name == child_name
         ]
 
+# TODO: remove descendants argument to avoid side-effect and return list object
     def find_all_descendants(self, child_name, descendants):
         """
         Generates a list of all descendants that match the child_name, or
