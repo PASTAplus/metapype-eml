@@ -130,13 +130,13 @@ def _process_element(e, clean, literals) -> Node:
                 if re.search("^[ \xA0]+$", e.text):
                     node.content = e.text
                 else:
-                    node.content = None if e.text.strip() == '' else e.text.strip()
+                    node.content = None if e.text.strip() == '' else " ".join(e.text.split())
         if e.tail is not None:
             # if tail consists entirely of one or more spaces and/or non-breaking spaces, keep it
             if re.search("^[ \xA0]+$", e.tail):
                 node.tail = e.tail
             else:
-                node.tail = None if e.tail.strip() == '' else e.tail.strip()
+                node.tail = None if e.tail.strip() == '' else " ".join(e.tail.split())
     else:
         node.content = e.text
         node.tail = e.tail
