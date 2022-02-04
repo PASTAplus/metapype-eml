@@ -102,14 +102,15 @@ def _nsp_unique(child_nsmap: dict, parent_nsmap: dict) -> dict:
     return nsmap
 
 
-def _process_element(e, clean) -> Node:
+def _process_element(e, clean, literals) -> Node:
     """
     Process an lxml etree element into a Metapype node. If the clean attribute is true, then
     remove leading and trailing whitespace from the element content.
 
     Args:
         e: lxml etree element
-        clean: boolean to clean leading and trailing whitespace
+        clean: boolean to clean leading and trailing whitespace from node content
+        literals: tuple of XML elements whose content should not be altered
 
     Returns: Node
 
@@ -122,7 +123,7 @@ def _process_element(e, clean) -> Node:
 
     if clean:
         if e.text is not None:
-            if tag in ("markdown", "literalLayout"):
+            if tag in literals:
                 node.content = e.text
             else:
                 # if text consists entirely of one or more spaces and/or non-breaking spaces, keep it
@@ -149,7 +150,7 @@ def _process_element(e, clean) -> Node:
 
     for _ in e:
         if _.tag is not etree.Comment:
-            node.add_child(_process_element(_, clean))
+            node.add_child(_process_element(_, clean, literals))
     for child in node.children:
         child.parent = node
         if child.nsmap == node.nsmap:
@@ -240,19 +241,20 @@ def graph(node: Node, level: int = 0) -> str:
     return g
 
 
-def from_xml(xml: str, clean: bool = True, ) -> Node:
+def from_xml(xml: str, clean: bool = True, literals: tuple = ()) -> Node:
     """
     Convert an XML model into a Metapype model. If clean is true, remove leading and trailing whitespace
     from the element content.
 
     Args:
         xml: XML string to be converted
-        clean: boolean to clean leading and trailing whitespace
+        clean: boolean to clean leading and trailing whitespace from node content
+        literals: tuple of XML elements whose content should not be altered
 
     Returns: the root Node of the Metapype model
 
     """
-    root = _process_element(etree.fromstring(xml.encode("utf-8")), clean)
+    root = _process_element(etree.fromstring(xml.encode("utf-8")), clean, literals)
     return root
 
 
