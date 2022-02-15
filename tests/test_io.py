@@ -63,7 +63,7 @@ def test_to_json():
     assert isinstance(eml, Node)
     validate.prune(eml)
     validate.tree(eml)
-    j = metapype_io.to_json(eml)
+    j = metapype_io.to_json(eml, 2)
     assert isinstance(j, str)
 
 
@@ -95,3 +95,17 @@ def test_graph():
     validate.tree(eml)
     g = metapype_io.graph(eml)
     assert isinstance(g, str)
+
+
+def test_text_type():
+    xml = """
+        <abstract lang="en" xmlns:eml="https://eml.ecoinformatics.org/eml-2.2.0">
+            <section xmlns:eml="https://eml.ecoinformatics.org/eml-2.1.1">
+                <para>This is <emphasis>abstract</emphasis> <subscript>Para 1</subscript> But 1 &lt; 2, capiche?</para>
+            </section>
+        </abstract>
+    """
+    eml = metapype_io.from_xml(xml, True, ("literalLayout", "markdown"))
+    validate.tree(eml)
+    new_xml = metapype_io.to_xml(eml)
+    print("\n", new_xml)
