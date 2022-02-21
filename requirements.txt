@@ -3,7 +3,6 @@ click==8.0.4
 daiquiri==3.0.0
 iniconfig==1.1.1
 lxml==4.8.0
-metapype==0.0.12
 packaging==21.3
 pip==22.0.3
 pluggy==1.0.0
