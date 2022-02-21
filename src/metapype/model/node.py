@@ -515,14 +515,15 @@ class Node(object):
         if delete_old:
             Node.delete_node_instance(id=old_child.id)
 
-    def shift(self, child, direction: Shift):
+    def shift(self, child, direction: Shift, sib: bool = True):
         """
         Shifts a child's position either left or right of its current position
-        or not at all of already at local edge
+        or not at all if already at local edge
 
         Args:
             child: Node to be swapped
             direction: shift (LEFT, RIGHT)
+            sib: shift only within same sibling type
 
         Returns:
             int of new index location or same if no change
@@ -530,23 +531,37 @@ class Node(object):
         index = self._children.index(child)
         name = self._children[index].name
         if direction == Shift.RIGHT:
-            for sib_index in range(index + 1, len(self._children)):
-                if self._children[sib_index].name == name:
-                    self.children[index], self.children[sib_index] = (
-                        self.children[sib_index],
+            if sib:
+                for sib_index in range(index + 1, len(self._children)):
+                    if self._children[sib_index].name == name:
+                        self.children[index], self.children[sib_index] = (
+                            self.children[sib_index],
+                            self.children[index],
+                        )
+                        index = sib_index
+                        break
+            else:
+                if index <= len(self._children) - 1:
+                    self.children[index], self.children[index + 1] = (
+                        self.children[index + 1],
                         self.children[index],
                     )
-                    index = sib_index
-                    break
         elif direction == Shift.LEFT:
-            for sib_index in range(index - 1, -1, -1):
-                if self._children[sib_index].name == name:
-                    self.children[index], self.children[sib_index] = (
-                        self.children[sib_index],
+            if sib:
+                for sib_index in range(index - 1, -1, -1):
+                    if self._children[sib_index].name == name:
+                        self.children[index], self.children[sib_index] = (
+                            self.children[sib_index],
+                            self.children[index],
+                        )
+                        index = sib_index
+                        break
+            else:
+                if index > 0:
+                    self.children[index], self.children[index - 1] = (
+                        self.children[index - 1],
                         self.children[index],
                     )
-                    index = sib_index
-                    break
         else:
             msg = "Expected direction to be either Shift.RIGHT or Shift.LEFT"
             raise ValueError(msg)
