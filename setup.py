@@ -41,8 +41,8 @@ setup(
     packages=find_packages(where="src", include=["metapype", "metapype.eml", "metapype.model"]),
     package_dir={"": "src"},
     include_package_data=True,
-    python_requires=" == 3.8.*",
-    install_requires=["click==8.0.3", "daiquiri==3.0.0",  "lxml==4.7.1", "rfc3986==1.5.0"],
+    python_requires=" >= 3.8.*",
+    install_requires=["click==8.0.4", "daiquiri==3.0.0",  "lxml==4.8.0", "rfc3986==2.0.0"],
     classifiers=["License :: OSI Approved :: Apache Software License",],
 )
 
