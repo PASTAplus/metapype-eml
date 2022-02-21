@@ -18,7 +18,6 @@ import pytest
 
 from metapype.eml import names
 from metapype.eml import validate
-import metapype.model.metapype_io as metapype_io
 from metapype.model.node import Node
 from metapype.model.node import Shift
 
