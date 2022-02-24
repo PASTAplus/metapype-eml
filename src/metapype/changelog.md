@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.15] 2022-02-24
+### Changed/Fixed
+- Revert "remove extraneous space prefix for nsmap and extras in `metapype_io.to_xml()`"
+
 ## [0.0.14] 2022-02-20
 ### Changed/Fixed
 - Support `Node.shift` to occur outside the same sibling type
