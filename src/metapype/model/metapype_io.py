@@ -271,17 +271,17 @@ def to_xml(node: Node, parent: Node = None, level: int = 0) -> str:
 
     if parent is None:
         if len(node.nsmap) > 0:
-            attributes += " ".join([f"xmlns:{k}=\"{v}\"" for k, v in node.nsmap.items()])
+            attributes += " " + " ".join([f"xmlns:{k}=\"{v}\"" for k, v in node.nsmap.items()])
     elif node.nsmap != parent.nsmap:
         nsmap = _nsp_unique(node.nsmap, parent.nsmap)
-        attributes += " ".join([f"xmlns:{k}=\"{v}\"" for k, v in nsmap.items()])
+        attributes += " " + " ".join([f"xmlns:{k}=\"{v}\"" for k, v in nsmap.items()])
 
     if len(node.extras) > 0:
-        attributes += " ".join([f"{k}=\"{v}\"" for k, v in node.extras.items()])
+        attributes += " " + " ".join([f"{k}=\"{v}\"" for k, v in node.extras.items()])
 
     if len(attributes) > 0:
         # Add final prefix-space to attribute string
-        attributes = " " + attributes
+        attributes = " " + attributes.lstrip()
 
     if node.content is not None:
         content = escape(node.content)
