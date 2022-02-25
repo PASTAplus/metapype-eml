@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.16] 2022-02-24
+### Changed/Fixed
+- Coerce all Node.content to be of type str unless it is None.
+
 ## [0.0.15] 2022-02-24
 ### Changed/Fixed
 - Revert "remove extraneous space prefix for nsmap and extras in `metapype_io.to_xml()`"

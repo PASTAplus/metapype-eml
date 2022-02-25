@@ -48,7 +48,7 @@ class Node(object):
         self._id = str(uuid.uuid1()) if id is None else id
         self._name = name
         self._parent = parent
-        self._content = content
+        self._content = None if content is None else str(content)
         self._tail = None
         self._attributes = {}
         self._nsmap = {}
@@ -206,7 +206,7 @@ class Node(object):
 
     @content.setter
     def content(self, content):
-        self._content = content
+        self._content = None if content is None else str(content)
 
     def copy(self):
         """
