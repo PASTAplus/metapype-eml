@@ -274,7 +274,8 @@ def to_xml(node: Node, parent: Node = None, level: int = 0) -> str:
             attributes += " " + " ".join([f"xmlns:{k}=\"{v}\"" for k, v in node.nsmap.items()])
     elif node.nsmap != parent.nsmap:
         nsmap = _nsp_unique(node.nsmap, parent.nsmap)
-        attributes += " " + " ".join([f"xmlns:{k}=\"{v}\"" for k, v in nsmap.items()])
+        if len(nsmap) > 0:
+            attributes += " " + " ".join([f"xmlns:{k}=\"{v}\"" for k, v in nsmap.items()])
 
     if len(node.extras) > 0:
         attributes += " " + " ".join([f"{k}=\"{v}\"" for k, v in node.extras.items()])
