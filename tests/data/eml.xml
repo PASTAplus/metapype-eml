@@ -405,8 +405,15 @@
     </additionalMetadata>
     <additionalMetadata>
         <describes>Testing namespaces</describes>
-        <metadata>
-            <stmml:stuff xmlns:stmml="http://www.xml-cml.org/schema/stmml-1.2"> This is stuff </stmml:stuff>
+        <metadata xmlns:stmml="http://www.xml-cml.org/schema/stmml-1.2">
+            <stmml:unitList xmlns:null="http://www.xml-cml.org/schema/stmml" xmlns:sch="http://www.ascc.net/xml/schematron" xmlns:stmml="http://www.xml-cml.org/schema/stmml-1.1" xsi:schemaLocation="https://eml.ecoinformatics.org/eml-2.2.0 https://eml.ecoinformatics.org/eml-2.2.0/stmml.xsd">
+                <stmml:unitType id="length" name="length">
+                    <stmml:dimension name="length"/>
+                </stmml:unitType>
+                 <stmml:unit abbreviation="mg/m³" constantToSI="0" id="milligramPerMeterCubed" multiplierToSI="0.000001" name="milligramPerMeterCubed" parentSI="kilogramPerCubicMeter" unitType="massDensity">
+                    <stmml:description>milligrams Per Cubic Meter</stmml:description>
+                 </stmml:unit>
+            </stmml:unitList>
         </metadata>
     </additionalMetadata>
 </eml:eml>
