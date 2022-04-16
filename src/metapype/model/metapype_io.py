@@ -284,13 +284,16 @@ def to_xml(node: Node, parent: Node = None, level: int = 0) -> str:
         # Add final prefix-space to attribute string
         attributes = " " + attributes.lstrip()
 
-    if node.content is not None:
+    if node.content is None and len(node.children) == 0:
+        open_tag = f"{indent}<{tag}{attributes}/>\n"
+        close_tag = ""
+    elif node.content is None:
+        open_tag = f"{indent}<{tag}{attributes}>\n"
+        close_tag = f"{indent}</{tag}>\n"
+    else:
         content = escape(node.content)
         open_tag = f"{indent}<{tag}{attributes}>{content}"
         close_tag = f"</{tag}>\n"
-    else:
-        open_tag = f"{indent}<{tag}{attributes}>\n"
-        close_tag = f"{indent}</{tag}>\n"
 
     if node.tail is not None:
         tail = escape(node.tail)
