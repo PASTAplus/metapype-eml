@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.18] 2022-04-16
+### Changed/Fixed
+- Support leaf-node with empty content in  `metapype_io.to_xml()`.
+
 ## [0.0.17] 2022-03-01
 ### Changed/Fixed
 - Fix extra space issue in `metapype_io.to_xml()` when model has inconsistent nsmap.
