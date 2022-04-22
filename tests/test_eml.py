@@ -670,3 +670,40 @@ def test_is_in_path():
     r = rule.get_rule(names.ASSOCIATEDPARTY)
     print("\n")
     assert Rule._is_in_path(r.children, phone)
+
+
+def test_project():
+    """
+    Note that this test was created because downstream metapype users (i.e., ezEML) did not support the
+    studyAreaDescription element in EML. Metapype did support it, but key sections (including the rules.json "project"
+    element) were causing issues with ezEML, so the simplest mitigation was to remove it at this time.
+
+    Content was commented out of
+    1. names.py
+    2. rule.py
+
+    Content was removed from
+    1. rules.json (because native JSON does not support comments)
+    """
+    project = Node(names.PROJECT)
+    title = Node(names.TITLE, content="My Title")
+    personnel = Node(names.PERSONNEL)
+    individual_name = Node(names.INDIVIDUALNAME)
+    personnel.add_child(individual_name)
+    sur_name = Node(names.SURNAME, content="Gaucho")
+    individual_name.add_child(sur_name)
+    project.add_child(title)
+    project.add_child(personnel)
+    role = Node(names.ROLE, content="Janitor")
+    personnel.add_child(role)
+    # study_area_description = Node(names.STUDYAREADESCRIPTION)
+    # project.add_child(study_area_description)
+    descriptor = Node(names.DESCRIPTOR)
+    descriptor.add_attribute("name", "A")
+    descriptor.add_attribute("citableClassificationSystem", "true")
+    # study_area_description.add_child(descriptor)
+    descriptor_value = Node(names.DESCRIPTORVALUE, content="Z")
+    descriptor.add_child(descriptor_value)
+    print("\n")
+    print(metapype_io.graph(project))
+    validate.tree(project)

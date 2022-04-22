@@ -1200,7 +1200,10 @@ node_mappings = {
     names.SOUTHBOUNDINGCOORDINATE: RULE_BOUNDINGCOORDINATE_NS,
     names.STANDARDUNIT: RULE_ANYSTRING,
     names.STORAGETYPE: RULE_STORAGETYPE,
-    names.STUDYAREADESCRIPTION: RULE_STUDYAREADESCRIPTION,
+
+    # The following is commented out to accommodate any downstream code that does not support studyAreaDescription in EML
+    # names.STUDYAREADESCRIPTION: RULE_STUDYAREADESCRIPTION,
+
     names.STUDYEXTENT: RULE_STUDYEXTENT,
     names.SUBSCRIPT: RULE_SUBSCRIPT,
     names.SUPERSCRIPT: RULE_SUPERSCRIPT,

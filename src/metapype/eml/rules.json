@@ -901,7 +901,6 @@
                 ["abstract", 0, 1],
                 ["funding", 0, 1],
                 ["award", 0, null],
-                ["studyAreaDescription", 0, 1],
                 ["relatedProject", 0, null]
             ],
             ["references", 1, 1],

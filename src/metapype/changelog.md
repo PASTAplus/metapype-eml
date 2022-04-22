@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## (0.0.19) 2002-04-22
+### Changed/Fixed
+- Remove studyAreaDescription element from the parent project in EML. This
+  allows downstream clients (i.e., ezEML) where this element was not currently 
+  supported.
+
 ## [0.0.18] 2022-04-16
 ### Changed/Fixed
 - Support leaf-node with empty content in  `metapype_io.to_xml()`.

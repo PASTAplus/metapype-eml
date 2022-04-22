@@ -224,7 +224,10 @@ SOURCE = "source"
 SOUTHBOUNDINGCOORDINATE = "southBoundingCoordinate"
 STANDARDUNIT = "standardUnit"
 STORAGETYPE = "storageType"
-STUDYAREADESCRIPTION = "studyAreaDescription"
+
+# The following is commented out to accommodate any downstream code that does not support studyAreaDescription in EML
+# STUDYAREADESCRIPTION = "studyAreaDescription"
+
 STUDYEXTENT = "studyExtent"
 SUBSCRIPT = "subscript"
 SUPERSCRIPT = "superscript"
