@@ -707,3 +707,40 @@ def test_project():
     print("\n")
     print(metapype_io.graph(project))
     validate.tree(project)
+
+
+def test_data_source():
+    methods = Node(names.METHODS)
+    method_step = Node(names.METHODSTEP)
+    description = Node(names.DESCRIPTION)
+    description.content = "This is my description"
+    method_step.add_child(description)
+    data_source = Node(names.DATASOURCE)
+    title = Node(names.TITLE)
+    title.content = "This is my title"
+    data_source.add_child(title)
+    creator = Node(names.CREATOR)
+    individual_name = Node(names.INDIVIDUALNAME)
+    surname = Node(names.SURNAME)
+    surname.content = "Me"
+    individual_name.add_child(surname)
+    creator.add_child(individual_name)
+    data_source.add_child(creator)
+    distribution = Node(names.DISTRIBUTION)
+    online = Node(names.ONLINE)
+    url = Node(names.URL)
+    url.add_attribute("function", "information")
+    url.content = "https://mydata.org"
+    online.add_child(url)
+    distribution.add_child(online)
+    data_source.add_child(distribution)
+    contact = Node(names.CONTACT)
+    position_name = Node(names.POSITIONNAME)
+    position_name.content = "Information Manager"
+    contact.add_child(position_name)
+    data_source.add_child(contact)
+    method_step.add_child(data_source)
+    methods.add_child(method_step)
+    print("\n")
+    print(metapype_io.graph(methods))
+    validate.tree(methods)
