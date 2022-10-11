@@ -46,7 +46,7 @@ def test_from_xml():
 
     with open(f"{xml_path}/eml.xml", "r") as f:
         xml = "".join(f.readlines())
-    eml = metapype_io.from_xml(xml, True, ("literalLayout", "markdown"))
+    eml = metapype_io.from_xml(xml, literals=("literalLayout", "markdown"))
     assert isinstance(eml, Node)
     validate.tree(eml)
 
@@ -59,7 +59,7 @@ def test_to_json():
 
     with open(f"{xml_path}/eml.xml", "r") as f:
         xml = "".join(f.readlines())
-    eml = metapype_io.from_xml(xml, True, ("literalLayout", "markdown"))
+    eml = metapype_io.from_xml(xml, literals=("literalLayout", "markdown"))
     assert isinstance(eml, Node)
     validate.prune(eml)
     validate.tree(eml)

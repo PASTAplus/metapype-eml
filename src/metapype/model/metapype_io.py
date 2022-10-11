@@ -102,7 +102,7 @@ def _nsp_unique(child_nsmap: dict, parent_nsmap: dict) -> dict:
     return nsmap
 
 
-def _process_element(e, clean, literals) -> Node:
+def _process_element(e, clean, collapse, literals) -> Node:
     """
     Process an lxml etree element into a Metapype node. If the clean attribute is true, then
     remove leading and trailing whitespace from the element content.
@@ -110,6 +110,7 @@ def _process_element(e, clean, literals) -> Node:
     Args:
         e: lxml etree element
         clean: boolean to clean leading and trailing whitespace from node content
+        collapse: collapse inner content whitespace to a single space character
         literals: tuple of XML elements whose content should not be altered
 
     Returns: Node
@@ -130,13 +131,21 @@ def _process_element(e, clean, literals) -> Node:
                 if re.search("^[ \xA0]+$", e.text):
                     node.content = e.text
                 else:
-                    node.content = None if e.text.strip() == '' else " ".join(e.text.split())
+                    node.content = e.text.strip()
+                    if node.content == '':
+                        node.content = None
+                    elif collapse:
+                        node.content = " ".join(e.text.split())
         if e.tail is not None:
             # if tail consists entirely of one or more spaces and/or non-breaking spaces, keep it
             if re.search("^[ \xA0]+$", e.tail):
                 node.tail = e.tail
             else:
-                node.tail = None if e.tail.strip() == '' else " ".join(e.tail.split())
+                node.tail = e.tail.strip()
+                if node.tail == '':
+                    node.tail = None
+                elif collapse:
+                    node.tail = " ".join(e.tail.split())
     else:
         node.content = e.text
         node.tail = e.tail
@@ -150,7 +159,7 @@ def _process_element(e, clean, literals) -> Node:
 
     for _ in e:
         if _.tag is not etree.Comment:
-            node.add_child(_process_element(_, clean, literals))
+            node.add_child(_process_element(_, clean, collapse, literals))
     for child in node.children:
         child.parent = node
         if child.nsmap == node.nsmap:
@@ -241,7 +250,7 @@ def graph(node: Node, level: int = 0) -> str:
     return g
 
 
-def from_xml(xml: str, clean: bool = True, literals: tuple = ()) -> Node:
+def from_xml(xml: str, clean: bool = True, collapse: bool = False, literals: tuple = ()) -> Node:
     """
     Convert an XML model into a Metapype model. If clean is true, remove leading and trailing whitespace
     from the element content.
@@ -249,12 +258,13 @@ def from_xml(xml: str, clean: bool = True, literals: tuple = ()) -> Node:
     Args:
         xml: XML string to be converted
         clean: boolean to clean leading and trailing whitespace from node content
+        collapse: boolean to collapse inner content whitespace to a single space character
         literals: tuple of XML elements whose content should not be altered
 
     Returns: the root Node of the Metapype model
 
     """
-    root = _process_element(etree.fromstring(xml.encode("utf-8")), clean, literals)
+    root = _process_element(etree.fromstring(xml.encode("utf-8")), clean, collapse, literals)
     return root
 
 
