@@ -282,14 +282,15 @@ def _title_rule(node: Node) -> list:
     evaluation = []
     title = node.content
     if title is not None:
-        length = len(title.split(" "))
-        if length < 5:
-            evaluation.append((
-                EvaluationWarning.TITLE_TOO_SHORT,
-                f'The title "{title}" is too short. A title should have at least 5 words;'
-                f' between 7 and 20 words is recommended.',
-                node
-            ))
+        if node.parent and node.parent.name == names.DATASET:
+            length = len(title.split(" "))
+            if length < 5:
+                evaluation.append((
+                    EvaluationWarning.TITLE_TOO_SHORT,
+                    f'The title "{title}" is too short. A title should have at least 5 words;'
+                    f' between 7 and 20 words is recommended.',
+                    node
+                ))
     return evaluation
 
 
