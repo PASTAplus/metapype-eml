@@ -83,7 +83,7 @@ def prune(n: Node, strict: bool = False) -> list:
                     n.remove_child(child)
                     Node.delete_node_instance(child.id)
         except MetapypeRuleError as ex:
-            logger.info(ex)
+            logger.debug(ex)
         children = n.children.copy()
         for child in children:
             pruned += prune(child, strict)
