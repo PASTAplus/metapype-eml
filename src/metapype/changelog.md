@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## (0.0.24) 2023-01-05
+### Changed/Fixed
+- Renamed RULE_NONEGATIVEFLOAT to RULE_ANYNONNEGATIVEFLOAT for pattern consistency.
+- Changed validation rule used by PRECISION node from RULE_ANYSTRING to RULE_ANYNONNEGATIVEFLOAT.
+- Add RULE_ANYFLOAT validation rule.
+- Test for PRECISION node.
+
 ## (0.0.23) 2022-12-19
 ### Changed/Fixed
 - Drop logging from INFO to DEBUG in `validate.py`
