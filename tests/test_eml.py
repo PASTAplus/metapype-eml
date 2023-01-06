@@ -744,3 +744,25 @@ def test_data_source():
     print("\n")
     print(metapype_io.graph(methods))
     validate.tree(methods)
+
+
+def test_measurement_scale():
+    measurement_scale = Node(names.MEASUREMENTSCALE)
+    ratio = Node(names.RATIO)
+    measurement_scale.add_child(ratio)
+    unit = Node(names.UNIT)
+    standard_unit = Node(names.STANDARDUNIT)
+    standard_unit.content = "meter"
+    unit.add_child(standard_unit)
+    ratio.add_child(unit)
+    precision = Node(names.PRECISION)
+    precision.content = "0.1"
+    ratio.add_child(precision)
+    numeric_domain = Node(names.NUMERICDOMAIN)
+    number_type = Node(names.NUMBERTYPE)
+    number_type.content = "float"
+    numeric_domain.add_child(number_type)
+    ratio.add_child(numeric_domain)
+    print("\n")
+    print(metapype_io.graph(measurement_scale))
+    validate.tree(measurement_scale)

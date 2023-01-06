@@ -106,15 +106,13 @@
             "content_rules" : ["emptyContent"]
         }
     ],
-    "anyNameRule" : [
-        { 
-            "lang": [false]
+    "anyFloatRule" : [
+        {
         },
         [
-            ["value", 0, null]
         ],
         {
-            "content_rules" : ["strContent", "nonEmptyContent"]
+            "content_rules" : ["floatContent", "nonEmptyContent"]
         }
     ],
     "anyIntRule" : [
@@ -124,6 +122,26 @@
         ],
         {
             "content_rules" : ["intContent", "nonEmptyContent"]
+        }
+    ],
+    "anyNameRule" : [
+        {
+            "lang": [false]
+        },
+        [
+            ["value", 0, null]
+        ],
+        {
+            "content_rules" : ["strContent", "nonEmptyContent"]
+        }
+    ],
+    "anyNonNegativeFloatRule" : [
+        {
+        },
+        [
+        ],
+        {
+            "content_rules" : ["floatContent_Nonnegative", "nonEmptyContent"]
         }
     ],
     "anyStringRule" : [
@@ -725,15 +743,6 @@
 
         {
             "content_rules" : ["emptyContent"]
-        }
-    ],
-    "nonNegativeFloatRule" : [
-        {
-        },
-        [
-        ],
-        {
-            "content_rules" : ["floatContent_Nonnegative", "nonEmptyContent"]
         }
     ],
     "nonNumericDomainRule" : [
