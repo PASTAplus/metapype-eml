@@ -415,9 +415,7 @@ class Rule(object):
                     )
                 )
 
-    def _validate_float_range_content(
-        self, node: Node, minmax, errs: list = None
-    ):
+    def _validate_float_range_content(self, node: Node, minmax, errs: list = None):
         self._validate_float_content(node, errs)
         float_val = float(node.content)
         if float_val < minmax[0] or float_val > minmax[1]:
@@ -893,8 +891,10 @@ RULE_ALLOW = "allowRule"
 RULE_ALTERNATEIDENTIFIER = "alternateIdentifierRule"
 RULE_ALTITUDEUNITS = "altitudeUnitsRule"
 RULE_ANNOTATION = "annotationRule"
+RULE_ANYFLOAT = "anyFloatRule"
 RULE_ANYINT = "anyIntRule"
 RULE_ANYNAME = "anyNameRule"
+RULE_ANYNONNEGATIVEFLOAT = "anyNonNegativeFloatRule"
 RULE_ANYSTRING = "anyStringRule"
 RULE_ANYURI = "anyURIRule"
 RULE_ATTRIBUTE = "attributeRule"
@@ -944,7 +944,6 @@ RULE_MINMAX = "minMaxRule"
 RULE_MISSINGVALUECODE = "missingValueCodeRule"
 RULE_MULTIBAND = "multiBandRule"
 RULE_NOMINAL = "nominalOrdinalRule"
-RULE_NONNEGATIVEFLOAT = "nonNegativeFloatRule"
 RULE_NONNUMERICDOMAIN = "nonNumericDomainRule"
 RULE_NUMERICDOMAIN = "numericDomainRule"
 RULE_OFFLINE = "offlineRule"
@@ -1140,7 +1139,6 @@ node_mappings = {
     names.NBANDS: RULE_ANYINT,
     names.NBITS: RULE_ANYINT,
     names.NOMINAL: RULE_NOMINAL,
-    names.NONNEGATIVEFLOAT: RULE_NONNEGATIVEFLOAT,
     names.NONNUMERICDOMAIN: RULE_NONNUMERICDOMAIN,
     names.NORTHBOUNDINGCOORDINATE: RULE_BOUNDINGCOORDINATE_NS,
     names.NUMBEROFRECORDS: RULE_ANYSTRING,
@@ -1168,7 +1166,7 @@ node_mappings = {
     names.PHYSICALLINEDELIMITER: RULE_ANYSTRING,
     names.POSITIONNAME: RULE_ANYNAME,
     names.POSTALCODE: RULE_ANYNAME,
-    names.PRECISION: RULE_ANYSTRING,
+    names.PRECISION: RULE_ANYNONNEGATIVEFLOAT,
     names.PRINCIPAL: RULE_PRINCIPAL,
     names.PROJECT: RULE_PROJECT,
     names.PROPERTYURI: RULE_PROPERTYURI,
