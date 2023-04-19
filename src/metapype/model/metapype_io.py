@@ -128,7 +128,7 @@ def _process_element(e, clean, collapse, literals) -> Node:
                 node.content = e.text
             else:
                 # if text consists entirely of one or more spaces and/or non-breaking spaces, keep it
-                if re.search("^[ \xA0]+$", e.text):
+                if re.search("^[ \xA0\x09]+$", e.text):
                     node.content = e.text
                 else:
                     node.content = e.text.strip()
@@ -138,7 +138,7 @@ def _process_element(e, clean, collapse, literals) -> Node:
                         node.content = " ".join(e.text.split())
         if e.tail is not None:
             # if tail consists entirely of one or more spaces and/or non-breaking spaces, keep it
-            if re.search("^[ \xA0]+$", e.tail):
+            if re.search("^[ \xA0\x09]+$", e.tail):
                 node.tail = e.tail
             else:
                 node.tail = e.tail.strip()
