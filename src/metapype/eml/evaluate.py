@@ -165,6 +165,73 @@ def _datatable_rule(node: Node) -> list:
             f'A data table Description is highly recommended.',
             node
         ))
+
+    physical_node = None
+    authentication_node = None
+    number_of_records_node = None
+    size_node = None
+
+    data_format_node = None
+    text_format_node = None
+    record_delimiter_node = None
+
+    for child in node.children:
+        if child.name == names.PHYSICAL:
+            physical_node = child
+            break
+    if physical_node:
+        for child in physical_node.children:
+            if child.name == names.AUTHENTICATION:
+                authentication_node = child
+            elif child.name == names.RECORDDELIMITER:
+                record_delimiter_node = child
+            elif child.name == names.SIZE:
+                size_node = child
+            elif child.name == names.DATAFORMAT:
+                data_format_node = child
+    if data_format_node:
+        for child in data_format_node.children:
+            if child.name == names.TEXTFORMAT:
+                text_format_node = child
+                break
+    if text_format_node:
+        for child in text_format_node.children:
+            if child.name == names.RECORDDELIMITER:
+                record_delimiter_node = child
+                break
+    for child in node.children:
+        if child.name == names.NUMBEROFRECORDS:
+            number_of_records_node = child
+            break
+
+    if not size_node or not size_node.content:
+        evaluation.append((
+            EvaluationWarning.DATATABLE_SIZE_MISSING,
+            f'A data table should contain a Size element.',
+            node
+        ))
+
+    if not authentication_node or not authentication_node.content:
+        evaluation.append((
+            EvaluationWarning.DATATABLE_MD5_CHECKSUM_MISSING,
+            f'A data table should contain an Authentication element.',
+            node
+        ))
+
+    if not number_of_records_node or not number_of_records_node.content:
+        evaluation.append((
+            EvaluationWarning.DATATABLE_NUMBER_OF_RECORDS_MISSING,
+            f'A data table should contain a Number of Records element.',
+            node
+        ))
+
+    if not record_delimiter_node or not record_delimiter_node.content:
+        evaluation.append((
+            EvaluationWarning.DATATABLE_RECORD_DELIMITER_MISSING,
+            f'A data table should contain a Record Delimiter element.',
+            node
+        ))
+
     return evaluation
 
 
