@@ -502,6 +502,7 @@ class Node(object):
         Args:
             old_child: Node
             new_child: Node
+            delete_old: Boolean
 
         Returns:
             None
