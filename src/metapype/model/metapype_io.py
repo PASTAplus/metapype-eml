@@ -268,7 +268,7 @@ def from_xml(xml: str, clean: bool = True, collapse: bool = False, literals: tup
     return root
 
 
-def to_xml(node: Node, parent: Node = None, level: int = 0) -> str:
+def to_xml(node: Node, parent: Node = None, level: int = 0, skip_ns: bool = False) -> str:
     xml = ""
     spacing = "  "
     indent = spacing * level
@@ -279,13 +279,14 @@ def to_xml(node: Node, parent: Node = None, level: int = 0) -> str:
     if len(node.attributes) > 0:
         attributes += " ".join([f"{k}=\"{v}\"" for k, v in node.attributes.items()])
 
-    if parent is None:
-        if len(node.nsmap) > 0:
-            attributes += " " + " ".join([f"xmlns:{k}=\"{v}\"" for k, v in node.nsmap.items()])
-    elif node.nsmap != parent.nsmap:
-        nsmap = _nsp_unique(node.nsmap, parent.nsmap)
-        if len(nsmap) > 0:
-            attributes += " " + " ".join([f"xmlns:{k}=\"{v}\"" for k, v in nsmap.items()])
+    if not skip_ns:
+        if parent is None:
+            if len(node.nsmap) > 0:
+                attributes += " " + " ".join([f"xmlns:{k}=\"{v}\"" for k, v in node.nsmap.items()])
+        elif node.nsmap != parent.nsmap:
+            nsmap = _nsp_unique(node.nsmap, parent.nsmap)
+            if len(nsmap) > 0:
+                attributes += " " + " ".join([f"xmlns:{k}=\"{v}\"" for k, v in nsmap.items()])
 
     if len(node.extras) > 0:
         attributes += " " + " ".join([f"{k}=\"{v}\"" for k, v in node.extras.items()])
