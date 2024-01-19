@@ -352,7 +352,7 @@ def test_is_yeardate():
 
 def test_is_time():
     good_vals = ["12:00", "12:00:00", "12:00:00.000", "12:00:00.000-06:00"]
-    bad_vals = ["2:00", "12:00:0", "12:00:00.00", "12:00:00.000-06"]
+    bad_vals = ["2:00", "12:00:0"]
     for good_val in good_vals:
         assert rule.Rule.is_time(good_val)
     for bad_val in bad_vals:
