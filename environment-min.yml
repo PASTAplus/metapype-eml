@@ -6,7 +6,7 @@ dependencies:
   - rfc3986
   - daiquiri
   - pytest
-  - python=3.8
+  - python=3.11
   - lxml
   - click
 prefix: /home/servilla/anaconda3/envs/metapype
