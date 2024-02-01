@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## (0.0.28) 2024-01-31
+### Changed/Fixed
+- Fix bug in `metapype_io.to_xml()` where recursive call did not include `skip_ns` argument.
+
 ## (0.0.27) 2024-01-18
 ### Changed/Fixed
 - Add parameter to to_xml() to allow skipping rendering of namespaces. Used by ezEML when
