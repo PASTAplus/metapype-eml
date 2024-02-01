@@ -312,6 +312,6 @@ def to_xml(node: Node, parent: Node = None, level: int = 0, skip_ns: bool = Fals
 
     xml += open_tag
     for child in node.children:
-        xml += to_xml(child, node, level + 1)
+        xml += to_xml(child, node, level + 1, skip_ns)
     xml += close_tag
     return xml
