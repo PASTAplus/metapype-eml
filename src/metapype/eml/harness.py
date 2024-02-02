@@ -21,11 +21,9 @@ import daiquiri
 
 from metapype.eml.exceptions import MetapypeRuleError
 from metapype.eml import export
-from metapype.eml import evaluate
 from metapype.eml import names
 from metapype.eml import rule
 from metapype.eml import validate
-from metapype.model import mp_io
 from metapype.model import metapype_io
 from metapype.model.node import Node
 
