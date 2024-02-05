@@ -15,11 +15,14 @@
 """
 import daiquiri
 import pytest
+import sys
 
 from metapype.eml import names
 from metapype.eml import validate
 from metapype.model.node import Node
 from metapype.model.node import Shift
+from metapype.model.node import NsmapAction
+import metapype.model.metapype_io as metapype_io
 
 
 logger = daiquiri.getLogger("test_node: " + __name__)
@@ -27,7 +30,9 @@ logger = daiquiri.getLogger("test_node: " + __name__)
 
 @pytest.fixture()
 def node():
-    return Node(names.EML)
+    eml = Node(names.EML)
+    eml.add_namespace("eml", "https://eml.ecoinformatics.org/eml-2.2.0")
+    return eml
 
 
 def test_add_attribute(node):
@@ -45,9 +50,11 @@ def test_add_child(node):
     node.add_child(child_1)
     children = node.children
     assert child_1 is children[0]
+    assert child_1.nsmap == node.nsmap
     child_2 = Node(names.DATASET)
-    node.add_child(child_2, 0)
+    node.add_child(child_2, 0, assign_nsmap=False)
     assert child_2 is children[0]
+    assert child_2.nsmap != node.nsmap
 
 
 def test_copy():
@@ -351,6 +358,99 @@ def test_delete_node_no_children():
     assert principal.id in Node.store
 
 
+def test_nsmap():
+    print("")
+    A = Node("A")
+    B = Node("B")
+    C = Node("C")
+    D = Node("D")
+    E = Node("E")
+
+    print("")
+    print(f"{A._name}-{id(A._nsmap)}: {A._nsmap}")
+    print(f"{B._name}-{id(B._nsmap)}: {B._nsmap}")
+    print(f"{C._name}-{id(C._nsmap)}: {C._nsmap}")
+    print(f"{D._name}-{id(D._nsmap)}: {D._nsmap}")
+    print(f"{E._name}-{id(E._nsmap)}: {E._nsmap}")
+
+    A.add_child(B)
+    B.add_child(C)
+    C.add_child(D)
+
+    print("")
+    print(f"{A._name}-{id(A._nsmap)}: {A._nsmap}")
+    print(f"{B._name}-{id(B._nsmap)}: {B._nsmap}")
+    print(f"{C._name}-{id(C._nsmap)}: {C._nsmap}")
+    print(f"{D._name}-{id(D._nsmap)}: {D._nsmap}")
+    print(f"{E._name}-{id(E._nsmap)}: {E._nsmap}")
+
+    A.add_namespace("a", "https://a.org")
+
+    print("")
+    print(f"{A._name}-{id(A._nsmap)}: {A._nsmap}")
+    print(f"{B._name}-{id(B._nsmap)}: {B._nsmap}")
+    print(f"{C._name}-{id(C._nsmap)}: {C._nsmap}")
+    print(f"{D._name}-{id(D._nsmap)}: {D._nsmap}")
+    print(f"{E._name}-{id(E._nsmap)}: {E._nsmap}")
+
+    C.add_namespace("c", "https://c.org")
+
+
+    print("")
+    print(f"{A._name}-{id(A._nsmap)}: {A._nsmap}")
+    print(f"{B._name}-{id(B._nsmap)}: {B._nsmap}")
+    print(f"{C._name}-{id(C._nsmap)}: {C._nsmap}")
+    print(f"{D._name}-{id(D._nsmap)}: {D._nsmap}")
+    print(f"{E._name}-{id(E._nsmap)}: {E._nsmap}")
+
+    B.add_namespace("b", "https://b.org")
+    E.add_namespace("e", "https://e.org")
+    # D.add_child(E)
+
+    print("")
+    print(f"{A._name}-{id(A._nsmap)}: {A._nsmap}")
+    print(f"{B._name}-{id(B._nsmap)}: {B._nsmap}")
+    print(f"{C._name}-{id(C._nsmap)}: {C._nsmap}")
+    print(f"{D._name}-{id(D._nsmap)}: {D._nsmap}")
+    print(f"{E._name}-{id(E._nsmap)}: {E._nsmap}")
+
+    X = Node("X")
+    B.add_namespace("b", "https://B.org")
+
+    print("")
+    print(f"{X._name}-{id(X._nsmap)}: {X._nsmap}")
+    print(f"{A._name}-{id(A._nsmap)}: {A._nsmap}")
+    print(f"{B._name}-{id(B._nsmap)}: {B._nsmap}")
+    print(f"{C._name}-{id(C._nsmap)}: {C._nsmap}")
+    print(f"{D._name}-{id(D._nsmap)}: {D._nsmap}")
+    print(f"{E._name}-{id(E._nsmap)}: {E._nsmap}")
+
+    X.add_namespace("x", "https://x.org")
+    # X.add_child(A, nsmap_action=NsmapAction.REPLACE)
+    X.add_child(A)
+    X.add_child(E)
+
+    print("")
+    print(f"{X._name}-{id(X._nsmap)}: {X._nsmap}")
+    print(f"{A._name}-{id(A._nsmap)}: {A._nsmap}")
+    print(f"{B._name}-{id(B._nsmap)}: {B._nsmap}")
+    print(f"{C._name}-{id(C._nsmap)}: {C._nsmap}")
+    print(f"{D._name}-{id(D._nsmap)}: {D._nsmap}")
+    print(f"{E._name}-{id(E._nsmap)}: {E._nsmap}")
+
+    X.remove_namespace("x")
+
+    print("")
+    print(f"{X._name}-{id(X._nsmap)}: {X._nsmap}")
+    print(f"{A._name}-{id(A._nsmap)}: {A._nsmap}")
+    print(f"{B._name}-{id(B._nsmap)}: {B._nsmap}")
+    print(f"{C._name}-{id(C._nsmap)}: {C._nsmap}")
+    print(f"{D._name}-{id(D._nsmap)}: {D._nsmap}")
+    print(f"{E._name}-{id(E._nsmap)}: {E._nsmap}")
+
+    print(metapype_io.to_xml(X))
+
+
 def is_deep_copy(node1: Node, node2: Node) -> bool:
     if id(node1) == id(node2):
         return False
@@ -406,3 +506,10 @@ def is_deep_copy(node1: Node, node2: Node) -> bool:
             return is_deep_copy(child1, child2)
 
     return True
+
+
+def size_all(*args) -> int:
+    size = 0
+    for arg in args:
+        size += sys.getsizeof(arg)
+    return size
