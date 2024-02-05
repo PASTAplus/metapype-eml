@@ -29,22 +29,27 @@ class Shift(Enum):
     RIGHT = 1
 
 
-class Node(object):
-    """
-    Model node class representation.
+class NsmapAction(Enum):
+    IGNORE = 0
+    MERGE = 1
+    REPLACE = 2
 
-    Attributes:
-        name: Required string of metadata element name being modeled
-        id: Optional node identifier
-        parent: Optional parent node
-        content: Optional string content
-    """
+
+class Node(object):
 
     store = {}
 
-    def __init__(
-        self, name: str, id: str = None, parent=None, content: str = None
-    ):
+    def __init__(self, name: str, id: str = None, parent=None, content: str = None):
+        """
+        Model node class representation.
+
+        Attributes:
+            name: Required string of metadata element name being modeled
+            id: Optional node identifier
+            parent: Optional parent node
+            content: Optional string content
+        """
+
         self._id = str(uuid.uuid1()) if id is None else id
         self._name = name
         self._parent = parent
@@ -68,6 +73,8 @@ class Node(object):
     def __object(self):
         o = {self._name: []}
         o[self._name].append({"id": self._id})
+        o[self._name].append({"parent": self._parent.name if self._parent else None})
+        o[self._name].append({"parent_id": self._parent.id if self._parent else None})
         o[self._name].append({"nsmap": self._nsmap})
         o[self._name].append({"prefix": self._prefix})
         o[self._name].append({"attributes": self._attributes})
@@ -136,13 +143,15 @@ class Node(object):
     def add_attribute(self, name, value):
         self._attributes[name] = value
 
-    def add_child(self, child, index=None):
+    def add_child(self, child, index=None, nsmap_action: NsmapAction = NsmapAction.MERGE) -> None:
         """
         Adds a child object into the children list at either the end of
-        the list or at the index location if specified.
+        the list or at the index location if specified, and assigns the
+        parent namespace map to the child.
         Args:
             child: Node
             index: Int
+            nsmap_action: NsmapAction
 
         Returns:
             None
@@ -154,11 +163,35 @@ class Node(object):
             self._children.insert(index, child)
             child.parent = self
 
+        if nsmap_action == NsmapAction.MERGE:
+            if self.nsmap == child.nsmap:
+                child.nsmap = self.nsmap
+            else:
+                for prefix in self.nsmap:
+                    if prefix not in child.nsmap:
+                        child.add_namespace(prefix, self.nsmap[prefix])
+        elif nsmap_action == NsmapAction.REPLACE:
+            child.set_namespace(self._nsmap, children=True)
+
     def add_extras(self, key: str, value: str):
         self._extras[key] = value
 
-    def add_namespace(self, prefix: str, namespace: str):
-        self._nsmap[prefix] = namespace
+    def add_namespace(self, prefix: str, namespace: str, nsmap_action: NsmapAction = NsmapAction.MERGE, nsmap_id: int = None):
+        if nsmap_id is None:
+            nsmap_id = id(self.nsmap)
+        if prefix in self.nsmap:
+            self.nsmap[prefix] = namespace
+        else:
+            self.nsmap = copy.deepcopy(self.nsmap)
+            self.nsmap[prefix] = namespace
+
+        if nsmap_action == NsmapAction.MERGE:
+            for child in self._children:
+                if id(child.nsmap) == nsmap_id:
+                    child.nsmap = self.nsmap
+                    child.add_namespace(prefix, namespace, nsmap_id=nsmap_id)
+                else:
+                    child.add_namespace(prefix, namespace)
 
     def attribute_value(self, name):
         if name in self._attributes:
@@ -454,7 +487,7 @@ class Node(object):
         return self._nsmap
     
     @nsmap.setter
-    def nsmap(self, nsmap):
+    def nsmap(self, nsmap: dict):
         self._nsmap = nsmap
 
     @property
@@ -494,6 +527,21 @@ class Node(object):
 
     def remove_children(self):
         self._children = []
+
+    def remove_namespace(self, prefix: str, nsmap_action: NsmapAction = NsmapAction.MERGE, nsmap_id: int = None) -> None:
+        if nsmap_id is None:
+            nsmap_id = id(self.nsmap)
+        if prefix in self.nsmap:
+            self.nsmap = copy.deepcopy(self.nsmap)
+            del self.nsmap[prefix]
+
+        if nsmap_action == NsmapAction.MERGE:
+            for child in self._children:
+                if id(child.nsmap) == nsmap_id:
+                    child.nsmap = self.nsmap
+                    child.remove_namespace(prefix, nsmap_id=nsmap_id)
+                else:
+                    child.remove_namespace(prefix)
 
     def replace_child(self, old_child, new_child, delete_old=True):
         """
@@ -568,6 +616,13 @@ class Node(object):
             raise ValueError(msg)
 
         return index
+
+    def set_namespace(self, nsmap: dict, children: bool = True):
+        self.nsmap = nsmap
+        if children:
+            for child in self.children:
+                child.set_namespace(nsmap, children)
+
 
     @property
     def tail(self) -> str:
