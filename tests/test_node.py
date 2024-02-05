@@ -50,11 +50,9 @@ def test_add_child(node):
     node.add_child(child_1)
     children = node.children
     assert child_1 is children[0]
-    assert child_1.nsmap == node.nsmap
     child_2 = Node(names.DATASET)
-    node.add_child(child_2, 0, assign_nsmap=False)
+    node.add_child(child_2, 0)
     assert child_2 is children[0]
-    assert child_2.nsmap != node.nsmap
 
 
 def test_copy():
