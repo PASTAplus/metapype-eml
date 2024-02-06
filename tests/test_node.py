@@ -407,6 +407,12 @@ def test_nsmap():
     assert "x" not in x.nsmap and "x" not in a.nsmap and "x" not in b.nsmap and \
            "x" not in c.nsmap and "x" not in d.nsmap and "x" not in e.nsmap
 
+    x.nsmap = {"x": "https://x.org"}
+    print()
+    dump_nsmap(x)
+    print(metapype_io.to_xml(x))
+    Node.fix_nsmap(x)
+    dump_nsmap(x)
 
 def is_deep_copy(node1: Node, node2: Node) -> bool:
     if id(node1) == id(node2):
@@ -470,3 +476,9 @@ def size_all(*args) -> int:
     for arg in args:
         size += sys.getsizeof(arg)
     return size
+
+
+def dump_nsmap(node: Node):
+    print(f"{node.name}-{id(node.nsmap)}: {node.nsmap}")
+    for child in node.children:
+        dump_nsmap(child)
