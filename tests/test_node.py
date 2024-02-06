@@ -350,103 +350,62 @@ def test_delete_node_no_children():
     permission = Node(names.PERMISSION, parent=allow)
     permission.content = "all"
     allow.add_child(permission)
-    node = Node.get_node_instance(principal.id)
-    assert principal is node
+    principal_instance = Node.get_node_instance(principal.id)
+    assert principal is principal_instance
     Node.delete_node_instance(eml.id, children=False)
     assert principal.id in Node.store
 
 
 def test_nsmap():
-    print("")
-    A = Node("A")
-    B = Node("B")
-    C = Node("C")
-    D = Node("D")
-    E = Node("E")
+    a = Node("a")
+    b = Node("b")
+    c = Node("c")
+    d = Node("d")
+    e = Node("e")
 
-    print("")
-    print(f"{A._name}-{id(A._nsmap)}: {A._nsmap}")
-    print(f"{B._name}-{id(B._nsmap)}: {B._nsmap}")
-    print(f"{C._name}-{id(C._nsmap)}: {C._nsmap}")
-    print(f"{D._name}-{id(D._nsmap)}: {D._nsmap}")
-    print(f"{E._name}-{id(E._nsmap)}: {E._nsmap}")
+    assert id(a.nsmap) != id(b.nsmap) != id(c.nsmap) != id(d.nsmap) != id(e.nsmap)
 
-    A.add_child(B)
-    B.add_child(C)
-    C.add_child(D)
+    a.add_child(b)
+    b.add_child(c)
+    c.add_child(d)
 
-    print("")
-    print(f"{A._name}-{id(A._nsmap)}: {A._nsmap}")
-    print(f"{B._name}-{id(B._nsmap)}: {B._nsmap}")
-    print(f"{C._name}-{id(C._nsmap)}: {C._nsmap}")
-    print(f"{D._name}-{id(D._nsmap)}: {D._nsmap}")
-    print(f"{E._name}-{id(E._nsmap)}: {E._nsmap}")
+    assert id(a.nsmap) == id(b.nsmap) == id(c.nsmap) == id(d.nsmap) != id(e.nsmap)
+    assert a.nsmap == b.nsmap == c.nsmap == d.nsmap == e.nsmap
 
-    A.add_namespace("a", "https://a.org")
+    a.add_namespace("a", "https://a.org")
 
-    print("")
-    print(f"{A._name}-{id(A._nsmap)}: {A._nsmap}")
-    print(f"{B._name}-{id(B._nsmap)}: {B._nsmap}")
-    print(f"{C._name}-{id(C._nsmap)}: {C._nsmap}")
-    print(f"{D._name}-{id(D._nsmap)}: {D._nsmap}")
-    print(f"{E._name}-{id(E._nsmap)}: {E._nsmap}")
+    assert a.nsmap["a"] == "https://a.org"
+    assert id(a.nsmap) == id(b.nsmap) == id(c.nsmap) == id(d.nsmap) != id(e.nsmap)
+    assert a.nsmap == b.nsmap == c.nsmap == d.nsmap != e.nsmap
 
-    C.add_namespace("c", "https://c.org")
+    c.add_namespace("c", "https://c.org")
 
+    assert c.nsmap["c"] == "https://c.org"
+    assert id(a.nsmap) == id(b.nsmap) != id(e.nsmap)
+    assert id(c.nsmap) == id(d.nsmap) != id(e.nsmap)
+    assert a.nsmap == b.nsmap
+    assert c.nsmap == d.nsmap
+    assert e.nsmap == {}
 
-    print("")
-    print(f"{A._name}-{id(A._nsmap)}: {A._nsmap}")
-    print(f"{B._name}-{id(B._nsmap)}: {B._nsmap}")
-    print(f"{C._name}-{id(C._nsmap)}: {C._nsmap}")
-    print(f"{D._name}-{id(D._nsmap)}: {D._nsmap}")
-    print(f"{E._name}-{id(E._nsmap)}: {E._nsmap}")
+    b.add_namespace("b", "https://b.org")
+    e.add_namespace("e", "https://e.org")
 
-    B.add_namespace("b", "https://b.org")
-    E.add_namespace("e", "https://e.org")
-    # D.add_child(E)
+    assert "b" in b.nsmap and "b" in c.nsmap and "b" in d.nsmap and "b" not in e.nsmap
+    assert "e" in e.nsmap
 
-    print("")
-    print(f"{A._name}-{id(A._nsmap)}: {A._nsmap}")
-    print(f"{B._name}-{id(B._nsmap)}: {B._nsmap}")
-    print(f"{C._name}-{id(C._nsmap)}: {C._nsmap}")
-    print(f"{D._name}-{id(D._nsmap)}: {D._nsmap}")
-    print(f"{E._name}-{id(E._nsmap)}: {E._nsmap}")
+    b.add_namespace("b", "https://B.org")
+    assert "https://B.org" == b.nsmap["b"] and "https://B.org" == c.nsmap["b"] and "https://B.org" == d.nsmap["b"]
 
-    X = Node("X")
-    B.add_namespace("b", "https://B.org")
+    x = Node("x")
+    x.add_namespace("x", "https://x.org")
+    x.add_child(a)
+    x.add_child(e)
 
-    print("")
-    print(f"{X._name}-{id(X._nsmap)}: {X._nsmap}")
-    print(f"{A._name}-{id(A._nsmap)}: {A._nsmap}")
-    print(f"{B._name}-{id(B._nsmap)}: {B._nsmap}")
-    print(f"{C._name}-{id(C._nsmap)}: {C._nsmap}")
-    print(f"{D._name}-{id(D._nsmap)}: {D._nsmap}")
-    print(f"{E._name}-{id(E._nsmap)}: {E._nsmap}")
+    assert "x" in x.nsmap and "x" in a.nsmap and "x" in b.nsmap and "x" in c.nsmap and "x" in d.nsmap and "x" in e.nsmap
 
-    X.add_namespace("x", "https://x.org")
-    # X.add_child(A, nsmap_action=NsmapAction.REPLACE)
-    X.add_child(A)
-    X.add_child(E)
-
-    print("")
-    print(f"{X._name}-{id(X._nsmap)}: {X._nsmap}")
-    print(f"{A._name}-{id(A._nsmap)}: {A._nsmap}")
-    print(f"{B._name}-{id(B._nsmap)}: {B._nsmap}")
-    print(f"{C._name}-{id(C._nsmap)}: {C._nsmap}")
-    print(f"{D._name}-{id(D._nsmap)}: {D._nsmap}")
-    print(f"{E._name}-{id(E._nsmap)}: {E._nsmap}")
-
-    X.remove_namespace("x")
-
-    print("")
-    print(f"{X._name}-{id(X._nsmap)}: {X._nsmap}")
-    print(f"{A._name}-{id(A._nsmap)}: {A._nsmap}")
-    print(f"{B._name}-{id(B._nsmap)}: {B._nsmap}")
-    print(f"{C._name}-{id(C._nsmap)}: {C._nsmap}")
-    print(f"{D._name}-{id(D._nsmap)}: {D._nsmap}")
-    print(f"{E._name}-{id(E._nsmap)}: {E._nsmap}")
-
-    print(metapype_io.to_xml(X))
+    x.remove_namespace("x")
+    assert "x" not in x.nsmap and "x" not in a.nsmap and "x" not in b.nsmap and \
+           "x" not in c.nsmap and "x" not in d.nsmap and "x" not in e.nsmap
 
 
 def is_deep_copy(node1: Node, node2: Node) -> bool:
