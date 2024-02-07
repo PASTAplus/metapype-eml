@@ -29,12 +29,6 @@ class Shift(Enum):
     RIGHT = 1
 
 
-class NsmapAction(Enum):
-    IGNORE = 0
-    MERGE = 1
-    REPLACE = 2
-
-
 class Node(object):
 
     store = {}
@@ -107,17 +101,28 @@ class Node(object):
         del Node.store[id]
 
     @classmethod
-    def fix_nsmap(cls, node, nsmap: dict = None, nsmap_id: int = None) -> None:
+    def fix_nsmap(cls, node: "Node", nsmap: dict = None, nsmap_id: int = None) -> None:
+        """
+        Fixes the namespace mappings for the node and its children
+        Args:
+            node: Node - the node of which to fix the namespace map
+            nsmap: Dict - the namespace map of the node's parent
+            nsmap_id: Int - the object identifier of the node's nsmap; to be used for
+                            repeated nsmap objects
+
+        Returns:
+            None
+        """
         if nsmap is not None:
             if nsmap_id is None:
-                nsmap_id = id(nsmap)
+                nsmap_id = id(node.nsmap)
             if nsmap == node.nsmap:
                 node.nsmap = nsmap
             else:
                 for prefix in nsmap:
                     if prefix not in node.nsmap:
                         node.nsmap = copy.deepcopy(node.nsmap)
-                        node.nsmap[prefix] = nsmap[prefix]
+                    node.nsmap[prefix] = nsmap[prefix]
 
         for child in node.children:
             if id(child.nsmap) == nsmap_id:
@@ -126,16 +131,8 @@ class Node(object):
             else:
                 cls.fix_nsmap(child, node.nsmap)
 
-    @property
-    def extras(self):
-        return self._extras
-
-    @extras.setter
-    def extras(self, e: dict):
-        self._extras = e
-
     @classmethod
-    def get_node_instance(cls, id: str):
+    def get_node_instance(cls, id: str) -> "Node":
         """
         Returns the instance of a node from its identifier
 
@@ -148,7 +145,7 @@ class Node(object):
         return cls.store.get(id, None)
 
     @classmethod
-    def set_node_instance(cls, node):
+    def set_node_instance(cls, node: "Node"):
         """
         Sets the node instance in the node store
 
@@ -284,6 +281,14 @@ class Node(object):
             _child_copy.parent = _copy
             _copy.children.append(_child_copy)
         return _copy
+
+    @property
+    def extras(self):
+        return self._extras
+
+    @extras.setter
+    def extras(self, e: dict):
+        self._extras = e
 
     def find_all_children(self, child_name):
         """
@@ -556,7 +561,7 @@ class Node(object):
             else:
                 child.remove_namespace(prefix)
 
-    def replace_child(self, old_child, new_child, delete_old=True):
+    def replace_child(self, old_child: "Node", new_child: "Node", delete_old: bool = True):
         """
         Replaces the old child with a new child
 
