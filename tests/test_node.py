@@ -21,8 +21,6 @@ from metapype.eml import names
 from metapype.eml import validate
 from metapype.model.node import Node
 from metapype.model.node import Shift
-from metapype.model.node import NsmapAction
-import metapype.model.metapype_io as metapype_io
 
 
 logger = daiquiri.getLogger("test_node: " + __name__)
@@ -407,12 +405,6 @@ def test_nsmap():
     assert "x" not in x.nsmap and "x" not in a.nsmap and "x" not in b.nsmap and \
            "x" not in c.nsmap and "x" not in d.nsmap and "x" not in e.nsmap
 
-    x.nsmap = {"x": "https://x.org"}
-    print()
-    dump_nsmap(x)
-    print(metapype_io.to_xml(x))
-    Node.fix_nsmap(x)
-    dump_nsmap(x)
 
 def is_deep_copy(node1: Node, node2: Node) -> bool:
     if id(node1) == id(node2):
