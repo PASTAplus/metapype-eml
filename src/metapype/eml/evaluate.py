@@ -350,7 +350,7 @@ def _title_rule(node: Node) -> list:
     title = node.content
     if title is not None:
         if node.parent is not None and node.parent.name == names.DATASET:
-            length = len(title.split(" "))
+            length = len(title.strip().split(" "))
             if length < 5:
                 evaluation.append((
                     EvaluationWarning.TITLE_TOO_SHORT,
