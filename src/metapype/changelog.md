@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## (0.1.0) 2024-02-17
+### Changed/Fixed
+- Add `normalize()` help function to `metapype.model` to normalize whitespace in both XML documents and
+  string content.
+- Bump version to 0.1.0 to indicate that the project is no longer in alpha.
+
 ## (0.0.29) 2024-02-06
 ### Changed/Fixed
 - Add better namespace management in `Node.add_child()` and additional methods `Node.add_namespace()`,
