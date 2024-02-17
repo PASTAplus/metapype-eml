@@ -17,6 +17,7 @@ import daiquiri
 
 from metapype.eml import names
 from metapype.model.node import Node
+from metapype.model.normalize import normalize
 from metapype.eml.evaluation_warnings import EvaluationWarning
 
 
@@ -350,7 +351,7 @@ def _title_rule(node: Node) -> list:
     title = node.content
     if title is not None:
         if node.parent is not None and node.parent.name == names.DATASET:
-            length = len(title.strip().split(" "))
+            length = len(normalize(title).split(" "))
             if length < 5:
                 evaluation.append((
                     EvaluationWarning.TITLE_TOO_SHORT,
