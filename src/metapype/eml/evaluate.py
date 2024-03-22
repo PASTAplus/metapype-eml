@@ -269,6 +269,10 @@ def _description_rule(node: Node) -> list:
     return evaluation
 
 
+def _publisher_rule(node: Node) -> list:
+    return _responsible_party_rule(node)
+
+
 def _individual_name_rule(node: Node) -> list:
     evaluation = []
     givename = False
@@ -297,7 +301,7 @@ def _responsible_party_rule(node: Node) -> list:
     for child in node.children:
         if child.name == names.USERID and child.content:
             userid = True
-            if child.attributes.get('directory') == 'https://orcid.org':
+            if child.attributes.get('directory') in ['http://orcid.org', 'https://orcid.org']:
                 orcid = True
         if child.name == names.ELECTRONICMAILADDRESS and child.content:
             email = True
@@ -412,5 +416,6 @@ rules = {
     names.METADATAPROVIDER: _metadata_provider_rule,
     names.OTHERENTITY: _other_entity_rule,
     names.PERSONNEL: _personnel_rule,
+    names.PUBLISHER: _publisher_rule,
     names.TITLE: _title_rule,
 }
