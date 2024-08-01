@@ -1043,7 +1043,7 @@
         [
         ],
         {
-            "content_rules" : ["strContent"]
+            "content_rules" : ["strContent", "nonEmptyContent"]
         }
     ],
    "rowColumnRule" : [
