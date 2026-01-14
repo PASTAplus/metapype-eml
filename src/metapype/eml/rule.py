@@ -466,9 +466,9 @@ class Rule(object):
 
     @staticmethod
     def _validate_non_empty_content(node: Node, is_mixed_content: bool, errs: list = None):
-        if node.content is None or len(str(node.content)) == 0:
+        if node.content is None or not str(node.content).strip():  # If purely whitespace, it's considered empty
             if (is_mixed_content and len(node.children) == 0) or not is_mixed_content:
-                msg = f'Node "{node.name}" content should not be empty'
+                msg = f'Node "{node.name}" content should not be empty or entirely whitespace'
                 if errs is None:
                     raise MetapypeRuleError(msg)
                 else:
