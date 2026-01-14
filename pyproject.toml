@@ -1,30 +1,53 @@
-[build-system]
-requires = [
-    "setuptools>=49.6.0",
-    "wheel"
+[project]
+authors = [{name = "Mark Servilla", email = "mark.servilla@gmail.com"}]
+requires-python = ">=3.11"
+dependencies = []
+name = "metapype"
+dynamic = ["version"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "ruff",
+    "hatchling",
 ]
-build-backend = "setuptools.build_meta"
 
-[tool.black]
-line-length = 79
-target-version = ['py38']
-include = '\.pyi?$'
-exclude = '''
-/(
-    \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | _build
-  | buck-out
-  | build
-  | dist
+[tool.pixi.workspace]
+name = "metapype"
+channels = ["conda-forge"]
+platforms = ["linux-64", "linux-aarch64"]
+preview = ["pixi-build"]
 
-  # The following are specific to Black, you probably don't want those.
-  | blib2to3
-  | tests/data
-  | profiling
-)/
-'''
+[tool.pixi.pypi-dependencies]
+metapype = { path = ".", editable = true }
+
+[tool.pixi.dependencies]
+rfc3986 = ">=2.0.0,<3"
+daiquiri = ">=3.0.0,<4"
+pytest = ">=9.0.2,<10"
+lxml = ">=6.0.2,<7"
+click = ">=8.3.1,<9"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "src/metapype/VERSION.txt"
+pattern = "(?P<version>\\d+\\.\\d+\\.\\d+)"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/metapype"]
+
+[tool.hatch.build.targets.sdist]
+only-include = ["src/metapype"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-v",
+    "--strict-markers",
+]
