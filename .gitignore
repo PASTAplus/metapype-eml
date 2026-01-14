@@ -117,3 +117,6 @@ test_eml.*
 /utils/Test for Lake Baikal.json
 /utils/Test for Lake Baikal.json.20210209
 /utils/Test for Lake Baikal.json.original
+# pixi environments
+.pixi/*
+!.pixi/config.toml
