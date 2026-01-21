@@ -709,7 +709,7 @@
         [
         ],
         {
-            "content_rules" : ["strContent"]
+            "content_rules" : ["floatContent", "nonEmptyContent"]
         }
     ],
     "missingValueCodeRule" : [
