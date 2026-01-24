@@ -33,12 +33,12 @@ def get_text_content(text_node: Node) -> str:
     paras = []
     text_node.find_all_descendants(names.PARA, paras)
     for para in paras:
-        if para.content:
+        if para.content is not None:
             content += '\n' + para.content
     markdowns = []
     text_node.find_all_descendants(names.MARKDOWN, markdowns)
     for markdown in markdowns:
-        if markdown.content:
+        if markdown.content is not None:
             content += '\n' + markdown.content
     return content
 
