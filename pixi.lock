@@ -641,7 +641,7 @@ packages:
   timestamp: 1762506450786
 - pypi: ./
   name: metapype
-  version: 0.1.2
+  version: 0.1.4
   sha256: 7fae3d7b2204fdd9e8756994932caed3f968c728d9eeeac23e0da5b94e50b201
   requires_dist:
   - hatchling ; extra == 'dev'
