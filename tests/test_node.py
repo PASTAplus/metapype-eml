@@ -198,7 +198,7 @@ def test_replace_child():
     assert sur_name_1 not in individual_name.children
 
     # Test for old child removal from node store
-    assert sur_name_1.id not in Node.store
+    assert sur_name_1.id not in Node._store()
 
     # Test for child node type mismatch
     given_name = Node(names.GIVENNAME)
@@ -329,7 +329,7 @@ def test_delete_node():
     node = Node.get_node_instance(principal.id)
     assert principal is node
     Node.delete_node_instance(eml.id)
-    assert principal.id not in Node.store
+    assert principal.id not in Node._store()
 
 
 def test_delete_node_no_children():
@@ -351,7 +351,7 @@ def test_delete_node_no_children():
     principal_instance = Node.get_node_instance(principal.id)
     assert principal is principal_instance
     Node.delete_node_instance(eml.id, children=False)
-    assert principal.id in Node.store
+    assert principal.id in Node._store()
 
 
 def test_nsmap():

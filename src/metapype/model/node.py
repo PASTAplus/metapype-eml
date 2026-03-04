@@ -12,7 +12,25 @@
 
 :Created:
     5/15/18
+
 """
+
+"""
+Changes added in March 2026 to enforce task isolation for the node store:
+
+In Python 3.7+, every thread and every asyncio Task has an associated Context object that 
+determines the current values of all ContextVars. I.e., each thread or asyncio task carries 
+its own execution context.
+
+We use ContextVar to isolate the node store to an execution context.
+
+Note: we are using only the Python-level API; we are not dependent on CPython implementation details.
+
+These changes were authored primarily by ChatGPT 5.2.
+"""
+
+from contextlib import contextmanager
+from contextvars import ContextVar
 import copy
 from enum import Enum
 import json
@@ -28,10 +46,12 @@ class Shift(Enum):
     LEFT = 0
     RIGHT = 1
 
+_default_store = {}  # Provides backward-compatibility with previous versions of node.py
+
+_node_store: ContextVar[dict] = ContextVar("node_store", default=_default_store)
+
 
 class Node(object):
-
-    store = {}
 
     def __init__(self, name: str, id: str = None, parent=None, content: str = None):
         """
@@ -82,6 +102,84 @@ class Node(object):
         return o
 
     @classmethod
+    def _store(cls) -> dict:
+        """
+        Allows class methods to access the correct node store for the current context.
+
+        Returns:
+            reference to the node store
+        """
+        return _node_store.get()
+
+    @classmethod
+    def use_store(cls, store: dict):
+        """
+        Set the active store for the current execution context.
+
+        Returns:
+            a token that can be used to reset the store.
+        """
+        return _node_store.set(store)
+
+    @classmethod
+    def reset_store(cls, token):
+        """
+        Resets the node store to its previous setting.
+
+        Returns:
+            None
+        """
+        _node_store.reset(token)
+
+    @classmethod
+    def get_node_instance(cls, id: str):
+        """
+        Returns the instance of a node from its identifier
+
+        Args:
+            id: Str
+
+        Returns:
+            Node
+        """
+        return cls._store().get(id)
+
+    @classmethod
+    def set_node_instance(cls, node: "Node"):
+        """
+        Sets the node instance in the node store
+
+        Args:
+            node:
+
+        Returns:
+            None
+        """
+        cls._store()[node.id] = node
+
+    @classmethod
+    @contextmanager
+    def store_scope(cls, store: dict | None = None, *, clear_on_exit: bool = True):
+        """
+        Context manager to scope Node storage to a unit of work (request/job/etc).
+        For examples of its use, see unit tests in test_node_store_scope.py.
+
+        Args:
+            store: dict to use. If None, a new dict is created.
+            clear_on_exit: if True, clears the scoped store on exit to avoid leaks.
+        """
+        if store is None:
+            store = {}
+        token = cls.use_store(store)
+        try:
+            yield store
+        finally:
+            # clear first (while still active) so Node methods see the right store
+            if clear_on_exit:
+                store.clear()
+            cls.reset_store(token)
+
+    @classmethod
     def delete_node_instance(cls, id: str, children: bool = True):
         """
         Removes the node instance from the store; if children set to True, then
@@ -94,11 +192,12 @@ class Node(object):
         Returns:
             None
         """
+        store = cls._store()
         if children:
             node = cls.get_node_instance(id)
             for child in node.children:
                 cls.delete_node_instance(child.id)
-        del Node.store[id]
+        store.pop(id, None) # defensive: avoids KeyError if already removed
 
     @classmethod
     def fix_nsmap(cls, node: "Node", nsmap: dict = None, nsmap_id: int = None) -> None:
@@ -130,32 +229,6 @@ class Node(object):
                 cls.fix_nsmap(child, node.nsmap, nsmap_id=nsmap_id)
             else:
                 cls.fix_nsmap(child, node.nsmap)
-
-    @classmethod
-    def get_node_instance(cls, id: str) -> "Node":
-        """
-        Returns the instance of a node from its identifier
-
-        Args:
-            id: Str
-
-        Returns:
-            Node
-        """
-        return cls.store.get(id, None)
-
-    @classmethod
-    def set_node_instance(cls, node: "Node"):
-        """
-        Sets the node instance in the node store
-
-        Args:
-            node:
-
-        Returns:
-            None
-        """
-        cls.store[node.id] = node
 
     def add_attribute(self, name, value):
         self._attributes[name] = value
